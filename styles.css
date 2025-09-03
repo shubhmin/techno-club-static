@@ -141,3 +141,12 @@ footer .text-sm {
 footer .text-xs {
   font-size: 0.65rem; /* Adjust smallest text */
 }
+
+/* Center align logo */
+header .flex.items-center {
+  justify-content: center; /* Center the logo horizontally */
+}
+
+footer .flex.items-center {
+  justify-content: center; /* Center the logo horizontally in the footer */
+}
