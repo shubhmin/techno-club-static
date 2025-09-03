@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Important website</title>
+        <link href="imp.css" rel="stylesheet">
+    </head>
+    <body>
+        <!-- Instagram Button -->
+        <button class="cssbuttons-io" id="instagramBtn">
+        <span>
+            <img id="instaIcon" src="insta_logo.png" alt="Instagram Icon" style="width:24px; height:24px; vertical-align:middle; margin-right:8px;">
+            Instagram
+        </span>
+        </button>
+
+        <!-- YouTube Button -->
+        <button class="cssbuttons-io-red" id="youtubeBtn">
+            <span>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0h24v24H0z" fill="none"></path>
+                    <path
+                        d="M24 12l-5.657 5.657-1.414-1.414L21.172 12l-4.243-4.243 1.414-1.414L24 12zM2.828 12l4.243 4.243-1.414 1.414L0 12l5.657-5.657L7.07 7.757 2.828 12zm6.96 9H7.66l6.552-18h2.128L9.788 21z"
+                        fill="currentColor"
+                    ></path>
+                </svg>
+                Youtube
+            </span>
+        </button>
+
+        <!-- JavaScript for button functionality -->
+        <script>
+            document.getElementById('instagramBtn').addEventListener('click', function () {
+                window.location.href = 'https://example.com'; // Change to your Instagram URL
+            });
+
+            document.getElementById('youtubeBtn').addEventListener('click', function () {
+                window.location.href = 'https://youtube.com'; // Change to your YouTube URL
+            });
+        </script>
+    </body>
+
+    <script>
+        const button = document.getElementById('instagramBtn');
+        const icon = document.getElementById('instaIcon');
+
+        const originalSrc = 'insta_logo.png'; // normal icon
+        const hoverSrc = 'blackinstalogo.png'; // icon to show on hover
+
+        button.addEventListener('mouseenter', () => {
+            icon.src = hoverSrc;
+        });
+
+        button.addEventListener('mouseleave', () => {
+            icon.src = originalSrc;
+        });
+    </script>
+
+</html>

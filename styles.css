@@ -126,27 +126,4 @@
 /* Mobile/touch: show the overlay by default (optional) */
 @media (hover: none) and (pointer: coarse) {
   .person::after { opacity: 1; }
-}
-
-/* Footer styles */
-footer {
-  padding: 1rem 0; /* Reduce padding */
-  font-size: 0.875rem; /* Reduce font size */
-}
-
-footer .text-sm {
-  font-size: 0.75rem; /* Adjust smaller text */
-}
-
-footer .text-xs {
-  font-size: 0.65rem; /* Adjust smallest text */
-}
-
-/* Center align logo */
-header .flex.items-center {
-  justify-content: center; /* Center the logo horizontally */
-}
-
-footer .flex.items-center {
-  justify-content: center; /* Center the logo horizontally in the footer */
-}
+}   
