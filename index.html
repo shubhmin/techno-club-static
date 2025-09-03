@@ -37,7 +37,7 @@
       <div class="max-w-6xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-10 items-center">
         <div>
           <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
-            Stay Safe. Stay Smart.<br/>
+            Stay Smart. Stay safety.<br/>
             <span class="text-cyan-400">Cyber Security Club</span>
           </h1>
           <p class="mt-4 text-slate-300">Workshops • CTFs • Awareness Drives • Secure Coding • Real‑world projects.</p>
@@ -69,24 +69,122 @@
     </section>
   </main>
 
-  <footer class="mt-auto border-t border-slate-800 bg-slate-900/60">
-    <div class="max-w-6xl mx-auto px-4 py-8 grid sm:grid-cols-2 gap-6">
-      <div>
-        <div class="flex items-center gap-3">
-          <img src="assets/logo.png" class="h-9 w-9 rounded-lg" alt="Logo"/>
-          <div class="font-semibold">Cyber Security Club</div>
-        </div>
-        <p class="text-slate-400 mt-3 text-sm">Spreading cyber awareness, hands‑on workshops, and cool projects — by students, for students.</p>
+  <footer class="mt-auto border-t border-slate-800 bg-slate-900/60 transition-colors duration-300">
+  <div class="max-w-6xl mx-auto px-4 py-8 grid sm:grid-cols-2 gap-6">
+    <!-- Left side -->
+    <div>
+      <div class="flex items-center gap-3">
+        <img src="assets/logo.png" class="h-9 w-9 rounded-lg" alt="Logo"/>
+        <div class="font-semibold">Cyber Security Club</div>
       </div>
-      <div class="flex sm:justify-end items-center gap-4 text-sm text-slate-400">
-        <a href="about.html" class="hover:text-white">About</a>
-        <a href="members.html" class="hover:text-white">Members</a>
-        <a href="gallery.html" class="hover:text-white">Gallery</a>
-        <a href="chatbot.html" class="hover:text-white">Chatbot</a>
-      </div>
+      <p class="text-slate-400 mt-3 text-sm">© 2025 Cyber Security Club • DAV Public School, Sreshtha Vihar</p>
     </div>
-    <div class="text-center text-xs text-slate-500 py-4 border-t border-slate-800">© 2025 Cyber Security Club • DAV Public School, Sreshtha Vihar</div>
-  </footer>
+
+    <!-- Right side (links + toggle) -->
+    <div class="flex sm:justify-end items-center gap-6 text-sm text-slate-400">
+      <a href="about.html" class="hover:text-white">About</a>
+      <a href="members.html" class="hover:text-white">Members</a>
+      <a href="gallery.html" class="hover:text-white">Gallery</a>
+      <a href="chatbot.html" class="hover:text-white">Chatbot</a>
+
+      <!-- Uiverse Shy Earwig Toggle -->
+      <label class="switch">
+        <input id="themeToggle" type="checkbox" />
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+</footer>
+
+<!-- Uiverse Toggle CSS -->
+<style>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #475569; /* slate-600 */
+  transition: .4s;
+  border-radius: 34px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px; width: 26px;
+  left: 4px; bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #facc15; /* yellow-400 */
+}
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+</style>
+
+<!-- Theme Toggle Script -->
+<script>
+  const html = document.documentElement;
+  const themeToggle = document.getElementById("themeToggle");
+
+  // Initialize based on saved theme
+  if (localStorage.getItem("theme") === "light") {
+    html.classList.add("light");
+    themeToggle.checked = true;
+  }
+
+  themeToggle.addEventListener("change", () => {
+    if (themeToggle.checked) {
+      html.classList.add("light");
+      localStorage.setItem("theme", "light");
+    } else {
+      html.classList.remove("light");
+      localStorage.setItem("theme", "dark");
+    }
+  });
+</script>
+
+
+<!-- Theme Toggle Script -->
+<script>
+  const toggleCircle = document.getElementById("toggleCircle");
+
+  // Load stored theme
+  if (localStorage.getItem("theme") === "light") {
+    html.classList.add("light");
+    toggleCircle.classList.add("translate-x-6");
+    themeToggle.classList.replace("bg-slate-600", "bg-yellow-400");
+  }
+
+  themeToggle.addEventListener("click", () => {
+    html.classList.toggle("light");
+
+    if (html.classList.contains("light")) {
+      // Light mode ON
+      localStorage.setItem("theme", "light");
+      toggleCircle.classList.add("translate-x-6");
+      themeToggle.classList.replace("bg-slate-600", "bg-yellow-400");
+    } else {
+      // Dark mode ON
+      localStorage.setItem("theme", "dark");
+      toggleCircle.classList.remove("translate-x-6");
+      themeToggle.classList.replace("bg-yellow-400", "bg-slate-600");
+    }
+  });
+</script>
+
   <script>
     // highlight active nav
     const path = location.pathname.split('/').pop() || 'index.html';

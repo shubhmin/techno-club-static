@@ -27,17 +27,25 @@
         <a class="navlink" href="members.html">Members</a>
         <a class="navlink" href="gallery.html">Gallery</a>
         <a class="navlink" href="contactus.html">Contact us</a>
-        <a class="nav_cta" href="chatbot.html">Chatbot</a>
+        <a class="nav_cta active" href="chatbot.html">Chatbot</a>
       </nav>
     </div>
   </header>
 
   <main class="flex-1">
-    <section class="reveal" class="max-w-2xl mx-auto px-4 py-14">
+    <section class="reveal max-w-2xl mx-auto px-4 py-16">
       <h1 class="page_title">Chatbot</h1>
-      <p class="lead">Plug your preferred chatbot here (Dialogflow, Botpress, or a simple embed). For now, this is a placeholder section.</p>
-      <div class="card mt-6">
-        <p class="text-slate-200 text-sm">Add your embed code in this section.</p>
+      <p class="lead">Ask me about cybersecurity! (Type keywords like <em>phishing</em>, <em>malware</em>, <em>passwords</em>, etc.)</p>
+
+      <!-- Chat UI -->
+      <div class="card mt-8 p-4 flex flex-col space-y-4">
+        <div id="chatbox" class="h-80 overflow-y-auto bg-slate-900/50 rounded-lg p-3 text-sm space-y-2"></div>
+        <div class="flex space-x-2">
+          <input id="userInput" type="text" placeholder="Type your message..." 
+                 class="flex-1 p-2 rounded-lg bg-slate-800 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+          <button id="sendBtn" 
+                  class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg transition">Send</button>
+        </div>
       </div>
     </section>
   </main>
@@ -49,7 +57,7 @@
           <img src="assets/logo.png" class="h-9 w-9 rounded-lg" alt="Logo"/>
           <div class="font-semibold">Cyber Security Club</div>
         </div>
-        <p class="text-slate-400 mt-3 text-sm">Spreading cyber awareness, hands‑on workshops, and cool projects — by students, for students.</p>
+        <p class="text-slate-400 mt-3 text-sm">Spreading cyber awareness, hands-on workshops, and cool projects — by students, for students.</p>
       </div>
       <div class="flex sm:justify-end items-center gap-4 text-sm text-slate-400">
         <a href="about.html" class="hover:text-white">About</a>
@@ -60,30 +68,52 @@
     </div>
     <div class="text-center text-xs text-slate-500 py-4 border-t border-slate-800">© 2025 Cyber Security Club • DAV Public School, Sreshtha Vihar</div>
   </footer>
+
+  <!-- Chatbot Script -->
   <script>
-    // highlight active nav
-    const path = location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('.navlink, .nav_cta').forEach(a=>{
-      if(a.getAttribute('href') === path){ a.classList.add('active'); }
+    function getResponse(msg) {
+      const m = msg.toLowerCase();
+
+      if (m.includes("phish")) return "Phishing is when attackers trick you into giving personal info. Don’t click suspicious links.";
+      else if (m.includes("malware")) return "Malware is malicious software. Keep software updated and run antivirus scans.";
+      else if (m.includes("ransomware")) return "Ransomware encrypts files for ransom. Always back up your data.";
+      else if (m.includes("password")) return "Use long, unique passwords and enable 2FA.";
+      else if (m.includes("2fa")) return "Two-factor authentication adds an extra security layer.";
+      else if (m.includes("encryption")) return "Encryption protects your data. Use HTTPS and encrypted storage.";
+      else if (m.includes("firewall")) return "Firewalls filter traffic. Configure them to block unused ports.";
+      else if (m.includes("sql injection")) return "SQL Injection exploits poor coding. Use prepared statements.";
+      else if (m.includes("xss")) return "XSS injects code into web pages. Sanitize inputs and outputs.";
+      else if (m.includes("help") || m.includes("how")) return "Try asking about phishing, malware, ransomware, 2FA, encryption, or firewalls.";
+      else if (m.includes("hi") || m.includes("hello")) return "Hello! I’m your Cyber Club chatbot. Ask me about cybersecurity.";
+      else return "Sorry, I don’t understand. Try asking about phishing, malware, passwords, or 2FA.";
+    }
+
+    const chatbox = document.getElementById("chatbox");
+    const userInput = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    function appendMessage(sender, text) {
+      const p = document.createElement("p");
+      p.className = sender === "You" ? "text-cyan-400" : "text-green-400";
+      p.textContent = sender + ": " + text;
+      chatbox.appendChild(p);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    function handleSend() {
+      const msg = userInput.value.trim();
+      if (!msg) return;
+      appendMessage("You", msg);
+      const reply = getResponse(msg);
+      appendMessage("Bot", reply);
+      userInput.value = "";
+    }
+
+    sendBtn.addEventListener("click", handleSend);
+    userInput.addEventListener("keypress", e => {
+      if (e.key === "Enter") handleSend();
     });
   </script>
-
-<script>
-// Simple scroll reveal
-document.addEventListener("DOMContentLoaded", () => {
-  const els = document.querySelectorAll(".reveal");
-  const revealOnScroll = () => {
-    els.forEach(el => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight - 50) {
-        el.classList.add("animate__animated", "animate__fadeInUp");
-      }
-    });
-  };
-  window.addEventListener("scroll", revealOnScroll);
-  revealOnScroll();
-});
-</script>
-
 </body>
 </html>
+  

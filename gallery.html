@@ -12,13 +12,14 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+  <!-- Header -->
   <header class="sticky top-0 z-50 backdrop-blur bg-slate-900/70 border-b border-slate-800">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <a href="index.html" class="flex items-center gap-3">
         <img src="assets/logo.png" alt="Club Logo" class="h-10 w-10 rounded-lg" />
         <div class="leading-tight">
-          <div class="font-bold text-lg">Cyber Security Club</div>
-          <div class="text-xs text-slate-400">DAV Public School, Sreshtha Vihar</div>
+          <div class="font-bold text-lg text-center">Cyber Security Club</div>
+          <div class="text-xs text-slate-400 text-center">DAV Public School, Sreshtha Vihar</div>
         </div>
       </a>
       <nav class="flex items-center gap-1 text-sm">
@@ -32,9 +33,10 @@
     </div>
   </header>
 
+  <!-- Main Content -->
   <main class="flex-1">
-    <section class="reveal" class="max-w-6xl mx-auto px-4 py-16">
-      <h1 class="page_title">Gallery</h1>
+    <section class="reveal max-w-6xl mx-auto px-4 py-16">
+      <h1 class="page_title text-center">Gallery</h1>
       <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mt-8">
         <img src="assets/A.jpeg" class="gallery_img" alt="Gallery 1">
         <img src="assets/C.jpeg" class="gallery_img" alt="Gallery 2">
@@ -44,16 +46,17 @@
     </section>
   </main>
 
+  <!-- Footer -->
   <footer class="mt-auto border-t border-slate-800 bg-slate-900/60">
     <div class="max-w-6xl mx-auto px-4 py-8 grid sm:grid-cols-2 gap-6">
-      <div>
-        <div class="flex items-center gap-3">
+      <div class="text-center sm:text-left">
+        <div class="flex items-center gap-3 justify-center sm:justify-start">
           <img src="assets/logo.png" class="h-9 w-9 rounded-lg" alt="Logo"/>
           <div class="font-semibold">Cyber Security Club</div>
         </div>
         <p class="text-slate-400 mt-3 text-sm">Spreading cyber awareness, hands‑on workshops, and cool projects — by students, for students.</p>
       </div>
-      <div class="flex sm:justify-end items-center gap-4 text-sm text-slate-400">
+      <div class="flex sm:justify-end justify-center items-center gap-4 text-sm text-slate-400">
         <a href="about.html" class="hover:text-white">About</a>
         <a href="members.html" class="hover:text-white">Members</a>
         <a href="gallery.html" class="hover:text-white">Gallery</a>
@@ -62,30 +65,32 @@
     </div>
     <div class="text-center text-xs text-slate-500 py-4 border-t border-slate-800">© 2025 Cyber Security Club • DAV Public School, Sreshtha Vihar</div>
   </footer>
+
+  <!-- Highlight Active Nav -->
   <script>
-    // highlight active nav
     const path = location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('.navlink, .nav_cta').forEach(a=>{
-      if(a.getAttribute('href') === path){ a.classList.add('active'); }
+    document.querySelectorAll('.navlink, .nav_cta').forEach(a => {
+      if (a.getAttribute('href') === path) {
+        a.classList.add('active');
+      }
     });
   </script>
 
-<script>
-// Simple scroll reveal
-document.addEventListener("DOMContentLoaded", () => {
-  const els = document.querySelectorAll(".reveal");
-  const revealOnScroll = () => {
-    els.forEach(el => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight - 50) {
-        el.classList.add("animate__animated", "animate__fadeInUp");
-      }
+  <!-- Scroll Reveal -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const els = document.querySelectorAll(".reveal");
+      const revealOnScroll = () => {
+        els.forEach(el => {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight - 50) {
+            el.classList.add("animate__animated", "animate__fadeInUp");
+          }
+        });
+      };
+      window.addEventListener("scroll", revealOnScroll);
+      revealOnScroll();
     });
-  };
-  window.addEventListener("scroll", revealOnScroll);
-  revealOnScroll();
-});
-</script>
-
+  </script>
 </body>
 </html>
