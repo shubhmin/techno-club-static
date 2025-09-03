@@ -1,4 +1,3 @@
-
 /* Plain CSS helpers complementing Tailwind CDN utilities */
 
 .navlink, .nav_cta {
@@ -70,7 +69,6 @@
   border-radius: 0.75rem; box-shadow: 0 0 0 1px #1f2937;
 }
 
-
 /* Hover & animation effects */
 .card, .gallery_img, .btn-primary {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -81,4 +79,65 @@
 }
 .btn-primary:hover {
   transform: scale(1.1);
+}
+
+/* --- Members hover bio effect (keeps your current layout) --- */
+.person {
+  position: relative;
+  overflow: hidden;            /* crop zoomed image & overlay */
+}
+
+.person .person_img {
+  transition: transform 400ms ease;
+}
+
+.person:hover .person_img,
+.person:focus-within .person_img {
+  transform: scale(1.08);      /* zoom on hover/focus */
+}
+
+/* Overlay pulls text from the element's data-bio attribute */
+.person::after {
+  content: attr(data-bio);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+  background: rgba(2, 6, 23, 0.85);   /* slate-950 with opacity */
+  color: #e2e8f0;                     /* slate-200 */
+  font-size: 0.9rem;
+  line-height: 1.4;
+  border-radius: 1rem;                 /* match your .person radius */
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 250ms ease, transform 250ms ease;
+  pointer-events: none;                /* don’t block clicks */
+}
+
+.person:hover::after,
+.person:focus-within::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Mobile/touch: show the overlay by default (optional) */
+@media (hover: none) and (pointer: coarse) {
+  .person::after { opacity: 1; }
+}
+
+/* Footer styles */
+footer {
+  padding: 1rem 0; /* Reduce padding */
+  font-size: 0.875rem; /* Reduce font size */
+}
+
+footer .text-sm {
+  font-size: 0.75rem; /* Adjust smaller text */
+}
+
+footer .text-xs {
+  font-size: 0.65rem; /* Adjust smallest text */
 }

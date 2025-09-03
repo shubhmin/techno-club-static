@@ -1,39 +1,195 @@
-<section class="reveal max-w-6xl mx-auto px-4 py-16">
-  <h1 class="page_title">Members</h1>
-  <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
-    
-    <!-- Member Card -->
-    <div class="relative group overflow-hidden rounded-2xl shadow-lg border border-slate-800 bg-slate-900/50">
-      <img src="assets/meena.jpeg" alt="Meena"
-           class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110">
-      <div class="absolute inset-0 bg-black/70 flex flex-col justify-center items-center 
-                  text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-4">
-        <h3 class="text-xl font-bold text-cyan-400">Meena</h3>
-        <p class="text-sm text-slate-300 mt-2">Coordinator — guiding students in cybersecurity projects and events.</p>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🛡️ Cyber Security Club — Members</title>
+  <meta name="description" content="Meet the members of DAV Public School's Cyber Security Club." />
+  <link rel="icon" href="assets/logo.png" />
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    /* --- Members hover bio effect --- */
+    .person {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: 1rem;
+      border: 1px solid #1f2937;
+      background: rgba(15,23,42,0.4);
+      transition: transform 220ms ease, box-shadow 220ms ease;
+      position: relative;
+    }
+    .person:hover,
+    .person:focus-within {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(2,6,23,0.6);
+    }
+    .person_img {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 0.75rem;
+      object-fit: cover;
+      box-shadow: 0 0 0 1px #1f2937;
+      transition: transform 400ms cubic-bezier(.2,.9,.2,1);
+      display: block;
+      flex-shrink: 0;
+    }
+    .person:hover .person_img,
+    .person:focus-within .person_img {
+      transform: scale(1.12);
+    }
+    .person .bio {
+      position: absolute;
+      left: calc(3.5rem + 1rem + 0.5rem);
+      top: 0.5rem;
+      min-width: 18rem;
+      max-width: 20rem;
+      background: rgba(2,6,23,0.95);
+      color: #e2e8f0;
+      padding: 0.6rem 0.85rem;
+      border-radius: 0.6rem;
+      font-size: 0.875rem;
+      line-height: 1.35;
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 200ms ease, transform 200ms ease;
+      z-index: 30;
+    }
+    .person:hover .bio,
+    .person:focus-within .bio {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .person_name { font-weight: 600; }
+    .person_role { font-size: 0.75rem; color: #94a3b8; }
+    @media (hover: none) and (pointer: coarse) {
+      .person .bio {
+        position: static;
+        opacity: 1;
+        transform: none;
+        margin-top: 0.5rem;
+        width: 100%;
+        box-shadow: none;
+        background: rgba(2,6,23,0.85);
+        pointer-events: auto;
+      }
+      .person { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 backdrop-blur bg-slate-900/70 border-b border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="assets/logo.png" alt="Club Logo" class="h-10 w-10 rounded-lg" />
+        <div class="leading-tight">
+          <div class="font-bold text-lg">Cyber Security Club</div>
+          <div class="text-xs text-slate-400">DAV Public School, Sreshtha Vihar</div>
+        </div>
+      </a>
+      <nav class="flex items-center gap-1 text-sm">
+        <a class="navlink" href="index.html">Home</a>
+        <a class="navlink" href="about.html">About</a>
+        <a class="navlink active" href="members.html">Members</a>
+        <a class="navlink" href="gallery.html">Gallery</a>
+        <a class="navlink" href="contactus.html">Contact us</a>
+        <a class="nav_cta" href="chatbot.html">Chatbot</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Members Section -->
+  <main class="flex-1">
+    <section class="reveal max-w-6xl mx-auto px-4 py-16">
+      <h1 class="page_title">Members</h1>
+      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
+
+        <!-- Member -->
+        <div class="person" tabindex="0">
+          <img src="assets/meena.jpeg" alt="Meena" class="person_img">
+          <div>
+            <div class="person_name">Meena</div>
+            <div class="person_role">Coordinator</div>
+            <div class="bio">Coordinator — guides student teams and plans cyber awareness events.</div>
+          </div>
+        </div>
+
+        <!-- Member -->
+        <div class="person" tabindex="0">
+          <img src="assets/ashok.jpeg" alt="Ashok" class="person_img">
+          <div>
+            <div class="person_name">Ashok</div>
+            <div class="person_role">Mentor</div>
+            <div class="bio">Mentor — conducts workshops on ethical hacking & network security.</div>
+          </div>
+        </div>
+
+        <!-- Member -->
+        <div class="person" tabindex="0">
+          <img src="assets/Sangeeta_Kapoor.jpeg" alt="Sangeeta Kapoor" class="person_img">
+          <div>
+            <div class="person_name">Sangeeta Kapoor</div>
+            <div class="person_role">Advisor</div>
+            <div class="bio">Advisor — provides strategic guidance and supports the club’s initiatives.</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-slate-800 bg-slate-900/60">
+    <div class="max-w-6xl mx-auto px-4 py-8 grid sm:grid-cols-2 gap-6">
+      <div>
+        <div class="flex items-center gap-3">
+          <img src="assets/logo.png" class="h-9 w-9 rounded-lg" alt="Logo"/>
+          <div class="font-semibold">Cyber Security Club</div>
+        </div>
+        <p class="text-slate-400 mt-3 text-sm">Spreading cyber awareness, hands-on workshops, and cool projects — by students, for students.</p>
+      </div>
+      <div class="flex sm:justify-end items-center gap-4 text-sm text-slate-400">
+        <a href="about.html" class="hover:text-white">About</a>
+        <a href="members.html" class="hover:text-white">Members</a>
+        <a href="gallery.html" class="hover:text-white">Gallery</a>
+        <a href="chatbot.html" class="hover:text-white">Chatbot</a>
       </div>
     </div>
+    <div class="text-center text-xs text-slate-500 py-4 border-t border-slate-800">© 2025 Cyber Security Club • DAV Public School, Sreshtha Vihar</div>
+  </footer>
 
-    <!-- Another Member -->
-    <div class="relative group overflow-hidden rounded-2xl shadow-lg border border-slate-800 bg-slate-900/50">
-      <img src="assets/ashok.jpeg" alt="Ashok"
-           class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110">
-      <div class="absolute inset-0 bg-black/70 flex flex-col justify-center items-center 
-                  text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-4">
-        <h3 class="text-xl font-bold text-cyan-400">Ashok</h3>
-        <p class="text-sm text-slate-300 mt-2">Mentor — helps organize workshops and inspires students in ethical hacking.</p>
-      </div>
-    </div>
-
-    <!-- Another Member -->
-    <div class="relative group overflow-hidden rounded-2xl shadow-lg border border-slate-800 bg-slate-900/50">
-      <img src="assets/Sangeeta_Kapoor.jpeg" alt="Sangeeta Kapoor"
-           class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110">
-      <div class="absolute inset-0 bg-black/70 flex flex-col justify-center items-center 
-                  text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-4">
-        <h3 class="text-xl font-bold text-cyan-400">Sangeeta Kapoor</h3>
-        <p class="text-sm text-slate-300 mt-2">Advisor — provides strategic guidance and supports the club’s vision.</p>
-      </div>
-    </div>
-
-  </div>
-</section>
+  <!-- Scripts -->
+  <script>
+    // highlight active nav
+    const path = location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.navlink, .nav_cta').forEach(a=>{
+      if(a.getAttribute('href') === path){ a.classList.add('active'); }
+    });
+  </script>
+  <script>
+    // scroll reveal
+    document.addEventListener("DOMContentLoaded", () => {
+      const els = document.querySelectorAll(".reveal");
+      const revealOnScroll = () => {
+        els.forEach(el => {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight - 50) {
+            el.classList.add("animate__animated", "animate__fadeInUp");
+          }
+        });
+      };
+      window.addEventListener("scroll", revealOnScroll);
+      revealOnScroll();
+    });
+  </script>
+</body>
+</html>
