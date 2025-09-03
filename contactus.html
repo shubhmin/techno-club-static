@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact Us — Cyber Security Club</title>
+  <link rel="icon" href="assets/logo.png" />
+  <!-- Tailwind + Styles -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+
+  <!-- Header (copied from index.html) -->
+  <header class="sticky top-0 z-50 backdrop-blur bg-slate-900/70 border-b border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="assets/logo.png" alt="Club Logo" class="h-10 w-10 rounded-lg" />
+        <div class="leading-tight">
+          <div class="font-bold text-lg">Cyber Security Club</div>
+          <div class="text-xs text-slate-400">DAV Public School, Sreshtha Vihar</div>
+        </div>
+      </a>
+      <nav class="flex items-center gap-1 text-sm">
+        <a class="navlink" href="index.html">Home</a>
+        <a class="navlink" href="about.html">About</a>
+        <a class="navlink" href="members.html">Members</a>
+        <a class="navlink" href="gallery.html">Gallery</a>
+        <a class="navlink active" href="contactus.html">Contact us</a>
+        <a class="nav_cta" href="chatbot.html">Chatbot</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contact Section -->
+  <main class="flex-1">
+    <section class="reveal">
+      <div class="max-w-6xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-10 items-start">
+        
+        <!-- Contact Form -->
+        <form action="https://formspree.io/f/myzdgoap" method="POST" 
+              class="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl shadow-lg space-y-6">
+          <h2 class="text-3xl font-bold mb-4 text-cyan-400">Get in Touch</h2>
+          <p class="text-slate-400 mb-6 text-sm">We’d love to hear from you! Fill out the form below.</p>
+
+          <input type="text" name="name" placeholder="Your Name" required
+                 class="w-full border border-slate-700 bg-slate-950 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400">
+
+          <input type="email" name="email" placeholder="Your Email" required
+                 class="w-full border border-slate-700 bg-slate-950 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400">
+
+          <textarea name="message" rows="5" placeholder="Your Message" required
+                    class="w-full border border-slate-700 bg-slate-950 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"></textarea>
+
+          <input type="hidden" name="_to" value="shubhph@outlook.com">
+
+          <button type="submit"
+                  class="w-full bg-cyan-600 text-white py-3 rounded-xl shadow-lg font-semibold hover:bg-cyan-700 transition-transform transform hover:scale-105">
+            Send Message
+          </button>
+        </form>
+
+        <!-- Social Media Buttons -->
+        <div class="flex flex-col justify-center gap-6">
+          <h3 class="text-2xl font-semibold text-cyan-400">Follow Us</h3>
+          <p class="text-slate-400 text-sm">Connect with us on social platforms:</p>
+
+          <a href="https://instagram.com/yourpage" target="_blank" 
+             class="btn_primary flex items-center justify-center gap-3">
+            <i class="fab fa-instagram"></i> Instagram
+          </a>
+          <a href="https://youtube.com/yourchannel" target="_blank" 
+             class="btn_primary flex items-center justify-center gap-3 bg-red-600 hover:bg-red-700">
+            <i class="fab fa-youtube"></i> YouTube
+          </a>
+          <a href="https://twitter.com/yourpage" target="_blank" 
+             class="btn_primary flex items-center justify-center gap-3 bg-sky-500 hover:bg-sky-600">
+            <i class="fab fa-twitter"></i> Twitter
+          </a>
+          <a href="https://linkedin.com/yourpage" target="_blank" 
+             class="btn_primary flex items-center justify-center gap-3 bg-blue-700 hover:bg-blue-800">
+            <i class="fab fa-linkedin"></i> LinkedIn
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer (same as index.html) -->
+  <footer class="mt-auto border-t border-slate-800 bg-slate-900/60">
+    <div class="max-w-6xl mx-auto px-4 py-8 grid sm:grid-cols-2 gap-6">
+      <div>
+        <div class="flex items-center gap-3">
+          <img src="assets/logo.png" class="h-9 w-9 rounded-lg" alt="Logo"/>
+          <div class="font-semibold">Cyber Security Club</div>
+        </div>
+        <p class="text-slate-400 mt-3 text-sm">Spreading cyber awareness, hands-on workshops, and cool projects — by students, for students.</p>
+      </div>
+      <div class="flex sm:justify-end items-center gap-4 text-sm text-slate-400">
+        <a href="about.html" class="hover:text-white">About</a>
+        <a href="members.html" class="hover:text-white">Members</a>
+        <a href="gallery.html" class="hover:text-white">Gallery</a>
+        <a href="chatbot.html" class="hover:text-white">Chatbot</a>
+      </div>
+    </div>
+    <div class="text-center text-xs text-slate-500 py-4 border-t border-slate-800">
+      © 2025 Cyber Security Club • DAV Public School, Sreshtha Vihar
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+  <script>
+    // highlight active nav
+    const path = location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.navlink, .nav_cta').forEach(a=>{
+      if(a.getAttribute('href') === path){ a.classList.add('active'); }
+    });
+
+    // scroll reveal
+    document.addEventListener("DOMContentLoaded", () => {
+      const els = document.querySelectorAll(".reveal");
+      const revealOnScroll = () => {
+        els.forEach(el => {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight - 50) {
+            el.classList.add("animate__animated", "animate__fadeInUp");
+          }
+        });
+      };
+      window.addEventListener("scroll", revealOnScroll);
+      revealOnScroll();
+    });
+  </script>
+</body>
+</html>
