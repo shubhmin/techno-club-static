@@ -8,11 +8,11 @@
 .navlink:hover, .nav_cta:hover { background-color: rgba(30,41,59,0.7); }
 
 .nav_cta {
-  background-color: rgba(6,182,212,0.15);
-  color: #67e8f9;
+  background-color: rgba(99,102,241,0.15); /* indigo-500 */
+  color: #a78bfa; /* violet-400 */
 }
 .navlink.active, .nav_cta.active {
-  outline: 1px solid #22d3ee;
+  outline: 1px solid #6366f1; /* indigo-500 */
   color: #fff;
 }
 
@@ -22,12 +22,12 @@
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   border-radius: 0.75rem;
-  background: #06b6d4;
-  color: #0f172a;
+  background: #4f46e5; /* indigo-600 */
+  color: #eef2ff;
   font-weight: 600;
   transition: background-color 0.2s ease;
 }
-.btn_primary:hover { background: #22d3ee; }
+.btn_primary:hover { background: #6366f1; /* indigo-500 */ }
 
 .btn_ghost {
   display: inline-flex;
@@ -127,3 +127,58 @@
 @media (hover: none) and (pointer: coarse) {
   .person::after { opacity: 1; }
 }   
+
+/* === Light theme overrides (applies when <html class="light">) === */
+.light body { background: #f5f6fa; color: #101623; }
+.light header { background: rgba(250,252,255,0.9) !important; border-color: #e6e8ef !important; }
+.light footer { background: rgba(250,252,255,0.9) !important; border-color: #e6e8ef !important; }
+.light main > section { background: transparent; border-color: #e6e8ef; }
+.light main > section:nth-of-type(even) { background: #f0f2f7; }
+.light .card { background: #ffffff; border-color: #e6e8ef; }
+.light .btn_ghost { border-color: #cdd3e1; }
+.light .nav_cta { background-color: rgba(6,182,212,0.18); color: #0e7490; }
+.light .navlink.active, .light .nav_cta.active { color: #0b1324; }
+.light .lead { color: #3d4b63; }
+.light .card_text { color: #3d4b63; }
+.light .text-slate-400 { color: #5b6b83 !important; }
+.light .text-slate-300 { color: #3a4a64 !important; }
+.light .btn_primary { background: #06b6d4; color: #0b1324; }
+.light .btn_primary:hover { background: #22d3ee; }
+.light .gallery_img { box-shadow: 0 0 0 1px #dde3ef; }
+
+/* Light mode form elements */
+.light input, .light textarea, .light select {
+  background: #ffffff !important;
+  color: #101623 !important;
+  border-color: #cfd6e3 !important;
+}
+
+/* Simple toggle switch */
+.simple-switch { position: relative; display: inline-block; width: 52px; height: 28px; }
+.simple-switch input { opacity: 0; width: 0; height: 0; }
+.simple-switch .slider { position: absolute; inset: 0; background: #475569; border-radius: 999px; transition: background .25s ease; }
+.simple-switch .slider:before { content: ""; position: absolute; height: 22px; width: 22px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform .25s ease; }
+.simple-switch input:checked + .slider { background: #111827; }
+.simple-switch input:checked + .slider:before { transform: translateX(24px); }
+
+/* === Uiverse red-dingo-61 inspired toggle === */
+/* Replace previous toggle with Uiverse jolly-chicken-91 variant */
+.jc-toggle { position: relative; width: 64px; height: 34px; display: inline-block; }
+.jc-toggle input { display: none; }
+.jc-toggle .track {
+  position: absolute; inset: 0; border-radius: 999px; background: linear-gradient(135deg, #0ea5e9, #4338ca);
+  transition: background .35s ease, box-shadow .35s ease;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.25);
+}
+.jc-toggle .thumb {
+  position: absolute; top: 3px; left: 3px; width: 28px; height: 28px; border-radius: 999px; background: #0b1324;
+  display: grid; place-items: center; color: #f8fafc; transition: transform .35s ease, background .35s ease;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+}
+.jc-toggle .icon { font-size: 14px; line-height: 1; transition: opacity .25s ease; }
+.jc-toggle .icon.sun { opacity: 0; }
+.jc-toggle .icon.moon { opacity: 1; }
+.jc-toggle input:checked + .track { background: linear-gradient(135deg, #fde68a, #f59e0b); }
+.jc-toggle input:checked + .track .thumb { transform: translateX(30px); background: #ffffff; color: #0b1324; }
+.jc-toggle input:checked + .track .icon.sun { opacity: 1; }
+.jc-toggle input:checked + .track .icon.moon { opacity: 0; }

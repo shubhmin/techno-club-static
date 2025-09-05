@@ -6,6 +6,7 @@
   <title>Contact Us - Cyber Security Club</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="button.css">
   <link rel="stylesheet" href="imp.css"> <!-- new button styles -->
    <link rel="icon" href="assets/logo.png" />
 </head>
@@ -26,6 +27,7 @@
         <a class="navlink" href="about.html">About</a>
         <a class="navlink" href="members.html">Members</a>
         <a class="navlink" href="gallery.html">Gallery</a>
+        <a class="navlink" href="ethical-ai.html">Ethical AI</a>
         <a class="navlink" href="contactus.html">Contact us</a>
         <a class="nav_cta" href="chatbot.html">Chatbot</a>
       </nav>
@@ -33,29 +35,45 @@
   </header>
 
   <!-- Contact Section -->
-  <section class="py-16 max-w-5xl mx-auto px-6">
-    <h2 class="text-4xl font-bold text-center mb-4 text-cyan-400">Get in Touch</h2>
-    <p class="text-center text-gray-400 mb-12">We’d love to hear from you! Fill out the form below or connect with us on social media.</p>
+  <section class="py-16 max-w-6xl mx-auto px-6">
+    <h2 class="page_title text-center">Get in Touch</h2>
+    <p class="lead text-center mx-auto">We’d love to hear from you! Fill out the form or find us online.</p>
 
-    <div class="grid md:grid-cols-2 gap-10">
+    <div class="grid md:grid-cols-3 gap-8 mt-10">
       
+      <!-- Cards -->
+      <div class="md:col-span-1 space-y-4 order-2 md:order-1">
+        <div class="card">
+          <div class="card_title">Email</div>
+          <div class="card_text">cyberclub@davsv.edu</div>
+        </div>
+        <div class="card">
+          <div class="card_title">Location</div>
+          <div class="card_text">DAV Public School, Sreshtha Vihar</div>
+        </div>
+        <div class="card">
+          <div class="card_title">Hours</div>
+          <div class="card_text">Weekly meets • After school</div>
+        </div>
+      </div>
+
       <!-- Contact Form -->
       <form action="https://formspree.io/f/myzdgoap" method="POST" 
-            class="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl shadow-lg space-y-4">
+            class="md:col-span-2 order-1 md:order-2 bg-slate-900/40 border border-slate-800 p-8 rounded-2xl shadow-lg space-y-4">
         <input type="text" name="name" placeholder="Your Name" required
-               class="w-full border border-slate-700 bg-slate-950 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400">
+               class="w-full border border-slate-700 bg-slate-950 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400">
         <input type="email" name="email" placeholder="Your Email" required
-               class="w-full border border-slate-700 bg-slate-950 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400">
+               class="w-full border border-slate-700 bg-slate-950 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400">
         <textarea name="message" rows="5" placeholder="Your Message" required
-                  class="w-full border border-slate-700 bg-slate-950 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"></textarea>
+                  class="w-full border border-slate-700 bg-slate-950 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"></textarea>
         <input type="hidden" name="_to" value="shubhph@outlook.com">
-        <button type="submit" class="w-full bg-cyan-600 text-white py-3 rounded-xl shadow-lg font-semibold hover:bg-cyan-700 transition-transform transform hover:scale-105">
+        <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-xl shadow-lg font-semibold hover:bg-indigo-700 transition-transform transform hover:scale-105">
           Send Message
         </button>
       </form>
 
       <!-- Social Media Buttons -->
-      <div class="flex flex-col justify-center space-y-6">
+      <div class="flex flex-col justify-center space-y-6 order-3">
 
         <!-- Instagram -->
         <button class="cssbuttons-io" id="instagramBtn">
@@ -82,7 +100,13 @@
 
   <!-- Footer -->
   <footer class="bg-slate-900/60 border-t border-slate-800 text-gray-400 text-center py-6 mt-12">
-    <p>© 2025 Cyber Security Club, DAV Public School, Sreshtha Vihar | All Rights Reserved</p>
+    <div class="max-w-6xl mx-auto px-4 flex items-center justify-between">
+      <p>© 2025 Cyber Security Club, DAV Public School, Sreshtha Vihar</p>
+      <label class="simple-switch" title="Toggle light/dark">
+        <input id="themeInput" type="checkbox" />
+        <span class="slider"></span>
+      </label>
+    </div>
   </footer>
 
   <!-- Button scripts -->
@@ -99,6 +123,23 @@
     const instaIcon = document.getElementById('instaIcon');
     instaBtn.addEventListener('mouseenter', () => { instaIcon.src = 'assets/blackinstalogo.png'; });
     instaBtn.addEventListener('mouseleave', () => { instaIcon.src = 'assets/insta_logo.png'; });
+  </script>
+
+  <!-- Theme toggle -->
+  <script>
+    (()=>{
+      const html = document.documentElement;
+      const input = document.getElementById('themeInput') || document.getElementById('input') || document.querySelector('.switch input');
+      const saved = localStorage.getItem('theme');
+      const isDark = saved !== 'light';
+      if (!isDark) html.classList.add('light'); else html.classList.remove('light');
+      if (input) input.checked = isDark;
+      input?.addEventListener('change', () => {
+        const dark = input.checked;
+        html.classList.toggle('light', !dark);
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      });
+    })();
   </script>
 
 </body>

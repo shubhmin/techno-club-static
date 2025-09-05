@@ -9,6 +9,7 @@
   <!-- Tailwind via CDN for utilities -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="button.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
@@ -35,16 +36,31 @@
   <main class="flex-1">
     <section class="reveal max-w-2xl mx-auto px-4 py-16">
       <h1 class="page_title">Chatbot</h1>
-      <p class="lead">Ask me about cybersecurity! (Type keywords like <em>phishing</em>, <em>malware</em>, <em>passwords</em>, etc.)</p>
+      <p class="lead">Ask about cybersecurity and ethical AI! Try <em>phishing</em>, <em>malware</em>, <em>passwords</em>, <em>2FA</em>, <em>AI bias</em>, <em>privacy</em>, <em>plagiarism</em>.</p>
 
       <!-- Chat UI -->
       <div class="card mt-8 p-4 flex flex-col space-y-4">
         <div id="chatbox" class="h-80 overflow-y-auto bg-slate-900/50 rounded-lg p-3 text-sm space-y-2"></div>
         <div class="flex space-x-2">
           <input id="userInput" type="text" placeholder="Type your message..." 
-                 class="flex-1 p-2 rounded-lg bg-slate-800 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                 class="flex-1 p-2 rounded-lg bg-slate-800 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400">
           <button id="sendBtn" 
-                  class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg transition">Send</button>
+                  class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition">Send</button>
+        </div>
+      </div>
+
+      <!-- Tips & quick questions -->
+      <div class="card mt-6">
+        <div class="card_title">Quick questions</div>
+        <div class="text-slate-300 text-sm mt-2 flex flex-wrap gap-2">
+          <button class="btn_ghost" data-ask="What is phishing?">What is phishing?</button>
+          <button class="btn_ghost" data-ask="How to make a strong password?">Strong password tips</button>
+          <button class="btn_ghost" data-ask="What is 2FA?">What is 2FA?</button>
+          <button class="btn_ghost" data-ask="How to prevent malware?">Prevent malware</button>
+          <button class="btn_ghost" data-ask="What is a firewall?">What is a firewall?</button>
+          <button class="btn_ghost" data-ask="What is AI bias?">What is AI bias?</button>
+          <button class="btn_ghost" data-ask="How to avoid AI plagiarism?">Avoid AI plagiarism</button>
+          <button class="btn_ghost" data-ask="What are safe AI prompts?">Safe AI prompts</button>
         </div>
       </div>
     </section>
@@ -63,7 +79,33 @@
         <a href="about.html" class="hover:text-white">About</a>
         <a href="members.html" class="hover:text-white">Members</a>
         <a href="gallery.html" class="hover:text-white">Gallery</a>
+        <a href="ethical-ai.html" class="hover:text-white">Ethical AI</a>
         <a href="chatbot.html" class="hover:text-white">Chatbot</a>
+        <label class="switch">
+          <input id="input" type="checkbox" checked="darkTheme" />
+          <div class="slider round">
+            <div class="sun-moon">
+              <svg id="moon-dot-1" class="moon-dot" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+              <svg id="moon-dot-2" class="moon-dot" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+              <svg id="moon-dot-3" class="moon-dot" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+              <svg id="light-ray-1" class="light-ray" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+              <svg id="light-ray-2" class="light-ray" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+              <svg id="light-ray-3" class="light-ray" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+              <svg id="cloud-1" class="cloud-dark" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+              <svg id="cloud-2" class="cloud-dark" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+              <svg id="cloud-3" class="cloud-dark" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+              <svg id="cloud-4" class="cloud-light" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+              <svg id="cloud-5" class="cloud-light" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+              <svg id="cloud-6" class="cloud-light" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"></circle></svg>
+            </div>
+            <div class="stars">
+              <svg id="star-1" class="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
+              <svg id="star-2" class="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
+              <svg id="star-3" class="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
+              <svg id="star-4" class="star" viewBox="0 0 20 20"><path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path></svg>
+            </div>
+          </div>
+        </label>
       </div>
     </div>
     <div class="text-center text-xs text-slate-500 py-4 border-t border-slate-800">© 2025 Cyber Security Club • DAV Public School, Sreshtha Vihar</div>
@@ -83,7 +125,11 @@
       else if (m.includes("firewall")) return "Firewalls filter traffic. Configure them to block unused ports.";
       else if (m.includes("sql injection")) return "SQL Injection exploits poor coding. Use prepared statements.";
       else if (m.includes("xss")) return "XSS injects code into web pages. Sanitize inputs and outputs.";
-      else if (m.includes("help") || m.includes("how")) return "Try asking about phishing, malware, ransomware, 2FA, encryption, or firewalls.";
+      else if (m.includes("ai bias") || m.includes("bias")) return "AI bias happens when models reflect skewed data or design. Always cross-check outputs, include diverse examples, and be transparent about limitations.";
+      else if (m.includes("plagiarism")) return "Use AI as a helper, not a writer. Paraphrase, add your own ideas, cite sources, and disclose AI assistance if required.";
+      else if (m.includes("privacy")) return "Protect privacy: don’t paste personal data or secrets into AI tools. Remove identifiers and follow school policy.";
+      else if (m.includes("prompt") || m.includes("safe ai prompts")) return "Safe prompts: avoid asking for answers you must produce yourself, don’t request sensitive data, and ask for summaries with sources instead of verbatim text.";
+      else if (m.includes("help") || m.includes("how")) return "Try asking about phishing, malware, 2FA, firewalls, AI bias, privacy, or plagiarism.";
       else if (m.includes("hi") || m.includes("hello")) return "Hello! I’m your Cyber Club chatbot. Ask me about cybersecurity.";
       else return "Sorry, I don’t understand. Try asking about phishing, malware, passwords, or 2FA.";
     }
@@ -94,7 +140,7 @@
 
     function appendMessage(sender, text) {
       const p = document.createElement("p");
-      p.className = sender === "You" ? "text-cyan-400" : "text-green-400";
+      p.className = sender === "You" ? "text-indigo-400" : "text-green-400";
       p.textContent = sender + ": " + text;
       chatbox.appendChild(p);
       chatbox.scrollTop = chatbox.scrollHeight;
@@ -113,6 +159,29 @@
     userInput.addEventListener("keypress", e => {
       if (e.key === "Enter") handleSend();
     });
+
+    // Quick question buttons
+    document.querySelectorAll('[data-ask]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        userInput.value = btn.getAttribute('data-ask');
+        handleSend();
+      });
+    });
+  </script>
+  <script>
+    (()=>{
+      const html = document.documentElement;
+      const input = document.getElementById('input') || document.querySelector('.switch input');
+      const saved = localStorage.getItem('theme');
+      const isDark = saved !== 'light';
+      if (!isDark) html.classList.add('light'); else html.classList.remove('light');
+      if (input) input.checked = isDark;
+      input?.addEventListener('change', () => {
+        const dark = input.checked;
+        html.classList.toggle('light', !dark);
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      });
+    })();
   </script>
 </body>
 </html>

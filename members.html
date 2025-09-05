@@ -9,6 +9,7 @@
   <!-- Tailwind via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="button.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
     /* --- Members hover bio effect --- */
@@ -111,7 +112,26 @@
   <main class="flex-1">
     <section class="reveal max-w-6xl mx-auto px-4 py-16">
       <h1 class="page_title">Members</h1>
-      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
+      <p class="lead">Our core team and contributors who make learning fun and impactful.</p>
+      
+      <!-- Featured teams -->
+      <div class="mt-8 grid md:grid-cols-3 gap-6">
+        <div class="card">
+          <h3 class="card_title">Training</h3>
+          <p class="card_text">Runs workshops on basics, secure coding and awareness.</p>
+        </div>
+        <div class="card">
+          <h3 class="card_title">CTF & Puzzles</h3>
+          <p class="card_text">Designs monthly challenges and mini events.</p>
+        </div>
+        <div class="card">
+          <h3 class="card_title">Ethical AI</h3>
+          <p class="card_text">Promotes responsible AI use, bias awareness and citation best practices.</p>
+        </div>
+      </div>
+
+      <!-- People grid -->
+      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10">
 
         <!-- Member -->
         <div class="person" tabindex="0">
@@ -144,6 +164,15 @@
         </div>
 
       </div>
+
+      <!-- Call to join -->
+      <div class="mt-12 flex items-center justify-between gap-4 card">
+        <div>
+          <div class="font-semibold text-lg">Want to contribute?</div>
+          <div class="text-slate-400 text-sm">Join a team that suits you — Training, CTF or Projects.</div>
+        </div>
+        <a href="contactus.html" class="btn_primary">Get in touch</a>
+      </div>
     </section>
   </main>
 
@@ -161,7 +190,12 @@
         <a href="about.html" class="hover:text-white">About</a>
         <a href="members.html" class="hover:text-white">Members</a>
         <a href="gallery.html" class="hover:text-white">Gallery</a>
+        <a href="ethical-ai.html" class="hover:text-white">Ethical AI</a>
         <a href="chatbot.html" class="hover:text-white">Chatbot</a>
+        <label class="simple-switch" title="Toggle light/dark">
+          <input id="themeInput" type="checkbox" />
+          <span class="slider"></span>
+        </label>
       </div>
     </div>
     <div class="text-center text-xs text-slate-500 py-4 border-t border-slate-800">© 2025 Cyber Security Club • DAV Public School, Sreshtha Vihar</div>
@@ -174,6 +208,21 @@
     document.querySelectorAll('.navlink, .nav_cta').forEach(a=>{
       if(a.getAttribute('href') === path){ a.classList.add('active'); }
     });
+  </script>
+  <script>
+    (()=>{
+      const html = document.documentElement;
+      const input = document.getElementById('themeInput') || document.getElementById('input') || document.querySelector('.switch input');
+      const saved = localStorage.getItem('theme');
+      const isDark = saved !== 'light';
+      if (!isDark) html.classList.add('light'); else html.classList.remove('light');
+      if (input) input.checked = isDark;
+      input?.addEventListener('change', () => {
+        const dark = input.checked;
+        html.classList.toggle('light', !dark);
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      });
+    })();
   </script>
   <script>
     // scroll reveal
