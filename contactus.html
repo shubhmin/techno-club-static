@@ -57,7 +57,6 @@
         </div>
       </div>
 
-      <!-- Contact Form -->
       <form action="https://formspree.io/f/myzdgoap" method="POST" 
             class="md:col-span-2 order-1 md:order-2 bg-slate-900/40 border border-slate-800 p-8 rounded-2xl shadow-lg space-y-4">
         <input type="text" name="name" placeholder="Your Name" required
@@ -141,6 +140,20 @@
       });
     })();
   </script>
+  <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.querySelector("form");
+  if (form) {
+    form.addEventListener("submit", function(e) {
+      const emailInput = form.querySelector("input[type='email']");
+      if (emailInput && !emailInput.value.endsWith("@davsreshtha.com")) {
+        e.preventDefault();
+        alert("Please use your @davsreshtha.com email address.");
+      }
+    });
+  }
+});
+</script>
 
 </body>
 </html>
