@@ -69,6 +69,43 @@
   border-radius: 0.75rem; box-shadow: 0 0 0 1px #1f2937;
 }
 
+/* --- Alternate gallery block: apply by wrapping a section with `.gallery-alt` --- */
+.gallery-alt figure { border-radius: 0.75rem; overflow: hidden; position: relative; }
+.gallery-alt .gallery_img {
+  height: 10rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  filter: grayscale(80%);
+  transition: filter 300ms ease, transform 300ms ease, box-shadow 300ms ease;
+  box-shadow: 0 0 0 1px #1f2937;
+}
+.gallery-alt .gallery_img:hover {
+  filter: none;
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+}
+.gallery-alt figcaption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 0.5rem 0.75rem;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%);
+  color: #f8fafc;
+  font-size: 0.85rem;
+  transform: translateY(50%);
+  opacity: 0;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+.gallery-alt figure:hover figcaption,
+.gallery-alt figure:focus-within figcaption {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+@media (min-width: 768px) {
+  .gallery-alt .gallery_img { height: 12rem; }
+}
+
+
 /* Hover & animation effects */
 .card, .gallery_img, .btn-primary {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
