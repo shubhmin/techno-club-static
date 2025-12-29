@@ -28,7 +28,7 @@
         <a class="navlink" href="members.html">Members</a>
         <a class="navlink" href="gallery.html">Gallery</a>
         <a class="navlink" href="ethical-ai.html">Ethical AI</a>
-        <a class="navlink active" href="contactus.html">Contact us</a>
+        <a class="navlink" href="contactus.html">Contact us</a>
         <a class="nav_cta" href="chatbot.html">Chatbot</a>
       </nav>
     </div>
@@ -87,20 +87,11 @@
     </div>
   </footer>
 
-  <!-- Button scripts -->
-  <script>
-    document.getElementById('instagramBtn').addEventListener('click', () => {
-      window.location.href = 'https://instagram.com/yourpage';
+    <script>
+    const path = location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.navlink, .nav_cta').forEach(a=>{
+      if(a.getAttribute('href') === path){ a.classList.add('active'); }
     });
-    document.getElementById('youtubeBtn').addEventListener('click', () => {
-      window.location.href = 'https://youtube.com/yourchannel';
-    });
-
-    // Icon hover effect for Instagram
-    const instaBtn = document.getElementById('instagramBtn');
-    const instaIcon = document.getElementById('instaIcon');
-    instaBtn.addEventListener('mouseenter', () => { instaIcon.src = 'assets/blackinstalogo.png'; });
-    instaBtn.addEventListener('mouseleave', () => { instaIcon.src = 'assets/insta_logo.png'; });
   </script>
 
   <!-- Theme toggle -->
