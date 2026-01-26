@@ -120,8 +120,9 @@
       </div>
     </section>
   </main>
-<div class="gallery-alt bg-slate-950">
-  <section class="max-w-6xl mx-auto px-4 py-16 reveal">
+
+  <div class="gallery-alt bg-slate-950">
+    <section class="max-w-6xl mx-auto px-4 py-16 reveal">
     <h1 class="page_title text-center">2024-2025</h1>
     <div class="mt-10 space-y-12">
       <!-- QUIZ -->      
@@ -201,8 +202,8 @@
       </div>
 
     </div>
-  </section>
-</div>
+    </section>
+  </div>
 
   <!-- Lightbox Modal -->
   <div id="lightbox" class="fixed inset-0 z-[60] hidden">
@@ -284,20 +285,6 @@
       revealOnScroll();
     });
   </script>
-  <script>
-    const html = document.documentElement;
-    const toggleInput = document.getElementById('input');
-    const saved = localStorage.getItem('theme');
-    const isDark = saved !== 'light';
-    if (!isDark) html.classList.add('light');
-    if (toggleInput) toggleInput.checked = isDark;
-    toggleInput?.addEventListener('change', () => {
-      const dark = toggleInput.checked;
-      html.classList.toggle('light', !dark);
-      localStorage.setItem('theme', dark ? 'dark' : 'light');
-    });
-  </script>
-
   <!-- Gallery Lightbox Script -->
   <script>
     const lightbox = document.getElementById('lightbox');

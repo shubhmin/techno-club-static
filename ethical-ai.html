@@ -140,21 +140,21 @@
         localStorage.setItem('theme', dark ? 'dark' : 'light');
       });
     })();
-    
+
     // Simple scroll reveal
-document.addEventListener("DOMContentLoaded", () => {
-  const els = document.querySelectorAll(".reveal");
-  const revealOnScroll = () => {
-    els.forEach(el => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight - 50) {
-        el.classList.add("animate__animated", "animate__fadeInUp");
-      }
+    document.addEventListener('DOMContentLoaded', () => {
+      const els = document.querySelectorAll('.reveal');
+      const revealOnScroll = () => {
+        els.forEach(el => {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight - 50) {
+            el.classList.add('animate__animated', 'animate__fadeInUp');
+          }
+        });
+      };
+      window.addEventListener('scroll', revealOnScroll);
+      revealOnScroll();
     });
-  };
-  window.addEventListener("scroll", revealOnScroll);
-  revealOnScroll();
-});
   </script>
 </body>
 </html>
