@@ -197,25 +197,3 @@
 .simple-switch .slider:before { content: ""; position: absolute; height: 22px; width: 22px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform .25s ease; }
 .simple-switch input:checked + .slider { background: #111827; }
 .simple-switch input:checked + .slider:before { transform: translateX(24px); }
-
-/* === Uiverse red-dingo-61 inspired toggle === */
-/* Replace previous toggle with Uiverse jolly-chicken-91 variant */
-.jc-toggle { position: relative; width: 64px; height: 34px; display: inline-block; }
-.jc-toggle input { display: none; }
-.jc-toggle .track {
-  position: absolute; inset: 0; border-radius: 999px; background: linear-gradient(135deg, #0ea5e9, #4338ca);
-  transition: background .35s ease, box-shadow .35s ease;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.25);
-}
-.jc-toggle .thumb {
-  position: absolute; top: 3px; left: 3px; width: 28px; height: 28px; border-radius: 999px; background: #0b1324;
-  display: grid; place-items: center; color: #f8fafc; transition: transform .35s ease, background .35s ease;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.35);
-}
-.jc-toggle .icon { font-size: 14px; line-height: 1; transition: opacity .25s ease; }
-.jc-toggle .icon.sun { opacity: 0; }
-.jc-toggle .icon.moon { opacity: 1; }
-.jc-toggle input:checked + .track { background: linear-gradient(135deg, #fde68a, #f59e0b); }
-.jc-toggle input:checked + .track .thumb { transform: translateX(30px); background: #ffffff; color: #0b1324; }
-.jc-toggle input:checked + .track .icon.sun { opacity: 1; }
-.jc-toggle input:checked + .track .icon.moon { opacity: 0; }
