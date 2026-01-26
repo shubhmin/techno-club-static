@@ -10,6 +10,11 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <script>
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.addEventListener('load', function () { window.scrollTo(0, 0); });
+    document.addEventListener('DOMContentLoaded', function () { window.scrollTo(0, 0); });
+  </script>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
 
@@ -48,7 +53,7 @@
           <p class="card_text">Runs workshops on basics, secure coding and awareness.</p>
         </div>
         <div class="card">
-          <h3 class="card_title">CTF & Puzzles</h3>
+          <h3 class="card_title">Quizzes & Puzzles</h3>
           <p class="card_text">Designs monthly challenges and mini events.</p>
         </div>
         <div class="card">
@@ -59,56 +64,44 @@
 
       <!-- People grid -->
       <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10">
-        <!-- Member -->
         <div class="person">
-          <img src="assets/ashok.jpeg" alt="Ashok" class="person_img">
+          <img src="assets/teachers/Ashok Goel Sir.jpeg" alt=" Mr. Ashok Goel" class="person_img">
           <div>
             <div class="person_name">Mr. Ashok Goel</div>
           </div>
         </div>
-
         <div class="person">
-          <img src="assets/meena.jpeg" alt="--" class="person_img">
+          <img src="assets/teachers/Meena Gulati Ma'am.jpeg" alt="Mrs. Meena Gulati" class="person_img">
           <div>
             <div class="person_name">Mrs. Meena Gulati</div>
           </div>
         </div>
-
-
-        <!-- Member -->
         <div class="person">
-          <img src="assets/Prarana.jpeg" alt="--" class="person_img">
+          <img src="assets/teachers/Parerana Sudan Ma'am.jpeg" alt="Mrs. Parerna Sudan" class="person_img">
           <div>
             <div class="person_name">Mrs. Parerna Sudan</div>
           </div>
         </div>
-
-
-        <!-- Member -->
         <div class="person">
-          <img src="assets/Ranjana.jpeg" alt="--" class="person_img">
+          <img src="assets/teachers/Ranjana Verma Ma'am.jpeg" alt="Ms. Ranjana Verma" class="person_img">
           <div>
-            <div class="person_name">Ms. Ranjana Varma</div>
+            <div class="person_name">Ms. Ranjana Verma</div>
           </div>
         </div>
-
         <div class="person">
-          <img src="assets/Sangeeta_Kapoor.jpeg" alt="--" class="person_img">
+          <img src="assets/teachers/Sangeeta Kapoor Ma'am.jpeg" alt="Mrs. Sangeeta Kapoor" class="person_img">
           <div>
             <div class="person_name">Mrs. Sangeeta Kapoor</div>
           </div>
         </div>
-
-        <!-- Member -->
         <div class="person">
-          <img src="assets/Renu Mittal.jpeg" alt="--" class="person_img">
+          <img src="assets/teachers/Renu Mittal Ma'am.jpeg" alt="Ms. Renu Mittal" class="person_img">
           <div>
             <div class="person_name">Ms. Renu Mittal</div>
           </div>
         </div>
-        <!-- Member -->
         <div class="person">
-          <img src="assets/PHOTO.jpg" alt="--" class="person_img">
+          <img src="assets/teachers/Srishti Ma'am.jpg" alt="Ms. Srishti" class="person_img">
           <div>
             <div class="person_name">Ms. Srishti</div>
           </div>
@@ -127,7 +120,7 @@
       <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10">
         <!-- Member -->
         <div class="person">
-          <img src="assets/aradhya.jpeg" alt="Aradhya Thakur" class="person_img">
+          <img src="assets/students/Aradhya Thakur.jpeg" alt="Aradhya Thakur" class="person_img">
           <div>
             <div class="person_name">Aradhya Thakur</div>
           </div>
@@ -135,7 +128,7 @@
 
         <!-- Member -->
         <div class="person">
-          <img src="assets/rishika.jpeg" alt="Rishika Kanojia" class="person_img">
+          <img src="assets/students/Rishika Kanojia.jpeg" alt="Rishika Kanojia" class="person_img">
           <div>
             <div class="person_name">Rishika Kanojia</div>
           </div>
@@ -143,7 +136,7 @@
 
         <!-- Member -->
         <div class="person">
-          <img src="assets/simra.jpeg" alt="Simra Naaz" class="person_img">
+          <img src="assets/students/Simra Naaz.jpeg" alt="Simra Naaz" class="person_img">
           <div>
             <div class="person_name">Simra Naaz</div>
           </div>
@@ -151,7 +144,7 @@
 
         <!-- Member -->
         <div class="person">
-          <img src="assets/Ayushi sharma.jpeg" alt="Khyati Joshi" class="person_img">
+          <img src="assets/students/Ayushi Sharma.jpeg" alt="Ayushi Sharma" class="person_img">
           <div>
             <div class="person_name">Ayushi Sharma</div>
           </div>
@@ -159,15 +152,13 @@
 
         <!-- Member -->
         <div class="person">
-          <img src="assets/Vanya.jpeg" alt="Vanya Saini" class="person_img">
+          <img src="assets/students/Vanya Saini.jpeg" alt="Vanya Saini" class="person_img">
           <div>
             <div class="person_name">Vanya Saini</div>
           </div>
         </div>
 
-        <!-- Placeholder members (50) - start -->
         <!-- Inline SVG used so no external placeholder file is required. Replace src and name when ready. -->
-        
         <div class="person">
           <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='100%25' height='100%25' fill='%23202a37'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23cbd5e1' font-family='Arial' font-size='24'>?</text></svg>" alt="Placeholder Member 1" class="person_img">
           <div>
@@ -232,30 +223,6 @@
           <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='100%25' height='100%25' fill='%23202a37'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23cbd5e1' font-family='Arial' font-size='24'>?</text></svg>" alt="Placeholder Member 11" class="person_img">
           <div>
             <div class="person_name">Placeholder Member 11</div>
-          </div>
-        </div>
-        <div class="person">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='100%25' height='100%25' fill='%23202a37'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23cbd5e1' font-family='Arial' font-size='24'>?</text></svg>" alt="Placeholder Member 12" class="person_img">
-          <div>
-            <div class="person_name">Placeholder Member 12</div>
-          </div>
-        </div>
-        <div class="person">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='100%25' height='100%25' fill='%23202a37'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23cbd5e1' font-family='Arial' font-size='24'>?</text></svg>" alt="Placeholder Member 13" class="person_img">
-          <div>
-            <div class="person_name">Placeholder Member 13</div>
-          </div>
-        </div>
-        <div class="person">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='100%25' height='100%25' fill='%23202a37'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23cbd5e1' font-family='Arial' font-size='24'>?</text></svg>" alt="Placeholder Member 14" class="person_img">
-          <div>
-            <div class="person_name">Placeholder Member 14</div>
-          </div>
-        </div>
-        <div class="person">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='100%25' height='100%25' fill='%23202a37'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23cbd5e1' font-family='Arial' font-size='24'>?</text></svg>" alt="Placeholder Member 15" class="person_img">
-          <div>
-            <div class="person_name">Placeholder Member 15</div>
           </div>
         </div>
     </section>

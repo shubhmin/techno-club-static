@@ -7,6 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="assets/logo.png" />
+    <script>
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      window.addEventListener('load', function () { window.scrollTo(0, 0); });
+      document.addEventListener('DOMContentLoaded', function () { window.scrollTo(0, 0); });
+    </script>
   </head>
   <body class="bg-slate-950 text-white font-sans min-h-screen flex flex-col">
 
