@@ -9,7 +9,6 @@
   <!-- Tailwind via CDN for utilities -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="button.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
@@ -301,55 +300,27 @@
 
   <!-- Gallery Lightbox Script -->
   <script>
-    // Albums: placeholder images for now
-    const albums = {
-      QUIZES: [
-        'assets/A.jpeg',
-        'assets/B.jpeg',
-        'assets/another image.png',
-        'assets/D.jpeg'
-      ],
-      workshops: [
-        'assets/C.jpeg',
-        'assets/D.jpeg',
-        'assets/A.jpeg',
-        'assets/B.jpeg'
-      ],
-      awareness: [
-        'assets/A.jpeg',
-        'assets/B.jpeg',
-        'assets/C.jpeg',
-        'assets/D.jpeg'
-      ],
-      aiethics: [
-        'assets/D.jpeg',
-        'assets/B.jpeg',
-        'assets/A.jpeg',
-        'assets/C.jpeg'
-      ]
-    };
-
     const lightbox = document.getElementById('lightbox');
     const lightboxImage = document.getElementById('lightboxImage');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const closeBtn = document.getElementById('closeBtn');
     const counter = document.getElementById('counter');
-    let currentAlbumKey = null;
+    let currentAlbum = [];
     let currentIndex = 0;
 
     function show(index) {
-      const album = albums[currentAlbumKey] || [];
-      if (album.length === 0) return;
-      currentIndex = (index + album.length) % album.length;
-      const src = album[currentIndex];
-      lightboxImage.src = src;
-      counter.textContent = (currentIndex + 1) + '/' + album.length;
+      if (currentAlbum.length === 0) return;
+      currentIndex = (index + currentAlbum.length) % currentAlbum.length;
+      lightboxImage.src = currentAlbum[currentIndex];
+      counter.textContent = (currentIndex + 1) + '/' + currentAlbum.length;
     }
 
-    function openLightbox(albumKey, startIndex) {
-      currentAlbumKey = albumKey;
-      show(startIndex || 0);
+    function openLightbox(imgSrc, siblings) {
+      currentAlbum = siblings;
+      currentIndex = siblings.indexOf(imgSrc);
+      if (currentIndex === -1) currentIndex = 0;
+      show(currentIndex);
       lightbox.classList.remove('hidden');
       document.body.style.overflow = 'hidden';
     }
@@ -359,14 +330,13 @@
       document.body.style.overflow = '';
     }
 
-    prevBtn.addEventListener('click', () => show(currentIndex - 1));
-    nextBtn.addEventListener('click', () => show(currentIndex + 1));
+    prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex - 1); });
+    nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); });
     closeBtn.addEventListener('click', closeLightbox);
     lightbox.addEventListener('click', (e) => {
       if (e.target.hasAttribute('data-close')) closeLightbox();
     });
 
-    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
       if (lightbox.classList.contains('hidden')) return;
       if (e.key === 'ArrowLeft') show(currentIndex - 1);
@@ -374,12 +344,15 @@
       if (e.key === 'Escape') closeLightbox();
     });
 
-    // Wire up thumbnails
-    document.querySelectorAll('[data-event][data-index]').forEach(el => {
-      el.addEventListener('click', () => {
-        const key = el.getAttribute('data-event');
-        const idx = parseInt(el.getAttribute('data-index'), 10) || 0;
-        openLightbox(key, idx);
+    // Wire up thumbnails: use the clicked image's src and build album from same section
+    document.querySelectorAll('figure.cursor-pointer').forEach(figure => {
+      figure.addEventListener('click', () => {
+        const img = figure.querySelector('img');
+        if (!img || !img.src) return;
+        const clickedSrc = img.getAttribute('src');
+        const grid = figure.closest('.grid');
+        const siblings = grid ? Array.from(grid.querySelectorAll('figure img')).map(i => i.getAttribute('src')).filter(Boolean) : [clickedSrc];
+        openLightbox(clickedSrc, siblings.length ? siblings : [clickedSrc]);
       });
     });
   </script>
