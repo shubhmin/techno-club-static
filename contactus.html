@@ -7,11 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="assets/logo.png" />
-    <script>
-      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-      window.addEventListener('load', function () { window.scrollTo(0, 0); });
-      document.addEventListener('DOMContentLoaded', function () { window.scrollTo(0, 0); });
-    </script>
+    <script src="script.js" defer></script>
   </head>
   <body class="bg-slate-950 text-white font-sans min-h-screen flex flex-col">
 
@@ -94,41 +90,5 @@
       </div>
       <div class="text-center text-xs text-slate-500 py-4 border-t border-slate-800">© 2025 Techno Sreshtha Cyber Safety Club • DAV Public School, Sreshtha Vihar</div>
     </footer>
-
-    <script>
-      const path = location.pathname.split('/').pop() || 'index.html';
-      document.querySelectorAll('.navlink, .nav_cta').forEach(a => {
-        if (a.getAttribute('href') === path) a.classList.add('active');
-      });
-    </script>
-    <script>
-      (() => {
-        const html = document.documentElement;
-        const input = document.getElementById('themeInput') || document.getElementById('input') || document.querySelector('.switch input');
-        const saved = localStorage.getItem('theme');
-        const isDark = saved !== 'light';
-        if (!isDark) html.classList.add('light'); else html.classList.remove('light');
-        if (input) input.checked = isDark;
-        input?.addEventListener('change', () => {
-          const dark = input.checked;
-          html.classList.toggle('light', !dark);
-          localStorage.setItem('theme', dark ? 'dark' : 'light');
-        });
-      })();
-    </script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const form = document.querySelector('form');
-        if (form) {
-          form.addEventListener('submit', function (e) {
-            const emailInput = form.querySelector("input[type='email']");
-            if (emailInput && !emailInput.value.endsWith('@davsreshtha.com')) {
-              e.preventDefault();
-              alert('Please use your @davsreshtha.com email address.');
-            }
-          });
-        }
-      });
-    </script>
   </body>
 </html>

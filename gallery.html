@@ -10,11 +10,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <script>
-    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-    window.addEventListener('load', function () { window.scrollTo(0, 0); });
-    document.addEventListener('DOMContentLoaded', function () { window.scrollTo(0, 0); });
-  </script>
+  <script src="script.js" defer></script>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
   <!-- Header -->
@@ -210,48 +206,7 @@
     </div>
     <div class="text-center text-xs text-slate-500 py-4 border-t border-slate-800">© 2025 Techno Sreshtha Cyber Safety Club • DAV Public School, Sreshtha Vihar</div>
   </footer>
-
-  <!-- Highlight Active Nav -->
-  <script>
-    const path = location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('.navlink, .nav_cta').forEach(a => {
-      if (a.getAttribute('href') === path) {
-        a.classList.add('active');
-      }
-    });
-  </script>
-  <script>
-    (()=>{
-      const html = document.documentElement;
-      const input = document.getElementById('themeInput') || document.getElementById('input') || document.querySelector('.switch input');
-      const saved = localStorage.getItem('theme');
-      const isDark = saved !== 'light';
-      if (!isDark) html.classList.add('light'); else html.classList.remove('light');
-      if (input) input.checked = isDark;
-      input?.addEventListener('change', () => {
-        const dark = input.checked;
-        html.classList.toggle('light', !dark);
-        localStorage.setItem('theme', dark ? 'dark' : 'light');
-      });
-    })();
-  </script>
-
-  <!-- Scroll Reveal -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const els = document.querySelectorAll(".reveal");
-      const revealOnScroll = () => {
-        els.forEach(el => {
-          const rect = el.getBoundingClientRect();
-          if (rect.top < window.innerHeight - 50) {
-            el.classList.add("animate__animated", "animate__fadeInUp");
-          }
-        });
-      };
-      window.addEventListener("scroll", revealOnScroll);
-      revealOnScroll();
-    });
-  </script>
+  
   <!-- Gallery Lightbox Script -->
   <script>
     const lightbox = document.getElementById('lightbox');

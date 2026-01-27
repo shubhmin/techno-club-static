@@ -8,11 +8,7 @@
   <link rel="icon" href="assets/logo.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css" />
-  <script>
-    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-    window.addEventListener('load', function () { window.scrollTo(0, 0); });
-    document.addEventListener('DOMContentLoaded', function () { window.scrollTo(0, 0); });
-  </script>
+  <script src="script.js" defer></script>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
 
@@ -159,20 +155,6 @@
         handleSend();
       });
     });
-
-      (() => {
-    const html = document.documentElement;
-    const input = document.getElementById('themeInput') || document.getElementById('input') || document.querySelector('.switch input');
-    const saved = localStorage.getItem('theme');
-    const isDark = saved !== 'light';
-    if (!isDark) html.classList.add('light'); else html.classList.remove('light');
-    if (input) input.checked = isDark;
-    input?.addEventListener('change', () => {
-      const dark = input.checked;
-      html.classList.toggle('light', !dark);
-      localStorage.setItem('theme', dark ? 'dark' : 'light');
-    });
-  })();
   </script>
 </body>
 </html>
