@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cyber Security Club — DAV Public School</title>
+    <title>Techno Sreshtha — DAV Public School</title>
     <meta name="description" content="DAV Public School's Cyber Security Club — events, members, gallery and resources." />
     <link rel="icon" href="assets/logo.png" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,7 +21,7 @@
         <a href="index.html" class="flex items-center gap-3">
           <img src="assets/logo.png" alt="Club Logo" class="h-10 w-10 rounded-lg" />
           <div class="leading-tight">
-            <div class="font-bold text-lg">Cyber Security Club</div>
+            <div class="font-bold text-lg">Techno Sreshtha Cyber Safety Club</div>
             <div class="text-xs text-slate-400">DAV Public School, Sreshtha Vihar</div>
           </div>
         </a>
@@ -40,18 +40,37 @@
     <main class="flex-1">
       <section class="reveal max-w-6xl mx-auto px-4 py-16">
         <h1 class="page_title">About the Club</h1>
-      <p class="lead">We’re a student‑run club at DAV Public School, Sreshtha Vihar, focused on cyber hygiene, safe browsing, secure coding, and spreading awareness.</p>
-      <div class="grid md:grid-cols-2 gap-8 mt-10">
-        <img src="assets/B.jpeg" class="rounded-xl ring-1 ring-slate-800" alt="About photo">
-        <div class="space-y-4 text-slate-300">
-          <p>Our activities include weekly meets, guest talks by alumni, and collaborative projects.</p>
-          <ul class="list-disc list-inside">
-            <li>Workshops (passwords, 2FA, phishing)</li>
-            <li>Student‑built tools & websites</li>
-            <li>Annual awareness drive</li>
-          </ul>
+        <p class="lead">We’re a student‑run club at DAV Public School, Sreshtha Vihar, focused on cyber hygiene, safe browsing, secure coding, and spreading awareness.</p>
+
+        <div class="grid md:grid-cols-2 gap-8 mt-10">
+          <img src="assets/B.jpeg" class="rounded-xl ring-1 ring-slate-800" alt="About photo">
+          <div class="space-y-4 text-slate-300">
+            <p>Our activities include biweekly meets, guest talks by alumni, and collaborative projects.</p>
+            <ul class="list-disc list-inside">
+              <li>Workshops (passwords, 2FA, phishing)</li>
+              <li>Student‑built tools & websites</li>
+              <li>Annual awareness drive</li>
+              <li>Ethical AI practices & prompt engineering</li>
+              <li>For more tips or interest in joining, contact us!</li>
+              <a href="contactus.html" class="btn_primary" style="margin-top: 12px; margin-left: 19px;">Contact us</a>
+            </ul>
+          </div>
         </div>
-      </div>
+
+        <div class="grid md:grid-cols-2 gap-8 mt-10">
+          <div class="space-y-4 text-slate-300" style="margin-top: 10px;">
+            <p>We are focused to help everyone around us be cyber savvy</p>
+            <ul class="list-disc list-inside">
+              <li>Interactive activities forall ages</li>
+              <li>Student run drives and expert guidance</li>
+              <li>Wholesome approach to AI</li>
+              <li>Daily planning for future events</li>
+              <li>Start your journey in becoming cyber guru!</li>
+            </ul>
+            <a href="ethical-ai.html" class="btn_primary" style="margin-top: 12px; margin-left: 19px;">Help others</a>
+          </div>
+          <img src="assets/2025/2025quiz (3).jpeg" class="rounded-xl ring-1 ring-slate-800" alt="About photo">
+        </div>
       </section>
 
       <!-- Mission & Values -->
@@ -83,7 +102,7 @@
             </div>
             <div class="card">
               <div class="text-indigo-400 font-semibold">Year 2</div>
-              <div class="text-slate-300 text-sm mt-1">Hosted internal CTF and 5+ workshops.</div>
+              <div class="text-slate-300 text-sm mt-1">Hosted internal poster making activity and 5+ workshops.</div>
             </div>
             <div class="card">
               <div class="text-indigo-400 font-semibold">Year 3</div>
@@ -91,7 +110,7 @@
             </div>
             <div class="card">
               <div class="text-indigo-400 font-semibold">Today</div>
-              <div class="text-slate-300 text-sm mt-1">Growing membership and school impact.</div>
+              <div class="text-slate-300 text-sm mt-1">Growing membership and school impact and AI tools.</div>
             </div>
           </div>
         </div>
@@ -125,7 +144,7 @@
         <div>
           <div class="flex items-center gap-3">
             <img src="assets/logo.png" class="h-9 w-9 rounded-lg" alt="Logo" />
-            <div class="font-semibold">Cyber Security Club</div>
+            <div class="font-semibold">Techno Sreshtha Cyber Safety Club</div>
           </div>
           <p class="text-slate-400 mt-3 text-sm">Spreading cyber awareness, hands‑on workshops, and cool projects — by students, for students.</p>
         </div>
@@ -141,7 +160,7 @@
           </label>
         </div>
       </div>
-      <div class="text-center text-xs text-slate-500 py-4 border-t border-slate-800">© 2025 Cyber Security Club • DAV Public School, Sreshtha Vihar</div>
+      <div class="text-center text-xs text-slate-500 py-4 border-t border-slate-800">© 2025 Techno Sreshtha Cyber Safety Club • DAV Public School, Sreshtha Vihar</div>
     </footer>
 
     <script>
@@ -149,8 +168,7 @@
       document.querySelectorAll('.navlink, .nav_cta').forEach(a => {
         if (a.getAttribute('href') === path) a.classList.add('active');
       });
-    </script>
-    <script>
+
       (() => {
         const html = document.documentElement;
         const input = document.getElementById('themeInput') || document.getElementById('input') || document.querySelector('.switch input');
@@ -164,8 +182,7 @@
           localStorage.setItem('theme', dark ? 'dark' : 'light');
         });
       })();
-    </script>
-    <script>
+
       document.addEventListener('DOMContentLoaded', () => {
         const els = document.querySelectorAll('.reveal');
         const revealOnScroll = () => {
