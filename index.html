@@ -222,5 +222,24 @@
         </div>
         <div class="text-center text-xs text-slate-500 py-4 border-t border-slate-800">© 2025 Techno Sreshtha Cyber Safety Club • DAV Public School, Sreshtha Vihar</div>
       </footer>
+
+      <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            const slides = document.querySelectorAll(".hero-slide");
+            let current = 0;
+            const interval = 4000; // time per slide (ms)
+        
+            function showSlide(index) {
+              slides.forEach((slide, i) => {
+                slide.classList.toggle("active", i === index);
+              });
+            }
+        
+            setInterval(() => {
+              current = (current + 1) % slides.length;
+              showSlide(current);
+            }, interval);
+          });
+      </script>
     </body>
 </html>
