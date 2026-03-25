@@ -47,11 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const revealOnScroll = () => {
     els.forEach(el => {
       const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight - 50) {
-        el.classList.add(
-          'animate__animated',
-          'animate__fadeInUp'
-        );
+      if (rect.top < window.innerHeight) {
+        el.classList.add("active");
       }
     });
   };
