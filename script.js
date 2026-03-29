@@ -56,3 +56,57 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', revealOnScroll);
   revealOnScroll();
 });
+
+/* ────────────────── Pill scrollbar ─────────────────────── */
+(function () {
+  const track = document.getElementById("pill-scrollbar");
+  const thumb = document.getElementById("pill-thumb");
+
+  let isDragging    = false;
+  let dragStartY    = 0;
+  let dragStartScroll = 0;
+
+  function update() {
+    const scrollTop  = window.scrollY;
+    const winHeight  = window.innerHeight;
+    const docHeight  = document.documentElement.scrollHeight;
+    const maxScroll  = docHeight - winHeight;
+
+    const thumbH = Math.max(40, (winHeight / docHeight) * winHeight);
+    const thumbY = maxScroll > 0 ? (scrollTop / maxScroll) * (winHeight - thumbH) : 0;
+
+    thumb.style.height    = thumbH + "px";
+    thumb.style.transform = `translateY(${thumbY}px)`;
+  }
+
+  window.addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+  window.addEventListener("resize", update);
+  update();
+
+  thumb.addEventListener("pointerdown", e => {
+    isDragging      = true;
+    dragStartY      = e.clientY;
+    dragStartScroll = window.scrollY;
+    thumb.classList.add("dragging");
+    thumb.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+
+  thumb.addEventListener("pointermove", e => {
+    if (!isDragging) return;
+    const winHeight  = window.innerHeight;
+    const docHeight  = document.documentElement.scrollHeight;
+    const thumbH     = Math.max(40, (winHeight / docHeight) * winHeight);
+    const maxScroll  = docHeight - winHeight;
+    const trackRange = winHeight - thumbH;
+
+    const delta      = e.clientY - dragStartY;
+    const scrollDelta = (delta / trackRange) * maxScroll;
+    window.scrollTo(0, dragStartScroll + scrollDelta);
+  });
+
+  thumb.addEventListener("pointerup", () => {
+    isDragging = false;
+    thumb.classList.remove("dragging");
+  });
+})();

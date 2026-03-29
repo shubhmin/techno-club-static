@@ -331,3 +331,42 @@
   transform: translateY(0);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
+
+/* ─────────────── Hide native scrollbar ────────────────── */
+html {
+  scrollbar-width: none;       /* Firefox */
+  overflow-y: scroll;
+}
+html::-webkit-scrollbar {
+  display: none;               /* Chrome / Safari / Edge */
+}
+
+/* ───────────────────── Pill scrollbar ─────────────────── */
+#pill-scrollbar {
+  position: fixed;
+  top: 0;
+  right: 2px;
+  width: 10px;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+#pill-thumb {
+  position: absolute;
+  right: 0;
+  width: 5px;
+  background: rgba(129, 140, 248, 1); /* indigo-400 tint to match site accent */
+  border-radius: 999px;
+  transition: width 0.2s ease, background 0.2s ease, right 0.2s ease;
+  pointer-events: auto;
+  cursor: pointer;
+  will-change: transform;
+}
+
+#pill-scrollbar:hover #pill-thumb,
+#pill-thumb.dragging {
+  width: 7px;
+  right: -1px;
+  background: rgba(129, 150, 248, 1);
+}
