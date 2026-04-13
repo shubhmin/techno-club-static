@@ -47,7 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const revealOnScroll = () => {
     els.forEach(el => {
       const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight) {
+      const halfVisible = rect.top + rect.height / 10 < window.innerHeight;
+
+      if (halfVisible) {
         el.classList.add("active");
       }
     });
