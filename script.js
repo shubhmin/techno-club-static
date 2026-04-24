@@ -9,14 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.scrollTo(0, 0);
 });
 
-/* ---------------- NAV ACTIVE LINK ---------------- */
-const path = location.pathname.split('/').pop() || 'index.html';
-document.querySelectorAll('.navlink, .nav_cta').forEach(a => {
-  if (a.getAttribute('href') === path) {
-    a.classList.add('active');
-  }
-});
-
 /* ---------------- THEME TOGGLE ---------------- */
 (() => {
   const html = document.documentElement;
@@ -64,20 +56,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const track = document.getElementById("pill-scrollbar");
   const thumb = document.getElementById("pill-thumb");
 
-  let isDragging    = false;
-  let dragStartY    = 0;
+  let isDragging = false;
+  let dragStartY = 0;
   let dragStartScroll = 0;
 
   function update() {
-    const scrollTop  = window.scrollY;
-    const winHeight  = window.innerHeight;
-    const docHeight  = document.documentElement.scrollHeight;
-    const maxScroll  = docHeight - winHeight;
+    const scrollTop = window.scrollY;
+    const winHeight = window.innerHeight;
+    const docHeight = document.documentElement.scrollHeight;
+    const maxScroll = docHeight - winHeight;
 
     const thumbH = Math.max(40, (winHeight / docHeight) * winHeight);
     const thumbY = maxScroll > 0 ? (scrollTop / maxScroll) * (winHeight - thumbH) : 0;
 
-    thumb.style.height    = thumbH + "px";
+    thumb.style.height = thumbH + "px";
     thumb.style.transform = `translateY(${thumbY}px)`;
   }
 
@@ -86,8 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
   update();
 
   thumb.addEventListener("pointerdown", e => {
-    isDragging      = true;
-    dragStartY      = e.clientY;
+    isDragging = true;
+    dragStartY = e.clientY;
     dragStartScroll = window.scrollY;
     thumb.classList.add("dragging");
     thumb.setPointerCapture(e.pointerId);
@@ -96,13 +88,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   thumb.addEventListener("pointermove", e => {
     if (!isDragging) return;
-    const winHeight  = window.innerHeight;
-    const docHeight  = document.documentElement.scrollHeight;
-    const thumbH     = Math.max(40, (winHeight / docHeight) * winHeight);
-    const maxScroll  = docHeight - winHeight;
+    const winHeight = window.innerHeight;
+    const docHeight = document.documentElement.scrollHeight;
+    const thumbH = Math.max(40, (winHeight / docHeight) * winHeight);
+    const maxScroll = docHeight - winHeight;
     const trackRange = winHeight - thumbH;
 
-    const delta      = e.clientY - dragStartY;
+    const delta = e.clientY - dragStartY;
     const scrollDelta = (delta / trackRange) * maxScroll;
     window.scrollTo(0, dragStartScroll + scrollDelta);
   });
