@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Techno Sreshtha — DAV Public School</title>
+  <meta name="description"
+    content="DAV Public School's Cyber Security Club — events, members, gallery and resources." />
+  <link rel="icon" href="assets/logo.webp" />
+  <link rel="stylesheet" href="output.css">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="script.js" defer></script>
+</head>
+
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+
+  <!-- ── Pill scrollbar ── -->
+  <div id="pill-scrollbar">
+    <div id="pill-thumb"></div>
+  </div>
+  <!-- HEADER -->
+  <header class="sticky top-0 z-50 backdrop-blur bg-slate-900/70 border-b border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="assets/logo.webp" alt="Club Logo" class="h-10 w-10 rounded-lg" />
+        <div class="leading-tight">
+          <div class="font-bold text-lg">Techno Sreshtha Cyber Safety Club</div>
+          <div class="text-xs text-slate-400">DAV Public School, Sreshtha Vihar</div>
+        </div>
+      </a>
+      <nav class="flex items-center gap-1 text-sm" aria-label="Main navigation">
+        <a class="navlink" href="index.html">Home</a>
+        <a class="navlink" href="student_games.html">Projects</a>
+        <a class="navlink" href="ethical-ai.html">Ethical AI</a>
+        <a class="navlink" href="gallery.html">Gallery</a>
+        <a class="navlink" href="about.html">About</a>
+        <a class="navlink" href="members.html">Members</a>
+        <a class="navlink" href="contactus.html">Contact us</a>
+        <a class="nav_cta active" href="chatbot.html">Chatbot</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="flex-1">
+    <section class="max-w-3xl mx-auto px-4 py-12">
+      <h1 class="page_title">Cybersecurity & AI Chatbot</h1>
+      <p class="lead">Ask about cybersecurity or ethical AI — e.g. phishing, malware, firewalls, AI bias, privacy.</p>
+
+      <!-- Chat UI -->
+      <div class="card mt-8 p-4 flex flex-col space-y-4">
+        <div id="chatbox" class="h-96 overflow-y-auto bg-slate-900/50 rounded-lg p-4 space-y-3 text-sm"></div>
+        <div class="flex space-x-2">
+          <input id="userInput" type="text" placeholder="Type your question..."
+            class="flex-1 p-2 rounded-lg bg-slate-800 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+          <button id="sendBtn"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition">Send</button>
+        </div>
+      </div>
+
+      <!-- Quick buttons -->
+      <div class="reveal card mt-6">
+        <div class="card_title">Quick questions</div>
+        <div class="text-slate-300 text-sm mt-2 flex flex-wrap gap-2">
+          <button class="btn_ghost" data-ask="What is phishing?">What is phishing?</button>
+          <button class="btn_ghost" data-ask="How to make a strong password?">Strong password tips</button>
+          <button class="btn_ghost" data-ask="What is 2FA?">What is 2FA?</button>
+          <button class="btn_ghost" data-ask="How to prevent malware?">Prevent malware</button>
+          <button class="btn_ghost" data-ask="What is a firewall?">What is a firewall?</button>
+          <button class="btn_ghost" data-ask="What is AI bias?">What is AI bias?</button>
+          <button class="btn_ghost" data-ask="How to avoid AI plagiarism?">Avoid AI plagiarism</button>
+          <button class="btn_ghost" data-ask="What are safe AI prompts?">Safe AI prompts</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto border-t border-slate-800 bg-slate-900/60">
+    <div class="max-w-6xl mx-auto px-4 py-8 grid sm:grid-cols-2 gap-6">
+      <div class="text-center sm:text-left">
+        <div class="flex items-center gap-3 justify-center sm:justify-start">
+          <img src="assets/logo.webp" class="h-9 w-9 rounded-lg" alt="Logo" />
+          <div class="font-semibold">Techno Sreshtha Cyber Safety Club</div>
+        </div>
+        <p class="text-slate-400 mt-3 text-sm">Spreading cyber awareness, hands-on workshops, and cool projects — by
+          students, for students.</p>
+      </div>
+      <div class="flex sm:justify-end justify-center items-center gap-4 text-sm text-slate-400">
+        <a href="index.html" class="hover:text-white">Home</a>
+        <a href="student_games.html" class="hover:text-white">Projects</a>
+        <a href="ethical-ai.html" class="hover:text-white">Ethical AI</a>
+        <a href="gallery.html" class="hover:text-white">Gallery</a>
+        <a href="about.html" class="hover:text-white">About</a>
+        <a href="members.html" class="hover:text-white">Members</a>
+        <a href="chatbot.html" class="hover:text-white">Chatbot</a>
+        <label class="simple-switch" title="Toggle light/dark">
+          <input id="themeInput" type="checkbox" />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="text-center text-xs text-slate-500 py-4 border-t border-slate-800">© 2026 Techno Sreshtha Cyber Safety
+      Club • DAV Public School, Sreshtha Vihar</div>
+  </footer>
+
+</body>
+
+</html>
