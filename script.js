@@ -99,17 +99,18 @@ function openLightbox(imgSrc, siblings) {
 function closeLightbox() {
   lightbox.classList.add('hidden');
   document.body.style.overflow = '';
+  update();
 }
 
-prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex - 1); });
-nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); });
-closeBtn.addEventListener('click', closeLightbox);
-lightbox.addEventListener('click', (e) => {
+prevBtn?.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex - 1); });
+nextBtn?.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); });
+closeBtn?.addEventListener('click', closeLightbox);
+lightbox?.addEventListener('click', (e) => {
   if (e.target.hasAttribute('data-close')) closeLightbox();
 });
 
 document.addEventListener('keydown', (e) => {
-  if (lightbox.classList.contains('hidden')) return;
+  if (!lightbox || lightbox.classList.contains('hidden')) return;
   if (e.key === 'ArrowLeft') show(currentIndex - 1);
   if (e.key === 'ArrowRight') show(currentIndex + 1);
   if (e.key === 'Escape') closeLightbox();
@@ -129,9 +130,10 @@ document.querySelectorAll('figure.cursor-pointer').forEach(figure => {
 
 
 /* ────────────────── Pill scrollbar ─────────────────────── */
-(function () {
+window.addEventListener('load', function () {
   const track = document.getElementById("pill-scrollbar");
   const thumb = document.getElementById("pill-thumb");
+  if (!track || !thumb) return;
 
   let isDragging = false;
   let dragStartY = 0;
@@ -180,4 +182,4 @@ document.querySelectorAll('figure.cursor-pointer').forEach(figure => {
     isDragging = false;
     thumb.classList.remove("dragging");
   });
-})();
+});
