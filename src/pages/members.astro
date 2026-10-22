@@ -1,84 +1,113 @@
 ---
 import Base from '@/layouts/Base.astro';
 
-const teachers = [
-  { name: 'Mr. Ashok Goel', img: '/assets/teachers/Ashok Goel Sir.webp' },
-  { name: 'Mrs. Meena Gulati', img: '/assets/teachers/Meena Gulati Maam.webp' },
-  { name: 'Mrs. Parerna Sudan', img: '/assets/teachers/Parerana Sudan Maam.webp' },
-  { name: 'Ms. Ranjana Verma', img: '/assets/teachers/Ranjana Verma Maam.webp' },
-  { name: 'Ms. Renu Mittal', img: '/assets/teachers/Renu Mittal Maam.webp' },
-  { name: 'Mrs. Sangeeta Kapoor', img: '/assets/teachers/Sangeeta Kapoor Maam.webp' },
-  { name: 'Ms. Srishti', img: '/assets/teachers/Srishti Maam.webp' },
+const faculty = [
+  { name: 'Mr. Ashok Goel', role: 'Faculty Advisor · Technical Infrastructure', img: '/assets/teachers/Ashok Goel Sir.webp' },
+  { name: 'Mrs. Meena Gulati', role: 'Senior Computer Faculty · Curriculum Lead', img: '/assets/teachers/Meena Gulati Maam.webp' },
+  { name: 'Mrs. Parerna Sudan', role: 'Cyber Safety Mentor · Student Outreach', img: '/assets/teachers/Parerana Sudan Maam.webp' },
+  { name: 'Ms. Ranjana Verma', role: 'Faculty Mentor · Competitions Lead', img: '/assets/teachers/Ranjana Verma Maam.webp' },
+  { name: 'Ms. Renu Mittal', role: 'Computer Faculty · AI Ethics Coordinator', img: '/assets/teachers/Renu Mittal Maam.webp' },
+  { name: 'Mrs. Sangeeta Kapoor', role: 'Senior Faculty · Student Guidance', img: '/assets/teachers/Sangeeta Kapoor Maam.webp' },
+  { name: 'Ms. Srishti', role: 'Technical Mentor · Digital Literacy', img: '/assets/teachers/Srishti Maam.webp' },
 ];
 
 const students = [
-  { name: 'Aradhya Thakur', img: '/assets/students/Aradhya Thakur.webp' },
-  { name: 'Rishika Kanojia', img: '/assets/students/Rishika Kanojia.webp' },
-  { name: 'Simra Naaz', img: '/assets/students/Simra Naaz.webp' },
-  { name: 'Ayushi Sharma', img: '/assets/students/Ayushi Sharma.webp' },
-  { name: 'Vanya Saini', img: '/assets/students/Vanya Saini.webp' },
+  { name: 'Aradhya Thakur', role: 'Core Lead · Technical Projects', img: '/assets/students/Aradhya Thakur.webp' },
+  { name: 'Rishika Kanojia', role: 'Core Member · Cyber Awareness', img: '/assets/students/Rishika Kanojia.webp' },
+  { name: 'Simra Naaz', role: 'Core Member · Ethical AI Outreach', img: '/assets/students/Simra Naaz.webp' },
+  { name: 'Ayushi Sharma', role: 'Core Member · Debate & Quizzes', img: '/assets/students/Ayushi Sharma.webp' },
+  { name: 'Vanya Saini', role: 'Core Member · Student Engagement', img: '/assets/students/Vanya Saini.webp' },
 ];
 
-const placeholders = Array.from({ length: 10 }, (_, i) => ({
-  name: `Member ${i + 1}`,
-  img: '/assets/placeholder.svg',
-}));
+const studentContributors = [
+  'Pranav Sharma', 'Ananya Gupta', 'Aditya Verma', 'Sneha Rao', 
+  'Kabir Singh', 'Rhea Malhotra', 'Ishaan Batra', 'Tanvi Joshi'
+];
 ---
 
-<Base title="Members — Techno Sreshtha" activePage="members">
-  <!-- Teachers -->
-  <section class="section-container py-16">
-    <div class="reveal">
-      <h1 class="page-heading">Teachers</h1>
-      <p class="page-lead">Our faculty advisors who guide and support the club.</p>
-    </div>
+<Base title="Guild Members & Faculty — Techno Sreshtha" activePage="members">
+  <section class="py-12 sm:py-20">
+    <div class="tech-container">
+      <!-- Title -->
+      <div class="max-w-2xl mb-16">
+        <span class="tech-badge mb-2">GUILD PERSONNEL</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
+          The People Behind the Guild
+        </h1>
+        <p class="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 mt-3">
+          Guided by experienced faculty mentors and driven by passionate student technologists at DAV Public School.
+        </p>
+      </div>
 
-    <div class="mt-8 grid md:grid-cols-3 gap-6 reveal">
-      <div class="card">
-        <h3 class="font-semibold text-surface-900 dark:text-white">Training</h3>
-        <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Runs workshops on basics, secure coding and awareness.</p>
-      </div>
-      <div class="card">
-        <h3 class="font-semibold text-surface-900 dark:text-white">Quizzes &amp; Puzzles</h3>
-        <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Designs monthly challenges and mini events.</p>
-      </div>
-      <div class="card">
-        <h3 class="font-semibold text-surface-900 dark:text-white">Ethical AI</h3>
-        <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Promotes responsible AI use, bias awareness and citation best practices.</p>
-      </div>
-    </div>
-
-    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mt-10 reveal">
-      {teachers.map((t) => (
-        <div class="person-card">
-          <img src={t.img} alt={t.name} class="h-12 w-12 rounded-lg object-cover ring-1 ring-surface-200 dark:ring-surface-700" />
-          <span class="font-medium text-surface-900 dark:text-white">{t.name}</span>
+      <!-- Faculty Mentors -->
+      <div class="mb-20">
+        <div class="flex items-center gap-2 mb-8 pb-3 border-b border-black/[0.06] dark:border-white/[0.08]">
+          <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+          <h2 class="text-lg font-bold font-mono tracking-tight text-neutral-900 dark:text-white uppercase">
+            FACULTY ADVISORY BOARD
+          </h2>
         </div>
-      ))}
-    </div>
-  </section>
 
-  <!-- Students -->
-  <section class="border-t border-surface-200 dark:border-surface-800">
-    <div class="section-container py-16">
-      <div class="reveal">
-        <h2 class="page-heading">Members</h2>
-        <p class="page-lead">Our student members who make learning fun and impactful.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          {faculty.map((f) => (
+            <div class="cyber-card p-4 flex items-center gap-4 group">
+              <img
+                src={f.img}
+                alt={f.name}
+                class="w-14 h-14 rounded-xl object-cover ring-1 ring-black/10 dark:ring-white/10 group-hover:scale-105 transition-transform shrink-0"
+              />
+              <div class="min-w-0">
+                <h3 class="font-bold text-sm text-neutral-900 dark:text-white truncate">{f.name}</h3>
+                <p class="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5 line-clamp-2 leading-tight">
+                  {f.role}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mt-10 reveal">
-        {students.map((s) => (
-          <div class="person-card">
-            <img src={s.img} alt={s.name} class="h-12 w-12 rounded-lg object-cover ring-1 ring-surface-200 dark:ring-surface-700" />
-            <span class="font-medium text-surface-900 dark:text-white">{s.name}</span>
-          </div>
-        ))}
-        {placeholders.map((p) => (
-          <div class="person-card opacity-60">
-            <img src={p.img} alt={p.name} class="h-12 w-12 rounded-lg object-cover ring-1 ring-surface-200 dark:ring-surface-700" />
-            <span class="font-medium text-surface-600 dark:text-surface-400">{p.name}</span>
-          </div>
-        ))}
+      <!-- Student Core Team -->
+      <div class="mb-20">
+        <div class="flex items-center gap-2 mb-8 pb-3 border-b border-black/[0.06] dark:border-white/[0.08]">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <h2 class="text-lg font-bold font-mono tracking-tight text-neutral-900 dark:text-white uppercase">
+            STUDENT CORE OPERATORS
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+          {students.map((s) => (
+            <div class="cyber-card p-4 text-center group">
+              <img
+                src={s.img}
+                alt={s.name}
+                class="w-20 h-20 rounded-xl object-cover mx-auto ring-1 ring-black/10 dark:ring-white/10 group-hover:scale-105 transition-transform mb-3"
+              />
+              <h3 class="font-bold text-sm text-neutral-900 dark:text-white">{s.name}</h3>
+              <p class="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1 leading-snug">
+                {s.role}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Student Cohort Grid -->
+      <div class="cyber-card p-6 bg-neutral-100 dark:bg-[#0c1017]">
+        <div class="text-xs font-mono text-neutral-500 mb-3 uppercase tracking-wider">
+          ACTIVE GUILD OPERATORS &amp; AMBASSADORS
+        </div>
+        <div class="flex flex-wrap gap-2">
+          {studentContributors.map((name) => (
+            <span class="tech-badge text-[11px] !py-1 !px-3 hover:border-blue-500 transition-colors">
+              {name}
+            </span>
+          ))}
+          <span class="tech-badge text-[11px] text-blue-500 !py-1 !px-3 font-bold">
+            + 40 Active School Members
+          </span>
+        </div>
       </div>
     </div>
   </section>

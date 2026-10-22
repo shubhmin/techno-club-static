@@ -1,10 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  /* Import Inter from Google Fonts via CSS */
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  :root {
+    --bg-base: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-card: #f1f5f9;
+    --border-color: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(0, 0, 0, 0.16);
+    --text-primary: #0f172a;
+    --text-muted: #64748b;
+  }
+
+  .dark {
+    --bg-base: #07090e;
+    --bg-surface: #0d1117;
+    --bg-card: #121721;
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.16);
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+  }
 
   html {
     scroll-behavior: smooth;
@@ -13,137 +32,100 @@
   }
 
   body {
-    @apply bg-surface-950 text-surface-200 font-sans;
-  }
-
-  .dark body {
-    @apply bg-surface-950 text-surface-200;
-  }
-
-  /* Light mode */
-  html:not(.dark) body {
-    @apply bg-surface-50 text-surface-800;
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   }
 }
 
 @layer components {
-  /* ─── Buttons ─── */
-  .btn-primary {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-lg
-           bg-accent-600 text-white font-semibold text-sm
-           hover:bg-accent-700 active:bg-accent-800
-           transition-colors duration-150;
+  /* Technical container */
+  .tech-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  .btn-outline {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-lg
-           border border-surface-300 dark:border-surface-700
-           text-surface-700 dark:text-surface-300
-           font-medium text-sm
-           hover:bg-surface-100 dark:hover:bg-surface-800
-           transition-colors duration-150;
+  /* Hardware/Tactile Glass Card */
+  .cyber-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  /* ─── Cards ─── */
-  .card {
-    @apply rounded-xl border border-surface-200 dark:border-surface-800
-           bg-white dark:bg-surface-900/60
-           p-6 transition-shadow duration-200
-           hover:shadow-lg hover:shadow-surface-900/5 dark:hover:shadow-black/20;
+  .cyber-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.2);
   }
 
-  /* ─── Section spacing ─── */
-  .section-container {
-    @apply max-w-6xl mx-auto px-5 sm:px-8;
+  /* Terminal box */
+  .terminal-window {
+    background-color: #05070a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.875rem;
+    font-family: 'JetBrains Mono', monospace;
   }
 
-  /* ─── Page headings ─── */
-  .page-heading {
-    @apply text-3xl sm:text-4xl font-extrabold tracking-tight
-           text-surface-900 dark:text-white;
+  /* Cyber button primary */
+  .btn-cyber-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg
+           bg-blue-600 text-white font-medium text-sm
+           hover:bg-blue-500 active:scale-[0.98]
+           transition-all duration-150 shadow-sm shadow-blue-500/20;
   }
 
-  .page-lead {
-    @apply mt-3 text-surface-500 dark:text-surface-400 max-w-2xl text-lg;
+  /* Cyber button outline */
+  .btn-cyber-outline {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg
+           border border-neutral-300 dark:border-neutral-800
+           bg-transparent text-neutral-800 dark:text-neutral-200 font-medium text-sm
+           hover:bg-neutral-100 dark:hover:bg-neutral-900 active:scale-[0.98]
+           transition-all duration-150;
   }
 
-  /* ─── Person card ─── */
-  .person-card {
-    @apply flex items-center gap-4 p-4 rounded-xl
-           border border-surface-200 dark:border-surface-800
-           bg-white dark:bg-surface-900/60;
+  /* Monospaced technical badge */
+  .tech-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono font-medium
+           border border-neutral-200 dark:border-white/10
+           bg-neutral-100/80 dark:bg-white/[0.04] text-neutral-700 dark:text-neutral-300;
   }
 
-  /* ─── Nav link ─── */
-  .nav-link {
-    @apply px-3 py-2 rounded-lg text-sm font-medium
-           text-surface-600 dark:text-surface-400
-           hover:text-surface-900 dark:hover:text-white
-           hover:bg-surface-100 dark:hover:bg-surface-800
-           transition-colors duration-150;
+  /* Cyber indicator dot */
+  .live-dot {
+    @apply relative flex h-2 w-2;
   }
-
-  .nav-link.active {
-    @apply text-accent-600 dark:text-accent-400 bg-accent-50 dark:bg-accent-900/20;
+  .live-dot span:first-child {
+    @apply animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75;
   }
-
-  /* ─── Gallery image ─── */
-  .gallery-img {
-    @apply w-full h-52 object-cover rounded-lg
-           border border-surface-200 dark:border-surface-800
-           transition-transform duration-300 ease-out
-           hover:scale-[1.02];
+  .live-dot span:last-child {
+    @apply relative inline-flex rounded-full h-2 w-2 bg-emerald-500;
   }
 }
 
-/* ─── Scroll reveal ─── */
+/* Scroll reveal animations */
 .reveal {
   opacity: 0;
-  transform: translateY(40px);
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-/* ─── Hero slideshow ─── */
-.hero-slideshow {
-  position: relative;
-}
-.hero-slide {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 0.6s ease;
-}
-.hero-slide.active {
-  opacity: 1;
-  position: relative;
-}
-
-/* ─── Lightbox ─── */
-.lightbox-overlay {
-  @apply fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm;
-}
-
-/* ─── Smooth scrollbar (no gimmicky pill) ─── */
+/* Custom crisp scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-surface-300 dark:bg-surface-700 rounded-full;
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-surface-400 dark:bg-surface-600;
-}
-html {
-  scrollbar-width: thin;
-  scrollbar-color: theme('colors.surface.400') transparent;
+  background: rgba(148, 163, 184, 0.5);
 }

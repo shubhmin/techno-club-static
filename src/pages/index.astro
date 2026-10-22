@@ -3,192 +3,421 @@ import Base from '@/layouts/Base.astro';
 ---
 
 <Base activePage="home">
-  <!-- Hero -->
-  <section class="reveal">
-    <div class="section-container py-20 sm:py-28 grid md:grid-cols-2 gap-12 items-center">
-      <div>
-        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-surface-900 dark:text-white leading-[1.1]">
-          Stay Smart.<br/>Stay Safe.
-        </h1>
-        <p class="mt-4 text-lg text-surface-500 dark:text-surface-400 max-w-lg">
-          Cybersecurity &amp; Ethical AI — Workshops, quizzes, awareness drives, and responsible tech use at DAV Public School.
+  <!-- Hero Section -->
+  <section class="relative pt-12 pb-20 sm:pt-20 sm:pb-28 overflow-hidden">
+    <div class="tech-container">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Left Headline Column -->
+        <div class="lg:col-span-7 space-y-6">
+          <!-- Status Pill -->
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            DAV PUBLIC SCHOOL, SRESHTHA VIHAR · CYBER GUILD
+          </div>
+
+          <!-- Major Headline -->
+          <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-neutral-900 dark:text-white leading-[1.08]">
+            Securing bytes.<br/>
+            Questioning algorithms.<br/>
+            <span class="text-blue-600 dark:text-blue-400 font-black">Building digital defenses.</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-xl leading-relaxed">
+            Techno Sreshtha is DAV Public School’s flagship student cybersecurity and ethical AI guild. We deconstruct real-world security vulnerabilities, interrogate algorithmic bias, and build open safety tools for students.
+          </p>
+
+          <!-- Action buttons -->
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <a href="/projects" class="btn-cyber-primary">
+              Explore Projects &amp; Labs
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </a>
+            <a href="/ethical-ai" class="btn-cyber-outline">
+              Ethical AI Directive
+            </a>
+            <a href="/chatbot" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-mono border border-blue-500/30 bg-blue-500/5 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10 transition-colors">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+              ASK AI BOT
+            </a>
+          </div>
+
+          <!-- Fast stats ticker -->
+          <div class="pt-8 border-t border-black/[0.06] dark:border-white/[0.08] grid grid-cols-3 gap-6 font-mono">
+            <div>
+              <div class="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">50+</div>
+              <div class="text-[11px] text-neutral-500 uppercase mt-0.5">Active Members</div>
+            </div>
+            <div>
+              <div class="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">12+</div>
+              <div class="text-[11px] text-neutral-500 uppercase mt-0.5">Security Labs</div>
+            </div>
+            <div>
+              <div class="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">06</div>
+              <div class="text-[11px] text-neutral-500 uppercase mt-0.5">School Drives</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Interactive Live Cyber Lab & Slideshow Box -->
+        <div class="lg:col-span-5 space-y-4">
+          <!-- Live Interactive Tool: Password Entropy Tester -->
+          <div id="entropy-lab" class="cyber-card p-6 shadow-xl border-neutral-300 dark:border-white/[0.12] bg-white dark:bg-[#0c1017]">
+            <div class="flex items-center justify-between border-b border-black/[0.06] dark:border-white/[0.08] pb-3 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                <span class="text-xs font-mono font-bold tracking-wider text-neutral-800 dark:text-neutral-200 uppercase">INTERACTIVE SECURITY LAB</span>
+              </div>
+              <span class="text-[10px] font-mono text-neutral-500">ENTROPY v1.2</span>
+            </div>
+
+            <p class="text-xs text-neutral-600 dark:text-neutral-400 mb-3">
+              Test password strength in real time. We calculate information entropy without sending data anywhere.
+            </p>
+
+            <div class="space-y-3">
+              <div class="relative">
+                <input
+                  id="entropy-input"
+                  type="text"
+                  placeholder="Type a password to test..."
+                  class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-neutral-300 dark:border-white/10 bg-neutral-50 dark:bg-black/50 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <!-- Entropy Bar Indicator -->
+              <div>
+                <div class="flex items-center justify-between text-[11px] font-mono mb-1">
+                  <span class="text-neutral-500">ESTIMATED CRACK TIME</span>
+                  <span id="entropy-time" class="font-bold text-neutral-700 dark:text-neutral-300">0 seconds</span>
+                </div>
+                <div class="w-full h-1.5 bg-neutral-200 dark:bg-neutral-800 rounded-full overflow-hidden">
+                  <div id="entropy-bar" class="h-full w-0 bg-red-500 transition-all duration-300"></div>
+                </div>
+              </div>
+
+              <!-- Checklist criteria -->
+              <div class="grid grid-cols-2 gap-2 text-[10px] font-mono pt-1 text-neutral-500 dark:text-neutral-400">
+                <div id="check-len" class="flex items-center gap-1.5">
+                  <span>○</span> 12+ Characters
+                </div>
+                <div id="check-upper" class="flex items-center gap-1.5">
+                  <span>○</span> Uppercase [A-Z]
+                </div>
+                <div id="check-num" class="flex items-center gap-1.5">
+                  <span>○</span> Numbers [0-9]
+                </div>
+                <div id="check-sym" class="flex items-center gap-1.5">
+                  <span>○</span> Special Symbols
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Event Highlights Slideshow Card -->
+          <div class="cyber-card p-3 overflow-hidden bg-neutral-100 dark:bg-[#0c1017]">
+            <div class="relative rounded-lg overflow-hidden aspect-[16/10]">
+              <img src="/assets/A.webp" alt="Club Event" class="hero-slide active object-cover w-full h-full" />
+              <img src="/assets/B.webp" alt="Club Event" class="hero-slide object-cover w-full h-full" />
+              <img src="/assets/C.webp" alt="Club Event" class="hero-slide object-cover w-full h-full" />
+              <img src="/assets/D.webp" alt="Club Event" class="hero-slide object-cover w-full h-full" />
+              <div class="absolute bottom-2 left-2 px-2.5 py-1 rounded bg-black/70 backdrop-blur-md text-[10px] font-mono text-white">
+                // CAMPUS ARCHIVES: 2024–2026
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Phishing Spotter Section -->
+  <section id="phishing-drill" class="py-16 border-y border-black/[0.06] dark:border-white/[0.08] bg-white/[0.6] dark:bg-[#090d14]/70">
+    <div class="tech-container">
+      <div class="max-w-2xl mb-10">
+        <div class="text-xs font-mono text-blue-600 dark:text-blue-400 uppercase tracking-wider font-semibold mb-1">
+          MICRO-CHALLENGE // SOCIAL ENGINEERING
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
+          Can you spot the phishing threat?
+        </h2>
+        <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-2">
+          Attackers target students with fake assignment notifications and spoofed portals. Click any scenario to inspect its headers and find the red flag.
         </p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <a href="/about" class="btn-primary">Learn more</a>
-          <a href="/gallery" class="btn-outline">See gallery</a>
-        </div>
       </div>
-      <div class="relative">
-        <div class="hero-slideshow rounded-2xl overflow-hidden aspect-[4/3] bg-surface-100 dark:bg-surface-800 ring-1 ring-surface-200 dark:ring-surface-700">
-          <img src="/assets/A.webp" alt="Event photo" class="hero-slide active" />
-          <img src="/assets/B.webp" alt="Event photo" class="hero-slide" />
-          <img src="/assets/C.webp" alt="Event photo" class="hero-slide" />
-          <img src="/assets/D.webp" alt="Event photo" class="hero-slide" />
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <!-- Card 1 -->
+        <div class="cyber-card p-5 cursor-pointer group" onclick="this.classList.toggle('revealed')">
+          <div class="flex items-center justify-between text-xs font-mono text-neutral-500 mb-2">
+            <span>SCENARIO 01</span>
+            <span class="text-amber-500 font-bold">CLICK TO INSPECT</span>
+          </div>
+          <h3 class="font-bold text-sm text-neutral-900 dark:text-white">"Emergency: Your Exam Paper was unsubmitted!"</h3>
+          <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
+            From: <code class="text-neutral-800 dark:text-neutral-300">support@dav-sreshtha-portal.tk</code>
+          </p>
+          <div class="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-700 dark:text-red-400 hidden group-[.revealed]:block">
+            <strong>RED FLAG DETECTED:</strong> Look at the domain suffix (<code class="font-mono">.tk</code> instead of <code class="font-mono">davsreshtha.com</code>) and the artificial panic tactic.
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="cyber-card p-5 cursor-pointer group" onclick="this.classList.toggle('revealed')">
+          <div class="flex items-center justify-between text-xs font-mono text-neutral-500 mb-2">
+            <span>SCENARIO 02</span>
+            <span class="text-amber-500 font-bold">CLICK TO INSPECT</span>
+          </div>
+          <h3 class="font-bold text-sm text-neutral-900 dark:text-white">"Free ChatGPT Plus Token for DAV Students"</h3>
+          <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
+            From: <code class="text-neutral-800 dark:text-neutral-300">admin-openai@school-ai-bonus.club</code>
+          </p>
+          <div class="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-700 dark:text-red-400 hidden group-[.revealed]:block">
+            <strong>RED FLAG DETECTED:</strong> Credential harvesting lure. Never input school credentials on unverified third-party domains.
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="cyber-card p-5 cursor-pointer group" onclick="this.classList.toggle('revealed')">
+          <div class="flex items-center justify-between text-xs font-mono text-neutral-500 mb-2">
+            <span>SCENARIO 03</span>
+            <span class="text-emerald-500 font-bold">CLICK TO INSPECT</span>
+          </div>
+          <h3 class="font-bold text-sm text-neutral-900 dark:text-white">"DAV Circular: Annual Cyber Olympiad Dates"</h3>
+          <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
+            From: <code class="text-neutral-800 dark:text-neutral-300">info@davsreshtha.com</code>
+          </p>
+          <div class="mt-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-700 dark:text-emerald-400 hidden group-[.revealed]:block">
+            <strong>LEGITIMATE COMMUNICATION:</strong> Matches official DAV domain, DKIM/SPF verified, no credential requests.
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Two Tracks -->
-  <section class="reveal border-t border-surface-200 dark:border-surface-800">
-    <div class="section-container py-16 grid md:grid-cols-2 gap-6">
-      <div class="card flex flex-col">
-        <h3 class="text-xl font-bold text-surface-900 dark:text-white">Cybersecurity</h3>
-        <p class="text-surface-500 dark:text-surface-400 mt-2 text-sm">
-          Hands-on security basics, secure coding, and safety awareness for everyone.
+  <!-- Core Focus Bento Grid -->
+  <section class="py-20">
+    <div class="tech-container">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="tech-badge mb-2">CORE DISCIPLINES</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
+          Where defense meets ethical inquiry.
+        </h2>
+        <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-3">
+          We bridge tactical offensive/defensive cybersecurity skills with critical evaluation of AI algorithms.
         </p>
-        <ul class="text-surface-600 dark:text-surface-300 text-sm mt-4 space-y-1.5 list-disc list-inside">
-          <li>Password &amp; phishing safety</li>
-          <li>Web security fundamentals</li>
-          <li>Weekly meetings</li>
-        </ul>
-        <div class="mt-auto pt-6">
-          <a href="/chatbot" class="btn-primary text-sm">Explore Cybersecurity</a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Track 01 -->
+        <div class="cyber-card p-8 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <span class="px-2 py-1 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-mono font-bold">TRACK 01</span>
+              <span class="text-xs font-mono text-neutral-400">DEFENSIVE &amp; OFFENSIVE OPS</span>
+            </div>
+            <h3 class="text-2xl font-bold text-neutral-900 dark:text-white mb-3">Cybersecurity Fundamentals</h3>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6">
+              Hands-on mastery over real-world network mechanics, credential protection, password hygiene, safe web browsing, and recognizing modern phishing vectors.
+            </p>
+            <ul class="space-y-2.5 text-xs font-mono text-neutral-700 dark:text-neutral-300">
+              <li class="flex items-center gap-2">
+                <span class="text-blue-500">▹</span> Credential security &amp; Multi-Factor Auth (2FA) mechanics
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-blue-500">▹</span> OWASP Web Vulnerabilities (SQLi, XSS, CSRF basics)
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-blue-500">▹</span> School-wide cyber hygiene audits &amp; awareness drives
+              </li>
+            </ul>
+          </div>
+          <div class="pt-8">
+            <a href="/chatbot" class="btn-cyber-primary text-xs">Test Security Terminal</a>
+          </div>
+        </div>
+
+        <!-- Track 02 -->
+        <div class="cyber-card p-8 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <span class="px-2 py-1 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-bold">TRACK 02</span>
+              <span class="text-xs font-mono text-neutral-400">AI ETHICS &amp; GOVERNANCE</span>
+            </div>
+            <h3 class="text-2xl font-bold text-neutral-900 dark:text-white mb-3">Responsible &amp; Ethical AI</h3>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6">
+              Moving beyond blindly copying AI outputs. We audit models for data bias, learn safe prompt engineering without privacy leakage, and preserve academic integrity.
+            </p>
+            <ul class="space-y-2.5 text-xs font-mono text-neutral-700 dark:text-neutral-300">
+              <li class="flex items-center gap-2">
+                <span class="text-emerald-500">▹</span> Algorithmic bias audits &amp; hallucination detection
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-emerald-500">▹</span> Privacy-preserving prompts (zero confidential leakage)
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-emerald-500">▹</span> Academic transparency: proper attribution &amp; citation protocols
+              </li>
+            </ul>
+          </div>
+          <div class="pt-8">
+            <a href="/ethical-ai" class="btn-cyber-outline text-xs">Read Ethical Charter</a>
+          </div>
         </div>
       </div>
-      <div class="card flex flex-col">
-        <h3 class="text-xl font-bold text-surface-900 dark:text-white">Ethical AI</h3>
-        <p class="text-surface-500 dark:text-surface-400 mt-2 text-sm">
-          Learn responsible AI use, prompt safety, bias awareness, and plagiarism‑free workflows.
-        </p>
-        <ul class="text-surface-600 dark:text-surface-300 text-sm mt-4 space-y-1.5 list-disc list-inside">
-          <li>AI safety &amp; privacy basics</li>
-          <li>Bias, fairness, and attribution</li>
-          <li>Secure, ethical prompt practices</li>
-        </ul>
-        <div class="mt-auto pt-6">
-          <a href="/ethical-ai" class="btn-primary text-sm">Explore Ethical AI</a>
+    </div>
+  </section>
+
+  <!-- Upcoming Missions / Events Timeline -->
+  <section class="py-16 border-t border-black/[0.06] dark:border-white/[0.08] bg-neutral-50 dark:bg-[#05070a]/50">
+    <div class="tech-container">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+        <div>
+          <span class="tech-badge mb-1.5">DISPATCH SCHEDULE</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white">Upcoming Club Activities</h2>
+        </div>
+        <a href="/gallery" class="text-xs font-mono text-blue-600 dark:text-blue-400 hover:underline">
+          VIEW PAST EVENT ARCHIVES →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="cyber-card p-6">
+          <div class="flex items-center justify-between text-[11px] font-mono text-neutral-500 mb-3">
+            <span>LAB 01</span>
+            <span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-500 font-bold">INTERACTIVE</span>
+          </div>
+          <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-2">Web Exploits &amp; Safe Coding</h3>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+            Deconstructing common client-side injection attacks, browser cookies, and how HTTPS encrypts student communications.
+          </p>
+          <div class="text-[11px] font-mono text-neutral-400">
+            LOCATION: COMPUTER LAB 2 // BIWEEKLY THURSDAY
+          </div>
+        </div>
+
+        <div class="cyber-card p-6">
+          <div class="flex items-center justify-between text-[11px] font-mono text-neutral-500 mb-3">
+            <span>MISSION 02</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 font-bold">COMPETITION</span>
+          </div>
+          <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-2">Annual Cyber &amp; AI Quiz Debate</h3>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+            Inter-house challenge testing ethical AI principles, cyber laws, digital forensics puzzles, and poster making.
+          </p>
+          <div class="text-[11px] font-mono text-neutral-400">
+            AUDITORIUM // OPEN TO ALL CLASSES
+          </div>
+        </div>
+
+        <div class="cyber-card p-6">
+          <div class="flex items-center justify-between text-[11px] font-mono text-neutral-500 mb-3">
+            <span>DRIVE 03</span>
+            <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 font-bold">COMMUNITY</span>
+          </div>
+          <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-2">Campus-Wide Cyber Hygiene Drive</h3>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+            Student ambassadors sharing live demonstrations on setting up 2FA, spotting scam WhatsApp links, and securing home Wi-Fi.
+          </p>
+          <div class="text-[11px] font-mono text-neutral-400">
+            CAMPUS-WIDE // ANNUAL CAMPAIGN
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Quick highlights -->
-  <section class="reveal border-t border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900/30">
-    <div class="section-container py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-      <div class="card">
-        <span class="font-semibold text-accent-600 dark:text-accent-400">Workshops</span>
-        <span class="text-surface-600 dark:text-surface-300"> — Phishing, password safety</span>
+  <!-- Photo Strip Preview -->
+  <section class="py-16">
+    <div class="tech-container">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <span class="tech-badge mb-1">FIELD PHOTO ARCHIVE</span>
+          <h2 class="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">Active in the halls &amp; labs</h2>
+        </div>
+        <a href="/gallery" class="btn-cyber-outline text-xs">Open Full Gallery</a>
       </div>
-      <div class="card">
-        <span class="font-semibold text-accent-600 dark:text-accent-400">Competitions</span>
-        <span class="text-surface-600 dark:text-surface-300"> — Weekly cybersafety tips</span>
-      </div>
-      <div class="card">
-        <span class="font-semibold text-accent-600 dark:text-accent-400">Projects</span>
-        <span class="text-surface-600 dark:text-surface-300"> — Tools, posters, web builds</span>
-      </div>
-      <div class="card">
-        <span class="font-semibold text-accent-600 dark:text-accent-400">Community</span>
-        <span class="text-surface-600 dark:text-surface-300"> — Peer learning &amp; mentoring</span>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="cyber-card overflow-hidden p-2">
+          <img src="/assets/A.webp" alt="Activity" class="w-full h-44 object-cover rounded-lg" loading="lazy" />
+          <div class="p-2 text-[11px] font-mono text-neutral-500">QUIZ DEBATE ROUNDS</div>
+        </div>
+        <div class="cyber-card overflow-hidden p-2">
+          <img src="/assets/B.webp" alt="Activity" class="w-full h-44 object-cover rounded-lg" loading="lazy" />
+          <div class="p-2 text-[11px] font-mono text-neutral-500">STUDENT AUDITORS</div>
+        </div>
+        <div class="cyber-card overflow-hidden p-2">
+          <img src="/assets/C.webp" alt="Activity" class="w-full h-44 object-cover rounded-lg" loading="lazy" />
+          <div class="p-2 text-[11px] font-mono text-neutral-500">WORKSHOP SESSIONS</div>
+        </div>
+        <div class="cyber-card overflow-hidden p-2">
+          <img src="/assets/D.webp" alt="Activity" class="w-full h-44 object-cover rounded-lg" loading="lazy" />
+          <div class="p-2 text-[11px] font-mono text-neutral-500">POSTER CAMPAIGNS</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Upcoming events -->
-  <section class="reveal border-t border-surface-200 dark:border-surface-800">
-    <div class="section-container py-16">
-      <h2 class="page-heading">Upcoming events</h2>
-      <p class="page-lead">Join our next hands-on sessions and challenges. Beginners are welcome!</p>
-      <div class="mt-8 grid md:grid-cols-3 gap-6">
-        <article class="card">
-          <h3 class="font-semibold text-surface-900 dark:text-white">Intro to Web Security</h3>
-          <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Learn about common web vulnerabilities and safe coding tips.</p>
-        </article>
-        <article class="card">
-          <h3 class="font-semibold text-surface-900 dark:text-white">Interactive Activities</h3>
-          <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Regular quizzes, poster making competitions.</p>
-        </article>
-        <article class="card">
-          <h3 class="font-semibold text-surface-900 dark:text-white">Cyber Hygiene Drive</h3>
-          <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">School‑wide awareness on strong passwords and scam spotting.</p>
-        </article>
-      </div>
-    </div>
-  </section>
+  <!-- Interactive Entropy Lab Script -->
+  <script>
+    const input = document.getElementById('entropy-input') as HTMLInputElement;
+    const timeDisplay = document.getElementById('entropy-time');
+    const bar = document.getElementById('entropy-bar');
+    const checkLen = document.getElementById('check-len');
+    const checkUpper = document.getElementById('check-upper');
+    const checkNum = document.getElementById('check-num');
+    const checkSym = document.getElementById('check-sym');
 
-  <!-- Stats -->
-  <section class="reveal border-t border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900/30">
-    <div class="section-container py-14 grid sm:grid-cols-3 gap-6 text-center">
-      <div class="card">
-        <div class="text-3xl font-extrabold text-accent-600 dark:text-accent-400">50+</div>
-        <div class="text-surface-500 dark:text-surface-400 text-sm mt-1">Active members</div>
-      </div>
-      <div class="card">
-        <div class="text-3xl font-extrabold text-accent-600 dark:text-accent-400">12</div>
-        <div class="text-surface-500 dark:text-surface-400 text-sm mt-1">Workshops conducted</div>
-      </div>
-      <div class="card">
-        <div class="text-3xl font-extrabold text-accent-600 dark:text-accent-400">6</div>
-        <div class="text-surface-500 dark:text-surface-400 text-sm mt-1">Awareness &amp; AI events</div>
-      </div>
-    </div>
-  </section>
+    function calculateEntropy(pwd: string) {
+      if (!pwd) return { entropy: 0, text: '0 seconds', pct: 0 };
+      let pool = 0;
+      if (/[a-z]/.test(pwd)) pool += 26;
+      if (/[A-Z]/.test(pwd)) pool += 26;
+      if (/[0-9]/.test(pwd)) pool += 10;
+      if (/[^a-zA-Z0-9]/.test(pwd)) pool += 33;
+      if (pool === 0) pool = 1;
 
-  <!-- Gallery preview -->
-  <section class="reveal border-t border-surface-200 dark:border-surface-800">
-    <div class="section-container py-16">
-      <h2 class="page-heading">What we've been up to</h2>
-      <p class="page-lead">Sneak peek from our activities. See more in the full gallery.</p>
-      <div class="mt-8 grid sm:grid-cols-2 md:grid-cols-3 gap-5">
-        <img src="/assets/B.webp" alt="Club activity" class="gallery-img" />
-        <img src="/assets/C.webp" alt="Club activity" class="gallery-img" />
-        <img src="/assets/D.webp" alt="Club activity" class="gallery-img" />
-      </div>
-      <div class="mt-6">
-        <a href="/gallery" class="btn-primary">Open gallery</a>
-      </div>
-    </div>
-  </section>
+      const entropy = pwd.length * Math.log2(pool);
 
-  <!-- FAQ -->
-  <section class="reveal border-t border-surface-200 dark:border-surface-800">
-    <div class="section-container py-16">
-      <h2 class="page-heading">FAQ</h2>
-      <div class="mt-8 grid md:grid-cols-2 gap-4">
-        <details class="card group">
-          <summary class="font-semibold cursor-pointer text-surface-900 dark:text-white flex items-center justify-between">
-            Do I need prior experience?
-            <svg class="w-5 h-5 shrink-0 transition-transform group-open:rotate-180 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-          </summary>
-          <p class="text-sm text-surface-500 dark:text-surface-400 mt-3">No. We start with basics and help you learn step by step.</p>
-        </details>
-        <details class="card group">
-          <summary class="font-semibold cursor-pointer text-surface-900 dark:text-white flex items-center justify-between">
-            How often do we meet?
-            <svg class="w-5 h-5 shrink-0 transition-transform group-open:rotate-180 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-          </summary>
-          <p class="text-sm text-surface-500 dark:text-surface-400 mt-3">We meet every Monday and Thursday. Events and workshops are announced in advance.</p>
-        </details>
-        <details class="card group">
-          <summary class="font-semibold cursor-pointer text-surface-900 dark:text-white flex items-center justify-between">
-            Can I propose a session?
-            <svg class="w-5 h-5 shrink-0 transition-transform group-open:rotate-180 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-          </summary>
-          <p class="text-sm text-surface-500 dark:text-surface-400 mt-3">Yes! Share your idea with the coordinators — we'll help you run it.</p>
-        </details>
-        <details class="card group">
-          <summary class="font-semibold cursor-pointer text-surface-900 dark:text-white flex items-center justify-between">
-            Where can I see past work?
-            <svg class="w-5 h-5 shrink-0 transition-transform group-open:rotate-180 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-          </summary>
-          <p class="text-sm text-surface-500 dark:text-surface-400 mt-3">Check the Gallery and our Members page for projects.</p>
-        </details>
-      </div>
-    </div>
-  </section>
+      // Estimate crack time assuming 10 billion guesses/sec
+      const combinations = Math.pow(pool, pwd.length);
+      const seconds = combinations / (10 * 1000 * 1000 * 1000);
 
-  <!-- CTA -->
-  <section class="reveal border-t border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900/30">
-    <div class="section-container py-14 flex flex-col md:flex-row items-center justify-between gap-6">
-      <div>
-        <h3 class="text-2xl md:text-3xl font-extrabold text-surface-900 dark:text-white">Ready to explore cyber security?</h3>
-        <p class="text-surface-500 dark:text-surface-400 mt-2">Be part of workshops, builds and friendly competitions.</p>
-      </div>
-      <div class="flex gap-3 shrink-0">
-        <a href="/contact" class="btn-primary">How to join</a>
-        <a href="/contact" class="btn-outline">Contact us</a>
-      </div>
-    </div>
-  </section>
+      let text = 'Instantly';
+      let pct = Math.min(100, Math.round((entropy / 80) * 100));
+
+      if (seconds < 1) text = 'Under 1 second (Trivial)';
+      else if (seconds < 60) text = `${Math.round(seconds)} seconds`;
+      else if (seconds < 3600) text = `${Math.round(seconds / 60)} minutes`;
+      else if (seconds < 86400) text = `${Math.round(seconds / 3600)} hours`;
+      else if (seconds < 31536000) text = `${Math.round(seconds / 86400)} days`;
+      else if (seconds < 31536000 * 100) text = `${Math.round(seconds / 31536000)} years`;
+      else text = 'Centuries (Mathematically Secure)';
+
+      return { entropy, text, pct };
+    }
+
+    input?.addEventListener('input', () => {
+      const pwd = input.value;
+      const res = calculateEntropy(pwd);
+
+      if (timeDisplay) timeDisplay.textContent = res.text;
+      if (bar) {
+        bar.style.width = `${res.pct}%`;
+        if (res.pct < 35) {
+          bar.className = 'h-full bg-red-500 transition-all duration-300';
+        } else if (res.pct < 70) {
+          bar.className = 'h-full bg-amber-500 transition-all duration-300';
+        } else {
+          bar.className = 'h-full bg-emerald-500 transition-all duration-300';
+        }
+      }
+
+      // Update checkmark indicators
+      if (checkLen) checkLen.innerHTML = (pwd.length >= 12 ? '<span class="text-emerald-500">●</span>' : '<span>○</span>') + ' 12+ Characters';
+      if (checkUpper) checkUpper.innerHTML = (/[A-Z]/.test(pwd) ? '<span class="text-emerald-500">●</span>' : '<span>○</span>') + ' Uppercase [A-Z]';
+      if (checkNum) checkNum.innerHTML = (/[0-9]/.test(pwd) ? '<span class="text-emerald-500">●</span>' : '<span>○</span>') + ' Numbers [0-9]';
+      if (checkSym) checkSym.innerHTML = (/[^a-zA-Z0-9]/.test(pwd) ? '<span class="text-emerald-500">●</span>' : '<span>○</span>') + ' Special Symbols';
+    });
+  </script>
 </Base>

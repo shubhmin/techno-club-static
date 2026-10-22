@@ -1,159 +1,249 @@
 ---
 import Base from '@/layouts/Base.astro';
 
-const galleryData = {
-  '2025-2026': [
-    {
-      title: 'Quiz and Debate Competitions',
-      images: [
-        { src: '/assets/2025/2025quiz (1).webp', caption: 'Class 5 Quiz competition' },
-        { src: '/assets/2025/2025quiz (2).jpeg', caption: 'Class 6 Debate competition' },
-        { src: '/assets/2025/2025quiz (3).webp', caption: 'Quiz and Debate final' },
-      ],
-    },
-    {
-      title: 'Awareness Drive',
-      images: [
-        { src: '/assets/2025/2025awareness (1).webp', caption: 'Drive 1' },
-        { src: '/assets/2025/2025awareness (2).webp', caption: 'Drive 2' },
-        { src: '/assets/2025/2025awareness (3).webp', caption: 'Drive 3' },
-      ],
-    },
-    {
-      title: 'AI Workshops',
-      images: [
-        { src: '/assets/2025/2025workshop (1).jpeg', caption: 'Workshop 1' },
-        { src: '/assets/2025/2025workshop (2).webp', caption: 'Workshop 2' },
-        { src: '/assets/2025/2025workshop (3).webp', caption: 'Workshop 3' },
-      ],
-    },
-  ],
-  '2024-2025': [
-    {
-      title: 'Quiz and Debate Competitions',
-      images: [
-        { src: '/assets/2024/2024quiz (1).webp', caption: 'Class 5 Quiz competition' },
-        { src: '/assets/2024/2024quiz (2).webp', caption: 'Class 6 Debate competition' },
-        { src: '/assets/2024/2024quiz (3).webp', caption: 'Quiz and Debate final' },
-      ],
-    },
-    {
-      title: 'Workshops',
-      images: [
-        { src: '/assets/2024/2024workshop (1).webp', caption: 'Workshop 1' },
-        { src: '/assets/2024/2024workshop (2).webp', caption: 'Workshop 2' },
-        { src: '/assets/2024/2024workshop (3).webp', caption: 'Workshop 3' },
-      ],
-    },
-    {
-      title: 'Awareness Drive',
-      images: [
-        { src: '/assets/2024/2024awareness (1).webp', caption: 'Posters & demos' },
-        { src: '/assets/2024/2024awareness (2).webp', caption: 'Student interactions' },
-        { src: '/assets/2024/2024awareness (3).webp', caption: 'Campus highlights' },
-      ],
-    },
-  ],
-};
+const albums = [
+  {
+    year: '2025–2026',
+    category: 'Competitions',
+    title: 'Inter-House Cyber & AI Quiz Debates',
+    description: 'High-octane rounds for classes 5–8 assessing awareness on digital footprints, cyber laws, and AI attribution.',
+    images: [
+      { src: '/assets/2025/2025quiz (1).webp', label: 'Class 5 Preliminary Round' },
+      { src: '/assets/2025/2025quiz (2).jpeg', label: 'Class 6 Debate Quarter-Finals' },
+      { src: '/assets/2025/2025quiz (3).webp', label: 'Auditorium Championship Finals' },
+    ],
+  },
+  {
+    year: '2025–2026',
+    category: 'Workshops',
+    title: 'AI Literacy & Safe Prompting Labs',
+    description: 'Hands-on training sessions in computer labs exploring prompt evaluation, bias identification, and citation mechanics.',
+    images: [
+      { src: '/assets/2025/2025workshop (1).jpeg', label: 'Lab Setup & Initial Briefing' },
+      { src: '/assets/2025/2025workshop (2).webp', label: 'Live Demonstration on Bias Detection' },
+      { src: '/assets/2025/2025workshop (3).webp', label: 'Peer Code Reviews & Verification' },
+    ],
+  },
+  {
+    year: '2025–2026',
+    category: 'Drives',
+    title: 'Campus Awareness & Security Demos',
+    description: 'Student-led interactive booths showing live password cracking simulators and phishing link dissection.',
+    images: [
+      { src: '/assets/2025/2025awareness (1).webp', label: 'Corridor Information Booth' },
+      { src: '/assets/2025/2025awareness (2).webp', label: 'Interactive Student Quiz Kiosk' },
+      { src: '/assets/2025/2025awareness (3).webp', label: 'Poster Campaign Showcase' },
+    ],
+  },
+  {
+    year: '2024–2025',
+    category: 'Competitions',
+    title: 'Foundational Cybersecurity Challenges',
+    description: 'Inaugural cyber tournament testing encryption ciphers, password entropy, and safe social media habits.',
+    images: [
+      { src: '/assets/2024/2024quiz (1).webp', label: 'Junior Category Puzzles' },
+      { src: '/assets/2024/2024quiz (2).webp', label: 'Middle Wing Debate' },
+      { src: '/assets/2024/2024quiz (3).webp', label: 'Prize Distribution' },
+    ],
+  },
+  {
+    year: '2024–2025',
+    category: 'Workshops',
+    title: 'Password Safety & Two-Factor Hygiene',
+    description: 'Practical workshops teaching students how to enforce 2FA and safely manage personal digital identities.',
+    images: [
+      { src: '/assets/2024/2024workshop (1).webp', label: 'Keynote & Slides' },
+      { src: '/assets/2024/2024workshop (2).webp', label: 'Interactive 2FA Configuration Lab' },
+      { src: '/assets/2024/2024workshop (3).webp', label: 'Q&A and Safety Pledge' },
+    ],
+  },
+  {
+    year: '2024–2025',
+    category: 'Drives',
+    title: 'Pledge for Digital Safety',
+    description: 'School-wide awareness posters, slogan competitions, and ethical internet pledges.',
+    images: [
+      { src: '/assets/2024/2024awareness (1).webp', label: 'Poster Exhibit' },
+      { src: '/assets/2024/2024awareness (2).webp', label: 'Student Engagement' },
+      { src: '/assets/2024/2024awareness (3).webp', label: 'Campus Showcase' },
+    ],
+  },
+];
 ---
 
-<Base title="Gallery — Techno Sreshtha" activePage="gallery">
-  <section class="section-container py-16">
-    <h1 class="reveal page-heading text-center">Gallery</h1>
-    <p class="reveal page-lead text-center mx-auto">Snapshots from workshops, competitions and awareness events.</p>
-
-    {Object.entries(galleryData).map(([year, sections]) => (
-      <div class="mt-14">
-        <h2 class="reveal text-2xl font-bold text-surface-900 dark:text-white text-center mb-8">{year}</h2>
-        <div class="space-y-10">
-          {sections.map((section) => (
-            <div class="reveal">
-              <h3 class="font-semibold text-surface-700 dark:text-surface-300 mb-4">{section.title}</h3>
-              <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {section.images.map((img) => (
-                  <figure class="group cursor-pointer" data-lightbox>
-                    <img
-                      src={img.src}
-                      alt={img.caption}
-                      class="gallery-img"
-                      loading="lazy"
-                    />
-                    <figcaption class="text-xs text-surface-500 dark:text-surface-400 mt-2">{img.caption}</figcaption>
-                  </figure>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+<Base title="Event Archives & Gallery — Techno Sreshtha" activePage="gallery">
+  <section class="py-12 sm:py-16">
+    <div class="tech-container">
+      <!-- Section Header -->
+      <div class="max-w-2xl mb-12">
+        <span class="tech-badge mb-2">FIELD PHOTOGRAPHY</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
+          Event Archives
+        </h1>
+        <p class="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 mt-3">
+          Documenting our student workshops, debate championships, and awareness drives across DAV Public School, Sreshtha Vihar.
+        </p>
       </div>
-    ))}
+
+      <!-- Albums List -->
+      <div class="space-y-16">
+        {albums.map((album) => (
+          <div class="cyber-card p-6 sm:p-8">
+            <!-- Album Metadata Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-black/[0.06] dark:border-white/[0.08] mb-6 gap-2">
+              <div>
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-xs font-mono font-bold text-blue-600 dark:text-blue-400">{album.year}</span>
+                  <span class="text-neutral-400">/</span>
+                  <span class="text-xs font-mono text-neutral-500 uppercase">{album.category}</span>
+                </div>
+                <h2 class="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-white">{album.title}</h2>
+              </div>
+              <p class="text-xs text-neutral-500 dark:text-neutral-400 max-w-sm sm:text-right">
+                {album.description}
+              </p>
+            </div>
+
+            <!-- Image Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+              {album.images.map((img) => (
+                <div
+                  class="group relative rounded-xl overflow-hidden cursor-pointer border border-black/[0.06] dark:border-white/[0.08] bg-neutral-100 dark:bg-black/40 aspect-[4/3]"
+                  data-lightbox-trigger
+                  data-src={img.src}
+                  data-caption={img.label}
+                  data-album={album.title}
+                >
+                  <img
+                    src={img.src}
+                    alt={img.label}
+                    loading="lazy"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                    <span class="text-xs font-mono text-white tracking-wide">
+                      {img.label}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   </section>
 
-  <!-- Lightbox Modal -->
-  <div id="lightbox" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm">
-    <div class="absolute inset-0 flex items-center justify-center p-4" data-close>
-      <div class="relative max-w-4xl w-full" onclick="event.stopPropagation()">
-        <img id="lightboxImage" src="" alt="" class="w-full max-h-[80vh] object-contain rounded-lg bg-surface-900" />
-        <button id="prevBtn" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors">‹</button>
-        <button id="nextBtn" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors">›</button>
-        <button id="closeBtn" class="absolute top-3 right-3 bg-black/50 hover:bg-black/70 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors text-sm">✕</button>
-        <div id="counter" class="absolute bottom-3 right-3 text-xs text-white/70 bg-black/50 px-2 py-1 rounded">1/1</div>
+  <!-- Fullscreen Lightbox Modal -->
+  <div id="gallery-lightbox" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="relative max-w-5xl w-full flex flex-col items-center">
+      <!-- Top info bar -->
+      <div class="w-full flex items-center justify-between text-white/80 font-mono text-xs pb-3 mb-2 border-b border-white/10">
+        <span id="lightbox-album-title" class="truncate font-semibold">ALBUM</span>
+        <div class="flex items-center gap-4">
+          <span id="lightbox-counter">1 / 1</span>
+          <button id="lightbox-close" class="p-1 rounded hover:bg-white/10 text-white transition-colors" aria-label="Close lightbox">
+            ✕ ESC
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Image Display -->
+      <div class="relative w-full flex items-center justify-center aspect-[16/10] max-h-[75vh]">
+        <img id="lightbox-img" src="" alt="" class="max-h-full max-w-full object-contain rounded-lg shadow-2xl" />
+        
+        <!-- Prev / Next Controls -->
+        <button id="lightbox-prev" class="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 border border-white/20 text-white flex items-center justify-center hover:bg-black/90 transition-colors" aria-label="Previous photo">
+          ‹
+        </button>
+        <button id="lightbox-next" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 border border-white/20 text-white flex items-center justify-center hover:bg-black/90 transition-colors" aria-label="Next photo">
+          ›
+        </button>
+      </div>
+
+      <!-- Caption -->
+      <div id="lightbox-caption" class="w-full text-center font-mono text-xs text-white/70 pt-3">
+        Caption
       </div>
     </div>
   </div>
 
   <script>
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImage = document.getElementById('lightboxImage') as HTMLImageElement;
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const closeBtn = document.getElementById('closeBtn');
-    const counter = document.getElementById('counter');
-    let album: string[] = [];
-    let idx = 0;
+    const lightbox = document.getElementById('gallery-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const lightboxAlbum = document.getElementById('lightbox-album-title');
+    const lightboxCounter = document.getElementById('lightbox-counter');
+    const closeBtn = document.getElementById('lightbox-close');
+    const prevBtn = document.getElementById('lightbox-prev');
+    const nextBtn = document.getElementById('lightbox-next');
 
-    function show(i: number) {
-      idx = (i + album.length) % album.length;
-      lightboxImage.src = album[idx];
-      counter!.textContent = `${idx + 1}/${album.length}`;
+    interface Item {
+      src: string;
+      caption: string;
+      album: string;
     }
 
-    function open(src: string, siblings: string[]) {
-      album = siblings;
-      idx = siblings.indexOf(src);
-      if (idx === -1) idx = 0;
-      show(idx);
-      lightbox!.classList.remove('hidden');
+    const triggers = Array.from(document.querySelectorAll('[data-lightbox-trigger]'));
+    const items: Item[] = triggers.map((el) => ({
+      src: el.getAttribute('data-src') || '',
+      caption: el.getAttribute('data-caption') || '',
+      album: el.getAttribute('data-album') || '',
+    }));
+
+    let currentIdx = 0;
+
+    function render() {
+      const item = items[currentIdx];
+      if (!item) return;
+      lightboxImg.src = item.src;
+      if (lightboxCaption) lightboxCaption.textContent = item.caption;
+      if (lightboxAlbum) lightboxAlbum.textContent = item.album;
+      if (lightboxCounter) lightboxCounter.textContent = `${currentIdx + 1} / ${items.length}`;
+    }
+
+    function open(index: number) {
+      currentIdx = index;
+      render();
+      lightbox?.classList.remove('hidden');
       document.body.style.overflow = 'hidden';
     }
 
     function close() {
-      lightbox!.classList.add('hidden');
+      lightbox?.classList.add('hidden');
       document.body.style.overflow = '';
     }
 
-    prevBtn?.addEventListener('click', (e) => { e.stopPropagation(); show(idx - 1); });
-    nextBtn?.addEventListener('click', (e) => { e.stopPropagation(); show(idx + 1); });
+    triggers.forEach((el, i) => {
+      el.addEventListener('click', () => open(i));
+    });
+
     closeBtn?.addEventListener('click', close);
-    lightbox?.querySelector('[data-close]')?.addEventListener('click', close);
+    lightbox?.addEventListener('click', (e) => {
+      if (e.target === lightbox) close();
+    });
+
+    prevBtn?.addEventListener('click', () => {
+      currentIdx = (currentIdx - 1 + items.length) % items.length;
+      render();
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      currentIdx = (currentIdx + 1) % items.length;
+      render();
+    });
 
     document.addEventListener('keydown', (e) => {
       if (lightbox?.classList.contains('hidden')) return;
-      if (e.key === 'ArrowLeft') show(idx - 1);
-      if (e.key === 'ArrowRight') show(idx + 1);
       if (e.key === 'Escape') close();
-    });
-
-    document.querySelectorAll('figure[data-lightbox]').forEach((fig) => {
-      fig.addEventListener('click', () => {
-        const img = fig.querySelector('img');
-        if (!img) return;
-        const grid = fig.closest('.grid');
-        const siblings = grid
-          ? Array.from(grid.querySelectorAll('figure img')).map((i) => (i as HTMLImageElement).src).filter(Boolean)
-          : [img.src];
-        open(img.src, siblings);
-      });
+      if (e.key === 'ArrowLeft') {
+        currentIdx = (currentIdx - 1 + items.length) % items.length;
+        render();
+      }
+      if (e.key === 'ArrowRight') {
+        currentIdx = (currentIdx + 1) % items.length;
+        render();
+      }
     });
   </script>
 </Base>

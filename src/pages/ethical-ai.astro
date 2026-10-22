@@ -1,83 +1,155 @@
 ---
 import Base from '@/layouts/Base.astro';
+
+const pillars = [
+  {
+    num: '01',
+    title: 'Privacy & Data Minimization',
+    desc: 'Public LLMs often store inputs for model training. Never input personal addresses, phone numbers, passwords, school exam drafts, or private student IDs into cloud prompts.',
+    badge: 'CONFIDENTIALITY',
+    iconColor: 'text-blue-500',
+  },
+  {
+    num: '02',
+    title: 'Bias & Algorithmic Scrutiny',
+    desc: 'AI language models perpetuate historical biases present in training corpora. Interrogate outputs across demographic, cultural, and ideological viewpoints.',
+    badge: 'OBJECTIVITY',
+    iconColor: 'text-emerald-500',
+  },
+  {
+    num: '03',
+    title: 'Attribution & Academic Integrity',
+    desc: 'AI should serve as a thought partner, not a surrogate author. Submitting uncredited synthetic text violates school honor codes and undermines authentic intellectual growth.',
+    badge: 'INTEGRITY',
+    iconColor: 'text-amber-500',
+  },
+  {
+    num: '04',
+    title: 'Hallucination & Empirical Verification',
+    desc: 'LLMs predict word probabilities—they do not possess factual truth. Always cross-reference citations, historical dates, scientific claims, and numerical calculations.',
+    badge: 'VERIFICATION',
+    iconColor: 'text-rose-500',
+  },
+];
+
+const comparisons = [
+  {
+    category: 'ESSAY & RESEARCH WORK',
+    good: 'Use AI to generate counter-arguments or suggest a topic outline, then draft your own prose with verified citations.',
+    bad: 'Pasting the essay prompt into ChatGPT and copying the raw response directly into your assignment.',
+  },
+  {
+    category: 'CODE & SCRIPTING',
+    good: 'Asking AI to explain why an index error occurred or suggest algorithm approaches, then writing and testing the code yourself.',
+    bad: 'Copying uninspected code snippets into school networks without understanding what syscalls they perform.',
+  },
+  {
+    category: 'PROMPT INPUTS',
+    good: '"Explain Dijkstra’s algorithm using an abstract transportation graph with 5 anonymous nodes."',
+    bad: '"Here is my teacher’s full email and grading rubric, write me an email arguing my test score."',
+  },
+];
 ---
 
-<Base title="Ethical AI — Techno Sreshtha" activePage="ethical ai">
-  <section class="section-container py-16">
-    <div class="reveal">
-      <h1 class="page-heading">Ethical AI</h1>
-      <p class="page-lead">How we use AI responsibly in school work and projects — with safety, fairness, and integrity.</p>
-    </div>
-
-    <div class="mt-10 grid md:grid-cols-3 gap-6 reveal">
-      <div class="card">
-        <h3 class="font-semibold text-surface-900 dark:text-white">Safety &amp; Privacy</h3>
-        <p class="text-sm text-surface-500 dark:text-surface-400 mt-2">
-          Avoid sharing personal data or secrets with AI tools. Remove identifiers and follow school policy.
+<Base title="Ethical AI Directive — Techno Sreshtha" activePage="ethical ai">
+  <section class="py-12 sm:py-20">
+    <div class="tech-container">
+      <!-- Header -->
+      <div class="max-w-3xl mb-16">
+        <span class="tech-badge mb-2">INSTITUTIONAL DIRECTIVE</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
+          The Ethical AI Charter
+        </h1>
+        <p class="text-base text-neutral-600 dark:text-neutral-400 mt-4 leading-relaxed">
+          Artificial intelligence tools are transforming how students research and code. Techno Sreshtha establishes clear, uncompromising guidelines for responsible, transparent, and rigorous AI adoption at DAV Public School.
         </p>
       </div>
-      <div class="card">
-        <h3 class="font-semibold text-surface-900 dark:text-white">Fairness &amp; Bias</h3>
-        <p class="text-sm text-surface-500 dark:text-surface-400 mt-2">
-          AI can reflect biased data. Cross‑check outputs, seek diverse sources, and acknowledge limitations.
-        </p>
-      </div>
-      <div class="card">
-        <h3 class="font-semibold text-surface-900 dark:text-white">Integrity &amp; Attribution</h3>
-        <p class="text-sm text-surface-500 dark:text-surface-400 mt-2">
-          Use AI for support, not to replace your work. Paraphrase, cite sources, and disclose assistance when required.
-        </p>
-      </div>
-    </div>
-  </section>
 
-  <!-- Good vs Bad -->
-  <section class="reveal border-t border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900/30">
-    <div class="section-container py-14 grid md:grid-cols-2 gap-6">
-      <div class="card">
-        <h3 class="text-lg font-bold text-surface-900 dark:text-white flex items-center gap-2">
-          <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-          Good Practices
-        </h3>
-        <ul class="text-sm text-surface-500 dark:text-surface-400 mt-3 list-disc list-inside space-y-1.5">
-          <li>Ask for outlines and explanations rather than finished essays.</li>
-          <li>Request sources and verify them; avoid copy‑paste.</li>
-          <li>Keep prompts safe — no private or sensitive data.</li>
-          <li>Use AI to debug, brainstorm, and learn concepts.</li>
-        </ul>
+      <!-- 4 Pillars Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20">
+        {pillars.map((p) => (
+          <div class="cyber-card p-8 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="font-mono text-xs font-bold text-neutral-400">{p.num} // {p.badge}</span>
+                <span class:list={['w-2 h-2 rounded-full', p.iconColor.replace('text-', 'bg-')]}></span>
+              </div>
+              <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-2">{p.title}</h3>
+              <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                {p.desc}
+              </p>
+            </div>
+            <div class="pt-6 mt-6 border-t border-black/[0.06] dark:border-white/[0.08] text-[11px] font-mono text-neutral-400">
+              MANDATORY COMPLIANCE · DAVPS GUILD
+            </div>
+          </div>
+        ))}
       </div>
-      <div class="card">
-        <h3 class="text-lg font-bold text-surface-900 dark:text-white flex items-center gap-2">
-          <span class="w-2 h-2 bg-red-500 rounded-full"></span>
-          What to Avoid
-        </h3>
-        <ul class="text-sm text-surface-500 dark:text-surface-400 mt-3 list-disc list-inside space-y-1.5">
-          <li>Submitting AI‑generated text as your own work.</li>
-          <li>Sharing personal data or credentials in prompts.</li>
-          <li>Bypassing rules, cheating, or generating harmful content.</li>
-          <li>Relying on a single AI answer without verification.</li>
-        </ul>
-      </div>
-    </div>
-  </section>
 
-  <!-- Resources -->
-  <section class="reveal border-t border-surface-200 dark:border-surface-800">
-    <div class="section-container py-16">
-      <h2 class="page-heading">Resources</h2>
-      <div class="mt-8 grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-        <a href="/chatbot" class="card group">
-          <div class="font-semibold text-surface-900 dark:text-white group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">Club Chatbot</div>
-          <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Ask basics on AI safety, privacy, and cybersecurity.</p>
-        </a>
-        <a href="/gallery" class="card group">
-          <div class="font-semibold text-surface-900 dark:text-white group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">AI &amp; Ethics Gallery</div>
-          <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">See snapshots from our Ethical AI sessions.</p>
-        </a>
-        <a href="/about" class="card group">
-          <div class="font-semibold text-surface-900 dark:text-white group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">About the Club</div>
-          <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">How we balance cybersecurity with ethical AI learning.</p>
-        </a>
+      <!-- Good vs Dangerous Protocols -->
+      <div class="mb-20">
+        <div class="max-w-2xl mb-8">
+          <span class="tech-badge mb-1">FIELD APPLICATION</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
+            Practical Protocols: Do vs Don't
+          </h2>
+          <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mt-2">
+            Clear distinctions between leverage and academic dishonesty.
+          </p>
+        </div>
+
+        <div class="space-y-4">
+          {comparisons.map((c) => (
+            <div class="cyber-card p-6">
+              <div class="text-xs font-mono font-bold text-neutral-500 mb-4">// {c.category}</div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Recommended -->
+                <div class="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.03]">
+                  <div class="flex items-center gap-2 text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 mb-2">
+                    <span>✓</span> ETHICAL PRACTICE
+                  </div>
+                  <p class="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                    {c.good}
+                  </p>
+                </div>
+
+                <!-- Prohibited -->
+                <div class="p-4 rounded-xl border border-red-500/20 bg-red-500/[0.03]">
+                  <div class="flex items-center gap-2 text-xs font-mono font-bold text-red-600 dark:text-red-400 mb-2">
+                    <span>✕</span> PROHIBITED MISUSE
+                  </div>
+                  <p class="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                    {c.bad}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Academic Citation Blueprint -->
+      <div class="cyber-card p-8 bg-neutral-100 dark:bg-[#0b0e14]">
+        <div class="max-w-2xl mb-6">
+          <span class="text-xs font-mono text-blue-600 dark:text-blue-400 font-bold uppercase">STANDARD PROTOCOL</span>
+          <h3 class="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-white mt-1">
+            How to Cite AI Assistance in School Work
+          </h3>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-2">
+            Transparency preserves credibility. Whenever an AI tool aids your project ideation, debugging, or editing, append this disclosure format to your project bibliography:
+          </p>
+        </div>
+
+        <div class="terminal-window p-4 text-xs font-mono text-neutral-300 leading-relaxed overflow-x-auto">
+          <code>
+            [AI Disclosure Statement]<br/>
+            Tool: OpenAI ChatGPT (GPT-4o) / Anthropic Claude 3.5<br/>
+            Date Consulted: October 2026<br/>
+            Purpose: Brainstorming counter-perspectives for debate research.<br/>
+            Prompt: "Analyze arguments opposing mandatory facial recognition in schools."<br/>
+            Verification: All arguments cross-checked against independent cyber-law journals.
+          </code>
+        </div>
       </div>
     </div>
   </section>

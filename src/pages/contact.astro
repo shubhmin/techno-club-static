@@ -2,57 +2,127 @@
 import Base from '@/layouts/Base.astro';
 ---
 
-<Base title="Contact — Techno Sreshtha" activePage="contact">
-  <section class="section-container py-16">
-    <h1 class="reveal page-heading text-center">Get in Touch</h1>
-    <p class="reveal page-lead text-center mx-auto">We'd love to hear from you! Fill out the form or find us online.</p>
-
-    <div class="grid md:grid-cols-3 gap-8 mt-12">
-      <!-- Info cards -->
-      <div class="reveal md:col-span-1 space-y-4 order-2 md:order-1">
-        <div class="card">
-          <div class="font-semibold text-surface-900 dark:text-white text-sm">Email</div>
-          <div class="text-sm text-surface-500 dark:text-surface-400 mt-1">cyberclub@davsv.edu</div>
-        </div>
-        <div class="card">
-          <div class="font-semibold text-surface-900 dark:text-white text-sm">Location</div>
-          <div class="text-sm text-surface-500 dark:text-surface-400 mt-1">DAV Public School, Sreshtha Vihar</div>
-        </div>
-        <div class="card">
-          <div class="font-semibold text-surface-900 dark:text-white text-sm">Hours</div>
-          <div class="text-sm text-surface-500 dark:text-surface-400 mt-1">Weekly meets · After school</div>
-        </div>
+<Base title="Connect & Join — Techno Sreshtha" activePage="connect">
+  <section class="py-12 sm:py-20">
+    <div class="tech-container">
+      <!-- Header -->
+      <div class="max-w-3xl mb-16">
+        <span class="tech-badge mb-2">COMMUNICATIONS DISPATCH</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
+          Initiate Contact with the Guild
+        </h1>
+        <p class="text-base text-neutral-600 dark:text-neutral-400 mt-4 leading-relaxed">
+          Interested in joining the cybersecurity guild, proposing a workshop, or inviting our student ambassadors for an awareness session? Send a dispatch directly to our coordinators.
+        </p>
       </div>
 
-      <!-- Form -->
-      <form
-        action="https://formspree.io/f/myzdgoap"
-        method="POST"
-        class="reveal md:col-span-2 order-1 md:order-2 card space-y-4"
-      >
-        <input
-          type="text"
-          name="name"
-          placeholder="Your Name"
-          required
-          class="w-full border border-surface-300 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-white p-3 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-500"
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Your Email"
-          required
-          class="w-full border border-surface-300 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-white p-3 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-500"
-        />
-        <textarea
-          name="message"
-          rows="5"
-          placeholder="Your Message"
-          required
-          class="w-full border border-surface-300 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-white p-3 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-500 resize-none"
-        ></textarea>
-        <button type="submit" class="btn-primary w-full justify-center">Send Message</button>
-      </form>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <!-- Contact Information Cards -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="cyber-card p-6">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+              <span class="text-xs font-mono text-neutral-400 font-bold uppercase">PHYSICAL LOCATION</span>
+            </div>
+            <h3 class="font-bold text-sm text-neutral-900 dark:text-white">DAV Public School, Sreshtha Vihar</h3>
+            <p class="text-xs text-neutral-500 mt-1">Computer Laboratory 2 &amp; Auditorium Wing</p>
+            <p class="text-xs text-neutral-400 mt-0.5 font-mono">Delhi 110092, India</p>
+          </div>
+
+          <div class="cyber-card p-6">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-mono text-neutral-400 font-bold uppercase">SCHEDULE &amp; MEETS</span>
+            </div>
+            <h3 class="font-bold text-sm text-neutral-900 dark:text-white">Biweekly Club Assembly</h3>
+            <p class="text-xs text-neutral-500 mt-1">Mondays &amp; Thursdays · After School (2:00 PM – 3:30 PM)</p>
+            <p class="text-xs text-neutral-400 mt-0.5 font-mono">Special lab clinics prior to Olympiad tournaments</p>
+          </div>
+
+          <div class="cyber-card p-6">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              <span class="text-xs font-mono text-neutral-400 font-bold uppercase">OFFICIAL EMAIL</span>
+            </div>
+            <h3 class="font-bold text-sm text-neutral-900 dark:text-white">cyberclub@davsv.edu</h3>
+            <p class="text-xs text-neutral-500 mt-1">Monitored by student coordinators and faculty patrons</p>
+          </div>
+        </div>
+
+        <!-- Submission Form -->
+        <div class="lg:col-span-7">
+          <div class="cyber-card p-8 bg-white dark:bg-[#080b11]">
+            <div class="border-b border-black/[0.06] dark:border-white/[0.08] pb-4 mb-6">
+              <h2 class="text-lg font-bold text-neutral-900 dark:text-white">Dispatch Message Form</h2>
+              <p class="text-xs text-neutral-500 mt-0.5">Direct transmission to the club coordinator mailbox.</p>
+            </div>
+
+            <form action="https://formspree.io/f/myzdgoap" method="POST" class="space-y-5">
+              <div>
+                <label for="name" class="block text-xs font-mono text-neutral-700 dark:text-neutral-300 uppercase font-semibold mb-1.5">
+                  Your Full Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="e.g. Aarav Sharma"
+                  required
+                  class="w-full px-4 py-2.5 rounded-lg text-xs font-mono border border-neutral-300 dark:border-white/10 bg-neutral-50 dark:bg-black/50 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label for="email" class="block text-xs font-mono text-neutral-700 dark:text-neutral-300 uppercase font-semibold mb-1.5">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="e.g. student@davsv.edu"
+                  required
+                  class="w-full px-4 py-2.5 rounded-lg text-xs font-mono border border-neutral-300 dark:border-white/10 bg-neutral-50 dark:bg-black/50 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label for="intent" class="block text-xs font-mono text-neutral-700 dark:text-neutral-300 uppercase font-semibold mb-1.5">
+                  Inquiry Topic
+                </label>
+                <select
+                  id="intent"
+                  name="topic"
+                  class="w-full px-4 py-2.5 rounded-lg text-xs font-mono border border-neutral-300 dark:border-white/10 bg-neutral-50 dark:bg-black/50 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="membership">Student Membership / Joining the Guild</option>
+                  <option value="workshop">Proposing a Workshop or Guest Talk</option>
+                  <option value="ai-ethics">Ethical AI Question / Clarification</option>
+                  <option value="general">General Campus Inquiry</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="message" class="block text-xs font-mono text-neutral-700 dark:text-neutral-300 uppercase font-semibold mb-1.5">
+                  Transmission Content / Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="5"
+                  placeholder="Tell us your class, interest, or session proposal..."
+                  required
+                  class="w-full px-4 py-2.5 rounded-lg text-xs font-mono border border-neutral-300 dark:border-white/10 bg-neutral-50 dark:bg-black/50 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                ></textarea>
+              </div>
+
+              <button type="submit" class="btn-cyber-primary w-full text-xs font-mono py-3">
+                TRANSMIT MESSAGE →
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </Base>

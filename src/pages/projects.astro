@@ -1,25 +1,113 @@
 ---
 import Base from '@/layouts/Base.astro';
+
+const projects = [
+  {
+    title: 'CyberGuard: The Phishing Maze',
+    tag: 'SCRATCH / GAMIFIED LEARNING',
+    track: 'JUNIOR WING (CLASSES 4–6)',
+    desc: 'An interactive puzzle adventure where students navigate a corporate network, spot suspect email headers, and neutralize ransomware bots before the timer expires.',
+    status: 'ACTIVE DEMO',
+    accent: 'border-blue-500/30 text-blue-500',
+    links: [
+      { label: 'Play on Scratch', href: 'https://scratch.mit.edu', external: true },
+    ],
+  },
+  {
+    title: 'Client-Side Password Entropy Engine',
+    tag: 'CRYPTOGRAPHY / WEB APP',
+    track: 'ALL GRADES',
+    desc: 'Pure client-side password entropy evaluator. Computes bits of unpredictability, models brute-force cluster crack times, and flags dictionary vulnerabilities without network transmission.',
+    status: 'LIVE ON HOMEPAGE',
+    accent: 'border-emerald-500/30 text-emerald-500',
+    links: [
+      { label: 'Try on Home', href: '/#entropy-lab' },
+    ],
+  },
+  {
+    title: 'The AI Disclosure Generator',
+    tag: 'ETHICAL AI / ACADEMIC INTEGRITY',
+    track: 'MIDDLE & SENIOR WING',
+    desc: 'A structured form generator helping students format transparent citations and disclosures when using AI models for school projects.',
+    status: 'SPECIFICATION RELEASED',
+    accent: 'border-amber-500/30 text-amber-500',
+    links: [
+      { label: 'View Charter', href: '/ethical-ai' },
+    ],
+  },
+  {
+    title: 'Social Footprint Audit Guide',
+    tag: 'PRIVACY / DEFENSIVE HYGIENE',
+    track: 'COMMUNITY CAMPAIGN',
+    desc: 'A checklist protocol designed by DAV students to audit camera permissions, location metadata, and public exposure on social media apps.',
+    status: 'PDF CHECKLIST',
+    accent: 'border-purple-500/30 text-purple-500',
+    links: [
+      { label: 'Ask Bot for Tips', href: '/chatbot' },
+    ],
+  },
+];
 ---
 
-<Base title="Projects — Techno Sreshtha" activePage="projects">
-  <section class="section-container py-16">
-    <h1 class="reveal page-heading text-center">Scratch Projects</h1>
-    <p class="reveal page-lead text-center mx-auto">
-      Projects from students in smaller classes — showing responsible tech values from a young age.
-    </p>
+<Base title="Student Labs & Projects — Techno Sreshtha" activePage="projects">
+  <section class="py-12 sm:py-20">
+    <div class="tech-container">
+      <!-- Header -->
+      <div class="max-w-3xl mb-16">
+        <span class="tech-badge mb-2">STUDENT BUILDS &amp; LABS</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
+          Practical Security Engineered by Students
+        </h1>
+        <p class="text-base text-neutral-600 dark:text-neutral-400 mt-4 leading-relaxed">
+          From Scratch games for primary classes to client-side cryptographic calculators and AI prompt audit tools—here is what our members build.
+        </p>
+      </div>
 
-    <div class="mt-12 flex gap-6 flex-wrap justify-center reveal">
-      <!-- Embed slots for Scratch projects -->
-      <div class="card text-center py-12 px-8 w-full max-w-lg">
-        <div class="text-surface-400 dark:text-surface-500">
-          <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <p class="font-medium">Projects coming soon</p>
-          <p class="text-sm mt-1">Scratch project embeds will appear here.</p>
+      <!-- Projects Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+        {projects.map((p) => (
+          <div class="cyber-card p-8 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono mb-4">
+                <span class:list={['px-2 py-0.5 rounded border font-semibold', p.accent]}>
+                  {p.tag}
+                </span>
+                <span class="text-neutral-400">{p.status}</span>
+              </div>
+              <h2 class="text-xl font-bold text-neutral-900 dark:text-white mb-2">{p.title}</h2>
+              <div class="text-[11px] font-mono text-neutral-500 mb-3">{p.track}</div>
+              <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6">
+                {p.desc}
+              </p>
+            </div>
+
+            <div class="pt-6 border-t border-black/[0.06] dark:border-white/[0.08] flex items-center justify-between">
+              <div class="flex gap-3">
+                {p.links.map((link) => (
+                  <a
+                    href={link.href}
+                    target={link.external ? '_blank' : undefined}
+                    class="btn-cyber-outline text-xs"
+                  >
+                    {link.label} {link.external ? '↗' : '→'}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Submit a Project Proposal Banner -->
+      <div class="cyber-card p-8 bg-neutral-100 dark:bg-[#0c1017] flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <span class="tech-badge mb-2">OPEN SUBMISSIONS</span>
+          <h3 class="text-xl font-bold text-neutral-900 dark:text-white">Have a cyber tool or Scratch game to showcase?</h3>
+          <p class="text-xs text-neutral-500 mt-1 max-w-xl">
+            Club members can propose and demo their projects during Thursday lab sessions. Faculty mentors provide code reviews and hosting assistance.
+          </p>
         </div>
+        <a href="/contact" class="btn-cyber-primary text-xs shrink-0">Submit A Project Proposal</a>
       </div>
     </div>
   </section>

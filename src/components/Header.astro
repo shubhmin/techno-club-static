@@ -5,73 +5,127 @@ interface Props {
 
 const { activePage = '' } = Astro.props;
 
-const links = [
-  { href: '/', label: 'Home' },
-  { href: '/projects', label: 'Projects' },
+const navItems = [
+  { href: '/', label: 'Overview' },
+  { href: '/about', label: 'Charter' },
   { href: '/ethical-ai', label: 'Ethical AI' },
-  { href: '/gallery', label: 'Gallery' },
-  { href: '/about', label: 'About' },
-  { href: '/members', label: 'Members' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/projects', label: 'Labs & Projects' },
+  { href: '/gallery', label: 'Archives' },
+  { href: '/members', label: 'Guild Team' },
+  { href: '/contact', label: 'Connect' },
 ];
 ---
 
-<header class="sticky top-0 z-40 backdrop-blur-lg bg-white/80 dark:bg-surface-950/80 border-b border-surface-200 dark:border-surface-800">
-  <div class="section-container py-3 flex items-center justify-between">
-    <!-- Logo -->
-    <a href="/" class="flex items-center gap-3 shrink-0">
-      <img src="/assets/logo.webp" alt="Club Logo" class="h-9 w-9 rounded-lg" />
-      <div class="leading-tight hidden sm:block">
-        <div class="font-bold text-surface-900 dark:text-white">Techno Sreshtha</div>
-        <div class="text-xs text-surface-500 dark:text-surface-400">DAV Public School</div>
+<header class="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-[#07090e]/85 border-b border-black/[0.06] dark:border-white/[0.08] transition-colors duration-200">
+  <div class="tech-container flex items-center justify-between h-16">
+    <!-- Brand identity -->
+    <a href="/" class="flex items-center gap-3 group">
+      <div class="relative">
+        <img 
+          src="/assets/logo.webp" 
+          alt="Techno Sreshtha Emblem" 
+          class="h-9 w-9 rounded-lg object-contain ring-1 ring-black/10 dark:ring-white/20 transition-transform group-hover:scale-105" 
+        />
+        <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full ring-2 ring-white dark:ring-[#07090e]"></div>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-sm tracking-tight text-neutral-900 dark:text-white">TECHNO SRESHTHA</span>
+          <span class="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono uppercase rounded bg-neutral-100 dark:bg-white/10 text-neutral-600 dark:text-neutral-300">DAVPS</span>
+        </div>
+        <p class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 -mt-0.5 hidden sm:block">CYBER DEFENSE & AI ETHICS</p>
       </div>
     </a>
 
-    <!-- Desktop nav -->
+    <!-- Desktop Menu -->
     <nav class="hidden lg:flex items-center gap-1" aria-label="Main navigation">
-      {links.map((link) => (
-        <a
-          href={link.href}
-          class:list={['nav-link', { active: activePage === link.label.toLowerCase() }]}
-        >
-          {link.label}
-        </a>
-      ))}
-      <a href="/chatbot" class="btn-primary ml-2 text-sm !py-2 !px-4">Chatbot</a>
+      {navItems.map((item) => {
+        const isActive = activePage.toLowerCase() === item.label.toLowerCase() || 
+          (item.href === '/' && activePage === 'home') ||
+          (item.href === '/about' && activePage === 'about');
+        return (
+          <a
+            href={item.href}
+            class:list={[
+              'px-3 py-1.5 rounded-md text-xs font-medium tracking-wide transition-all duration-150',
+              isActive
+                ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 font-semibold shadow-sm'
+                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/[0.05]'
+            ]}
+          >
+            {item.label}
+          </a>
+        );
+      })}
     </nav>
 
-    <!-- Mobile menu button -->
-    <button
-      id="mobile-menu-btn"
-      class="lg:hidden p-2 rounded-lg text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800"
-      aria-label="Toggle menu"
-    >
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
+    <!-- Right utility bar -->
+    <div class="flex items-center gap-3">
+      <!-- Chatbot CTA -->
+      <a 
+        href="/chatbot" 
+        class="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-lg border border-blue-500/30 bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 transition-colors"
+      >
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+        AI TERMINAL
+      </a>
+
+      <!-- Theme Switcher -->
+      <button
+        id="theme-toggle"
+        type="button"
+        class="p-2 rounded-lg text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-white/[0.06] transition-colors"
+        aria-label="Toggle display mode"
+      >
+        <!-- Sun icon (shown in dark) -->
+        <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="5" stroke-width="2"></circle>
+          <path stroke-linecap="round" stroke-width="2" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+        </svg>
+        <!-- Moon icon (shown in light) -->
+        <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+        </svg>
+      </button>
+
+      <!-- Mobile Hamburger -->
+      <button
+        id="mobile-nav-toggle"
+        class="lg:hidden p-2 rounded-lg text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-white/[0.06]"
+        aria-label="Toggle navigation drawer"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path id="mobile-hamburger-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
   </div>
 
-  <!-- Mobile nav -->
-  <div id="mobile-menu" class="hidden lg:hidden border-t border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-950">
-    <nav class="section-container py-4 flex flex-col gap-1">
-      {links.map((link) => (
-        <a
-          href={link.href}
-          class:list={['nav-link', { active: activePage === link.label.toLowerCase() }]}
-        >
-          {link.label}
-        </a>
-      ))}
-      <a href="/chatbot" class="btn-primary mt-2 text-center">Chatbot</a>
-    </nav>
+  <!-- Mobile Drawer -->
+  <div id="mobile-nav-menu" class="hidden lg:hidden border-t border-neutral-200 dark:border-white/[0.08] bg-white dark:bg-[#07090e] px-4 py-4 space-y-1">
+    {navItems.map((item) => (
+      <a
+        href={item.href}
+        class="block px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-white/[0.06]"
+      >
+        {item.label}
+      </a>
+    ))}
+    <div class="pt-3 border-t border-neutral-200 dark:border-white/[0.08]">
+      <a
+        href="/chatbot"
+        class="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-blue-600 text-white text-xs font-mono font-semibold"
+      >
+        LAUNCH AI TERMINAL
+      </a>
+    </div>
   </div>
 </header>
 
 <script>
-  const btn = document.getElementById('mobile-menu-btn');
-  const menu = document.getElementById('mobile-menu');
-  btn?.addEventListener('click', () => {
-    menu?.classList.toggle('hidden');
+  const navToggle = document.getElementById('mobile-nav-toggle');
+  const navMenu = document.getElementById('mobile-nav-menu');
+  navToggle?.addEventListener('click', () => {
+    navMenu?.classList.toggle('hidden');
   });
 </script>
