@@ -1,0 +1,113 @@
+---
+import Base from '@/layouts/Base.astro';
+---
+
+<Base title="About — Techno Sreshtha" activePage="about">
+  <section class="section-container py-16">
+    <h1 class="reveal page-heading">About the Club</h1>
+    <p class="reveal page-lead">
+      We're a student‑run club at DAV Public School, Sreshtha Vihar, focused on cyber hygiene, safe browsing, secure coding, and spreading awareness.
+    </p>
+
+    <!-- Hero grid -->
+    <div class="reveal grid md:grid-cols-2 gap-10 mt-12 items-center">
+      <img src="/assets/B.webp" class="rounded-xl ring-1 ring-surface-200 dark:ring-surface-800" alt="Club workshop" />
+      <div class="space-y-4">
+        <p class="text-surface-600 dark:text-surface-300">
+          Our activities include biweekly meets, guest talks by alumni, and collaborative projects.
+        </p>
+        <ul class="list-disc list-inside text-surface-600 dark:text-surface-300 space-y-1.5">
+          <li>Workshops — passwords, 2FA, phishing</li>
+          <li>Student‑built tools &amp; websites</li>
+          <li>Annual awareness drive</li>
+          <li>Ethical AI practices &amp; prompt engineering</li>
+        </ul>
+        <a href="/contact" class="btn-primary inline-flex mt-4">Contact us</a>
+      </div>
+    </div>
+
+    <!-- Second grid -->
+    <div class="reveal grid md:grid-cols-2 gap-10 mt-14 items-center">
+      <div class="space-y-4 md:order-1 order-2">
+        <p class="text-surface-600 dark:text-surface-300">
+          We're focused on helping everyone around us be cyber savvy.
+        </p>
+        <ul class="list-disc list-inside text-surface-600 dark:text-surface-300 space-y-1.5">
+          <li>Interactive activities for all ages</li>
+          <li>Student-run drives and expert guidance</li>
+          <li>Wholesome approach to AI</li>
+          <li>Daily planning for future events</li>
+          <li>Start your journey in becoming cyber savvy!</li>
+        </ul>
+        <a href="/ethical-ai" class="btn-primary inline-flex mt-4">Learn about Ethical AI</a>
+      </div>
+      <img src="/assets/2025/2025quiz (3).webp" class="rounded-xl ring-1 ring-surface-200 dark:ring-surface-800 md:order-2 order-1" alt="Quiz competition" />
+    </div>
+  </section>
+
+  <!-- Mission & Values -->
+  <section class="reveal border-t border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900/30">
+    <div class="section-container py-14 grid md:grid-cols-3 gap-6">
+      <div class="card">
+        <h3 class="font-semibold text-surface-900 dark:text-white">Our Mission</h3>
+        <p class="text-sm text-surface-500 dark:text-surface-400 mt-2">
+          Build a culture of cyber safety and ethical AI use through hands‑on learning and peer awareness.
+        </p>
+      </div>
+      <div class="card">
+        <h3 class="font-semibold text-surface-900 dark:text-white">Our Approach</h3>
+        <p class="text-sm text-surface-500 dark:text-surface-400 mt-2">
+          Learn by doing — labs, mini‑projects, friendly competitions, and responsible AI practices.
+        </p>
+      </div>
+      <div class="card">
+        <h3 class="font-semibold text-surface-900 dark:text-white">Our Values</h3>
+        <p class="text-sm text-surface-500 dark:text-surface-400 mt-2">
+          Curiosity, responsibility, fairness, transparency, teamwork, and impact.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="reveal border-t border-surface-200 dark:border-surface-800">
+    <div class="section-container py-16">
+      <h2 class="page-heading">Journey so far</h2>
+      <div class="mt-8 grid md:grid-cols-4 gap-4">
+        {[
+          { year: 'Year 1', text: 'Founded and ran first awareness drive.' },
+          { year: 'Year 2', text: 'Hosted poster making activity and 5+ workshops.' },
+          { year: 'Year 3', text: 'Built small web tools and posters.' },
+          { year: 'Today', text: 'Growing membership, school impact and AI tools.' },
+        ].map((item) => (
+          <div class="card">
+            <div class="font-semibold text-accent-600 dark:text-accent-400">{item.year}</div>
+            <div class="text-sm text-surface-500 dark:text-surface-400 mt-1">{item.text}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Focus Areas -->
+  <section class="reveal border-t border-surface-200 dark:border-surface-800">
+    <div class="section-container py-16 grid md:grid-cols-2 gap-6">
+      <div class="card">
+        <h3 class="text-xl font-bold text-surface-900 dark:text-white">Cybersecurity</h3>
+        <ul class="text-surface-500 dark:text-surface-400 text-sm mt-3 list-disc list-inside space-y-1">
+          <li>Safety basics: passwords, phishing, privacy</li>
+          <li>Secure coding and web security</li>
+          <li>CTFs, blue team drills, and awareness</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="text-xl font-bold text-surface-900 dark:text-white">Ethical AI</h3>
+        <ul class="text-surface-500 dark:text-surface-400 text-sm mt-3 list-disc list-inside space-y-1">
+          <li>Responsible prompt engineering</li>
+          <li>Bias, fairness, and citations</li>
+          <li>Privacy, safety, and plagiarism‑free workflows</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>

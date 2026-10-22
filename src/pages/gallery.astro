@@ -1,0 +1,159 @@
+---
+import Base from '@/layouts/Base.astro';
+
+const galleryData = {
+  '2025-2026': [
+    {
+      title: 'Quiz and Debate Competitions',
+      images: [
+        { src: '/assets/2025/2025quiz (1).webp', caption: 'Class 5 Quiz competition' },
+        { src: '/assets/2025/2025quiz (2).jpeg', caption: 'Class 6 Debate competition' },
+        { src: '/assets/2025/2025quiz (3).webp', caption: 'Quiz and Debate final' },
+      ],
+    },
+    {
+      title: 'Awareness Drive',
+      images: [
+        { src: '/assets/2025/2025awareness (1).webp', caption: 'Drive 1' },
+        { src: '/assets/2025/2025awareness (2).webp', caption: 'Drive 2' },
+        { src: '/assets/2025/2025awareness (3).webp', caption: 'Drive 3' },
+      ],
+    },
+    {
+      title: 'AI Workshops',
+      images: [
+        { src: '/assets/2025/2025workshop (1).jpeg', caption: 'Workshop 1' },
+        { src: '/assets/2025/2025workshop (2).webp', caption: 'Workshop 2' },
+        { src: '/assets/2025/2025workshop (3).webp', caption: 'Workshop 3' },
+      ],
+    },
+  ],
+  '2024-2025': [
+    {
+      title: 'Quiz and Debate Competitions',
+      images: [
+        { src: '/assets/2024/2024quiz (1).webp', caption: 'Class 5 Quiz competition' },
+        { src: '/assets/2024/2024quiz (2).webp', caption: 'Class 6 Debate competition' },
+        { src: '/assets/2024/2024quiz (3).webp', caption: 'Quiz and Debate final' },
+      ],
+    },
+    {
+      title: 'Workshops',
+      images: [
+        { src: '/assets/2024/2024workshop (1).webp', caption: 'Workshop 1' },
+        { src: '/assets/2024/2024workshop (2).webp', caption: 'Workshop 2' },
+        { src: '/assets/2024/2024workshop (3).webp', caption: 'Workshop 3' },
+      ],
+    },
+    {
+      title: 'Awareness Drive',
+      images: [
+        { src: '/assets/2024/2024awareness (1).webp', caption: 'Posters & demos' },
+        { src: '/assets/2024/2024awareness (2).webp', caption: 'Student interactions' },
+        { src: '/assets/2024/2024awareness (3).webp', caption: 'Campus highlights' },
+      ],
+    },
+  ],
+};
+---
+
+<Base title="Gallery — Techno Sreshtha" activePage="gallery">
+  <section class="section-container py-16">
+    <h1 class="reveal page-heading text-center">Gallery</h1>
+    <p class="reveal page-lead text-center mx-auto">Snapshots from workshops, competitions and awareness events.</p>
+
+    {Object.entries(galleryData).map(([year, sections]) => (
+      <div class="mt-14">
+        <h2 class="reveal text-2xl font-bold text-surface-900 dark:text-white text-center mb-8">{year}</h2>
+        <div class="space-y-10">
+          {sections.map((section) => (
+            <div class="reveal">
+              <h3 class="font-semibold text-surface-700 dark:text-surface-300 mb-4">{section.title}</h3>
+              <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {section.images.map((img) => (
+                  <figure class="group cursor-pointer" data-lightbox>
+                    <img
+                      src={img.src}
+                      alt={img.caption}
+                      class="gallery-img"
+                      loading="lazy"
+                    />
+                    <figcaption class="text-xs text-surface-500 dark:text-surface-400 mt-2">{img.caption}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm">
+    <div class="absolute inset-0 flex items-center justify-center p-4" data-close>
+      <div class="relative max-w-4xl w-full" onclick="event.stopPropagation()">
+        <img id="lightboxImage" src="" alt="" class="w-full max-h-[80vh] object-contain rounded-lg bg-surface-900" />
+        <button id="prevBtn" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors">‹</button>
+        <button id="nextBtn" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors">›</button>
+        <button id="closeBtn" class="absolute top-3 right-3 bg-black/50 hover:bg-black/70 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors text-sm">✕</button>
+        <div id="counter" class="absolute bottom-3 right-3 text-xs text-white/70 bg-black/50 px-2 py-1 rounded">1/1</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightboxImage') as HTMLImageElement;
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const closeBtn = document.getElementById('closeBtn');
+    const counter = document.getElementById('counter');
+    let album: string[] = [];
+    let idx = 0;
+
+    function show(i: number) {
+      idx = (i + album.length) % album.length;
+      lightboxImage.src = album[idx];
+      counter!.textContent = `${idx + 1}/${album.length}`;
+    }
+
+    function open(src: string, siblings: string[]) {
+      album = siblings;
+      idx = siblings.indexOf(src);
+      if (idx === -1) idx = 0;
+      show(idx);
+      lightbox!.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function close() {
+      lightbox!.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    prevBtn?.addEventListener('click', (e) => { e.stopPropagation(); show(idx - 1); });
+    nextBtn?.addEventListener('click', (e) => { e.stopPropagation(); show(idx + 1); });
+    closeBtn?.addEventListener('click', close);
+    lightbox?.querySelector('[data-close]')?.addEventListener('click', close);
+
+    document.addEventListener('keydown', (e) => {
+      if (lightbox?.classList.contains('hidden')) return;
+      if (e.key === 'ArrowLeft') show(idx - 1);
+      if (e.key === 'ArrowRight') show(idx + 1);
+      if (e.key === 'Escape') close();
+    });
+
+    document.querySelectorAll('figure[data-lightbox]').forEach((fig) => {
+      fig.addEventListener('click', () => {
+        const img = fig.querySelector('img');
+        if (!img) return;
+        const grid = fig.closest('.grid');
+        const siblings = grid
+          ? Array.from(grid.querySelectorAll('figure img')).map((i) => (i as HTMLImageElement).src).filter(Boolean)
+          : [img.src];
+        open(img.src, siblings);
+      });
+    });
+  </script>
+</Base>

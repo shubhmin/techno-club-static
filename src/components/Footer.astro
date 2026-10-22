@@ -1,0 +1,53 @@
+---
+const footerLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/ethical-ai', label: 'Ethical AI' },
+  { href: '/gallery', label: 'Gallery' },
+  { href: '/about', label: 'About' },
+  { href: '/members', label: 'Members' },
+  { href: '/chatbot', label: 'Chatbot' },
+];
+---
+
+<footer class="mt-auto border-t border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900/40">
+  <div class="section-container py-10 grid sm:grid-cols-2 gap-8">
+    <!-- Left -->
+    <div>
+      <div class="flex items-center gap-3">
+        <img src="/assets/logo.webp" class="h-8 w-8 rounded-lg" alt="Logo" />
+        <span class="font-semibold text-surface-900 dark:text-white">Techno Sreshtha</span>
+      </div>
+      <p class="text-surface-500 dark:text-surface-400 mt-3 text-sm max-w-xs">
+        Spreading cyber awareness, hands-on workshops, and student-built projects — by students, for students.
+      </p>
+    </div>
+
+    <!-- Right -->
+    <div class="flex flex-wrap sm:justify-end items-start gap-x-5 gap-y-2 text-sm">
+      {footerLinks.map((link) => (
+        <a href={link.href} class="text-surface-500 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white transition-colors">
+          {link.label}
+        </a>
+      ))}
+      <!-- Theme toggle -->
+      <button
+        id="theme-toggle"
+        class="mt-1 p-1.5 rounded-lg text-surface-500 dark:text-surface-400 hover:bg-surface-200 dark:hover:bg-surface-800 transition-colors"
+        aria-label="Toggle theme"
+      >
+        <!-- Sun icon (visible in dark mode) -->
+        <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <!-- Moon icon (visible in light mode) -->
+        <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="text-center text-xs text-surface-400 dark:text-surface-600 py-4 border-t border-surface-200 dark:border-surface-800">
+    © 2026 Techno Sreshtha Cyber Safety Club · DAV Public School, Sreshtha Vihar
+  </div>
+</footer>

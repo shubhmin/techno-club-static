@@ -1,0 +1,13 @@
+{
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/about.html", "destination": "/about", "permanent": true },
+    { "source": "/chatbot.html", "destination": "/chatbot", "permanent": true },
+    { "source": "/contactus.html", "destination": "/contact", "permanent": true },
+    { "source": "/ethical-ai.html", "destination": "/ethical-ai", "permanent": true },
+    { "source": "/gallery.html", "destination": "/gallery", "permanent": true },
+    { "source": "/members.html", "destination": "/members", "permanent": true },
+    { "source": "/student_games.html", "destination": "/projects", "permanent": true }
+  ]
+}

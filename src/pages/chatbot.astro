@@ -1,0 +1,104 @@
+---
+import Base from '@/layouts/Base.astro';
+import knowledgeBase from '@/data/knowledge.json';
+
+const quickQuestions = [
+  'What is phishing?',
+  'How to make a strong password?',
+  'What is 2FA?',
+  'How to prevent malware?',
+  'What is a firewall?',
+  'What is AI bias?',
+  'How to avoid AI plagiarism?',
+  'What are safe AI prompts?',
+];
+---
+
+<Base title="Chatbot — Techno Sreshtha" activePage="chatbot">
+  <section class="section-container py-12 max-w-3xl mx-auto">
+    <h1 class="reveal page-heading">Cybersecurity &amp; AI Chatbot</h1>
+    <p class="reveal page-lead">
+      Ask about cybersecurity or ethical AI — e.g. phishing, malware, firewalls, AI bias, privacy.
+    </p>
+
+    <!-- Chat UI -->
+    <div class="reveal card mt-8 p-5 flex flex-col space-y-4">
+      <div id="chatbox" class="h-96 overflow-y-auto bg-surface-50 dark:bg-surface-800/50 rounded-lg p-4 space-y-3 text-sm">
+        <div class="flex justify-start">
+          <div class="bg-surface-200 dark:bg-surface-700 text-surface-800 dark:text-surface-200 p-3 rounded-xl max-w-xs">
+            Hi! I'm a cybersecurity &amp; AI ethics chatbot. Ask me anything relevant.
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <input
+          id="userInput"
+          type="text"
+          placeholder="Type your question..."
+          class="flex-1 p-3 rounded-lg bg-surface-50 dark:bg-surface-800 border border-surface-300 dark:border-surface-700 text-surface-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-accent-500"
+        />
+        <button id="sendBtn" class="btn-primary !px-5">Send</button>
+      </div>
+    </div>
+
+    <!-- Quick questions -->
+    <div class="reveal card mt-6">
+      <div class="font-semibold text-surface-900 dark:text-white text-sm mb-3">Quick questions</div>
+      <div class="flex flex-wrap gap-2">
+        {quickQuestions.map((q) => (
+          <button class="btn-outline text-xs !py-1.5 !px-3" data-ask={q}>{q}</button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <script define:vars={{ knowledgeBase }}>
+    const chatbox = document.getElementById('chatbox');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function appendMessage(sender, text) {
+      const wrapper = document.createElement('div');
+      wrapper.className = sender === 'You' ? 'flex justify-end' : 'flex justify-start';
+
+      const bubble = document.createElement('div');
+      bubble.className = sender === 'You'
+        ? 'bg-accent-600 text-white p-3 rounded-xl max-w-xs'
+        : 'bg-surface-200 dark:bg-surface-700 text-surface-800 dark:text-surface-200 p-3 rounded-xl max-w-xs';
+      bubble.textContent = text;
+
+      wrapper.appendChild(bubble);
+      chatbox.appendChild(wrapper);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    function getResponse(msg) {
+      const lower = msg.toLowerCase();
+      for (const key in knowledgeBase) {
+        if (lower.includes(key)) return knowledgeBase[key];
+      }
+      return "Sorry, I only answer questions about cybersecurity and ethical AI.";
+    }
+
+    function handleSend() {
+      const msg = userInput.value.trim();
+      if (!msg) return;
+      appendMessage('You', msg);
+      const reply = getResponse(msg);
+      setTimeout(() => appendMessage('Bot', reply), 400);
+      userInput.value = '';
+    }
+
+    sendBtn?.addEventListener('click', handleSend);
+    userInput?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleSend();
+    });
+
+    document.querySelectorAll('[data-ask]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        userInput.value = btn.getAttribute('data-ask');
+        handleSend();
+      });
+    });
+  </script>
+</Base>

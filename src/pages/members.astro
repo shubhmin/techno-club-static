@@ -1,0 +1,85 @@
+---
+import Base from '@/layouts/Base.astro';
+
+const teachers = [
+  { name: 'Mr. Ashok Goel', img: '/assets/teachers/Ashok Goel Sir.webp' },
+  { name: 'Mrs. Meena Gulati', img: '/assets/teachers/Meena Gulati Maam.webp' },
+  { name: 'Mrs. Parerna Sudan', img: '/assets/teachers/Parerana Sudan Maam.webp' },
+  { name: 'Ms. Ranjana Verma', img: '/assets/teachers/Ranjana Verma Maam.webp' },
+  { name: 'Ms. Renu Mittal', img: '/assets/teachers/Renu Mittal Maam.webp' },
+  { name: 'Mrs. Sangeeta Kapoor', img: '/assets/teachers/Sangeeta Kapoor Maam.webp' },
+  { name: 'Ms. Srishti', img: '/assets/teachers/Srishti Maam.webp' },
+];
+
+const students = [
+  { name: 'Aradhya Thakur', img: '/assets/students/Aradhya Thakur.webp' },
+  { name: 'Rishika Kanojia', img: '/assets/students/Rishika Kanojia.webp' },
+  { name: 'Simra Naaz', img: '/assets/students/Simra Naaz.webp' },
+  { name: 'Ayushi Sharma', img: '/assets/students/Ayushi Sharma.webp' },
+  { name: 'Vanya Saini', img: '/assets/students/Vanya Saini.webp' },
+];
+
+const placeholders = Array.from({ length: 10 }, (_, i) => ({
+  name: `Member ${i + 1}`,
+  img: '/assets/placeholder.svg',
+}));
+---
+
+<Base title="Members — Techno Sreshtha" activePage="members">
+  <!-- Teachers -->
+  <section class="section-container py-16">
+    <div class="reveal">
+      <h1 class="page-heading">Teachers</h1>
+      <p class="page-lead">Our faculty advisors who guide and support the club.</p>
+    </div>
+
+    <div class="mt-8 grid md:grid-cols-3 gap-6 reveal">
+      <div class="card">
+        <h3 class="font-semibold text-surface-900 dark:text-white">Training</h3>
+        <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Runs workshops on basics, secure coding and awareness.</p>
+      </div>
+      <div class="card">
+        <h3 class="font-semibold text-surface-900 dark:text-white">Quizzes &amp; Puzzles</h3>
+        <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Designs monthly challenges and mini events.</p>
+      </div>
+      <div class="card">
+        <h3 class="font-semibold text-surface-900 dark:text-white">Ethical AI</h3>
+        <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Promotes responsible AI use, bias awareness and citation best practices.</p>
+      </div>
+    </div>
+
+    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mt-10 reveal">
+      {teachers.map((t) => (
+        <div class="person-card">
+          <img src={t.img} alt={t.name} class="h-12 w-12 rounded-lg object-cover ring-1 ring-surface-200 dark:ring-surface-700" />
+          <span class="font-medium text-surface-900 dark:text-white">{t.name}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Students -->
+  <section class="border-t border-surface-200 dark:border-surface-800">
+    <div class="section-container py-16">
+      <div class="reveal">
+        <h2 class="page-heading">Members</h2>
+        <p class="page-lead">Our student members who make learning fun and impactful.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mt-10 reveal">
+        {students.map((s) => (
+          <div class="person-card">
+            <img src={s.img} alt={s.name} class="h-12 w-12 rounded-lg object-cover ring-1 ring-surface-200 dark:ring-surface-700" />
+            <span class="font-medium text-surface-900 dark:text-white">{s.name}</span>
+          </div>
+        ))}
+        {placeholders.map((p) => (
+          <div class="person-card opacity-60">
+            <img src={p.img} alt={p.name} class="h-12 w-12 rounded-lg object-cover ring-1 ring-surface-200 dark:ring-surface-700" />
+            <span class="font-medium text-surface-600 dark:text-surface-400">{p.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

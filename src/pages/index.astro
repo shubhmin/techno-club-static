@@ -1,0 +1,194 @@
+---
+import Base from '@/layouts/Base.astro';
+---
+
+<Base activePage="home">
+  <!-- Hero -->
+  <section class="reveal">
+    <div class="section-container py-20 sm:py-28 grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-surface-900 dark:text-white leading-[1.1]">
+          Stay Smart.<br/>Stay Safe.
+        </h1>
+        <p class="mt-4 text-lg text-surface-500 dark:text-surface-400 max-w-lg">
+          Cybersecurity &amp; Ethical AI — Workshops, quizzes, awareness drives, and responsible tech use at DAV Public School.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/about" class="btn-primary">Learn more</a>
+          <a href="/gallery" class="btn-outline">See gallery</a>
+        </div>
+      </div>
+      <div class="relative">
+        <div class="hero-slideshow rounded-2xl overflow-hidden aspect-[4/3] bg-surface-100 dark:bg-surface-800 ring-1 ring-surface-200 dark:ring-surface-700">
+          <img src="/assets/A.webp" alt="Event photo" class="hero-slide active" />
+          <img src="/assets/B.webp" alt="Event photo" class="hero-slide" />
+          <img src="/assets/C.webp" alt="Event photo" class="hero-slide" />
+          <img src="/assets/D.webp" alt="Event photo" class="hero-slide" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Two Tracks -->
+  <section class="reveal border-t border-surface-200 dark:border-surface-800">
+    <div class="section-container py-16 grid md:grid-cols-2 gap-6">
+      <div class="card flex flex-col">
+        <h3 class="text-xl font-bold text-surface-900 dark:text-white">Cybersecurity</h3>
+        <p class="text-surface-500 dark:text-surface-400 mt-2 text-sm">
+          Hands-on security basics, secure coding, and safety awareness for everyone.
+        </p>
+        <ul class="text-surface-600 dark:text-surface-300 text-sm mt-4 space-y-1.5 list-disc list-inside">
+          <li>Password &amp; phishing safety</li>
+          <li>Web security fundamentals</li>
+          <li>Weekly meetings</li>
+        </ul>
+        <div class="mt-auto pt-6">
+          <a href="/chatbot" class="btn-primary text-sm">Explore Cybersecurity</a>
+        </div>
+      </div>
+      <div class="card flex flex-col">
+        <h3 class="text-xl font-bold text-surface-900 dark:text-white">Ethical AI</h3>
+        <p class="text-surface-500 dark:text-surface-400 mt-2 text-sm">
+          Learn responsible AI use, prompt safety, bias awareness, and plagiarism‑free workflows.
+        </p>
+        <ul class="text-surface-600 dark:text-surface-300 text-sm mt-4 space-y-1.5 list-disc list-inside">
+          <li>AI safety &amp; privacy basics</li>
+          <li>Bias, fairness, and attribution</li>
+          <li>Secure, ethical prompt practices</li>
+        </ul>
+        <div class="mt-auto pt-6">
+          <a href="/ethical-ai" class="btn-primary text-sm">Explore Ethical AI</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick highlights -->
+  <section class="reveal border-t border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900/30">
+    <div class="section-container py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+      <div class="card">
+        <span class="font-semibold text-accent-600 dark:text-accent-400">Workshops</span>
+        <span class="text-surface-600 dark:text-surface-300"> — Phishing, password safety</span>
+      </div>
+      <div class="card">
+        <span class="font-semibold text-accent-600 dark:text-accent-400">Competitions</span>
+        <span class="text-surface-600 dark:text-surface-300"> — Weekly cybersafety tips</span>
+      </div>
+      <div class="card">
+        <span class="font-semibold text-accent-600 dark:text-accent-400">Projects</span>
+        <span class="text-surface-600 dark:text-surface-300"> — Tools, posters, web builds</span>
+      </div>
+      <div class="card">
+        <span class="font-semibold text-accent-600 dark:text-accent-400">Community</span>
+        <span class="text-surface-600 dark:text-surface-300"> — Peer learning &amp; mentoring</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upcoming events -->
+  <section class="reveal border-t border-surface-200 dark:border-surface-800">
+    <div class="section-container py-16">
+      <h2 class="page-heading">Upcoming events</h2>
+      <p class="page-lead">Join our next hands-on sessions and challenges. Beginners are welcome!</p>
+      <div class="mt-8 grid md:grid-cols-3 gap-6">
+        <article class="card">
+          <h3 class="font-semibold text-surface-900 dark:text-white">Intro to Web Security</h3>
+          <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Learn about common web vulnerabilities and safe coding tips.</p>
+        </article>
+        <article class="card">
+          <h3 class="font-semibold text-surface-900 dark:text-white">Interactive Activities</h3>
+          <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Regular quizzes, poster making competitions.</p>
+        </article>
+        <article class="card">
+          <h3 class="font-semibold text-surface-900 dark:text-white">Cyber Hygiene Drive</h3>
+          <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">School‑wide awareness on strong passwords and scam spotting.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="reveal border-t border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900/30">
+    <div class="section-container py-14 grid sm:grid-cols-3 gap-6 text-center">
+      <div class="card">
+        <div class="text-3xl font-extrabold text-accent-600 dark:text-accent-400">50+</div>
+        <div class="text-surface-500 dark:text-surface-400 text-sm mt-1">Active members</div>
+      </div>
+      <div class="card">
+        <div class="text-3xl font-extrabold text-accent-600 dark:text-accent-400">12</div>
+        <div class="text-surface-500 dark:text-surface-400 text-sm mt-1">Workshops conducted</div>
+      </div>
+      <div class="card">
+        <div class="text-3xl font-extrabold text-accent-600 dark:text-accent-400">6</div>
+        <div class="text-surface-500 dark:text-surface-400 text-sm mt-1">Awareness &amp; AI events</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery preview -->
+  <section class="reveal border-t border-surface-200 dark:border-surface-800">
+    <div class="section-container py-16">
+      <h2 class="page-heading">What we've been up to</h2>
+      <p class="page-lead">Sneak peek from our activities. See more in the full gallery.</p>
+      <div class="mt-8 grid sm:grid-cols-2 md:grid-cols-3 gap-5">
+        <img src="/assets/B.webp" alt="Club activity" class="gallery-img" />
+        <img src="/assets/C.webp" alt="Club activity" class="gallery-img" />
+        <img src="/assets/D.webp" alt="Club activity" class="gallery-img" />
+      </div>
+      <div class="mt-6">
+        <a href="/gallery" class="btn-primary">Open gallery</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="reveal border-t border-surface-200 dark:border-surface-800">
+    <div class="section-container py-16">
+      <h2 class="page-heading">FAQ</h2>
+      <div class="mt-8 grid md:grid-cols-2 gap-4">
+        <details class="card group">
+          <summary class="font-semibold cursor-pointer text-surface-900 dark:text-white flex items-center justify-between">
+            Do I need prior experience?
+            <svg class="w-5 h-5 shrink-0 transition-transform group-open:rotate-180 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          </summary>
+          <p class="text-sm text-surface-500 dark:text-surface-400 mt-3">No. We start with basics and help you learn step by step.</p>
+        </details>
+        <details class="card group">
+          <summary class="font-semibold cursor-pointer text-surface-900 dark:text-white flex items-center justify-between">
+            How often do we meet?
+            <svg class="w-5 h-5 shrink-0 transition-transform group-open:rotate-180 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          </summary>
+          <p class="text-sm text-surface-500 dark:text-surface-400 mt-3">We meet every Monday and Thursday. Events and workshops are announced in advance.</p>
+        </details>
+        <details class="card group">
+          <summary class="font-semibold cursor-pointer text-surface-900 dark:text-white flex items-center justify-between">
+            Can I propose a session?
+            <svg class="w-5 h-5 shrink-0 transition-transform group-open:rotate-180 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          </summary>
+          <p class="text-sm text-surface-500 dark:text-surface-400 mt-3">Yes! Share your idea with the coordinators — we'll help you run it.</p>
+        </details>
+        <details class="card group">
+          <summary class="font-semibold cursor-pointer text-surface-900 dark:text-white flex items-center justify-between">
+            Where can I see past work?
+            <svg class="w-5 h-5 shrink-0 transition-transform group-open:rotate-180 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          </summary>
+          <p class="text-sm text-surface-500 dark:text-surface-400 mt-3">Check the Gallery and our Members page for projects.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="reveal border-t border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900/30">
+    <div class="section-container py-14 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div>
+        <h3 class="text-2xl md:text-3xl font-extrabold text-surface-900 dark:text-white">Ready to explore cyber security?</h3>
+        <p class="text-surface-500 dark:text-surface-400 mt-2">Be part of workshops, builds and friendly competitions.</p>
+      </div>
+      <div class="flex gap-3 shrink-0">
+        <a href="/contact" class="btn-primary">How to join</a>
+        <a href="/contact" class="btn-outline">Contact us</a>
+      </div>
+    </div>
+  </section>
+</Base>

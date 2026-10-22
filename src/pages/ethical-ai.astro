@@ -1,0 +1,84 @@
+---
+import Base from '@/layouts/Base.astro';
+---
+
+<Base title="Ethical AI — Techno Sreshtha" activePage="ethical ai">
+  <section class="section-container py-16">
+    <div class="reveal">
+      <h1 class="page-heading">Ethical AI</h1>
+      <p class="page-lead">How we use AI responsibly in school work and projects — with safety, fairness, and integrity.</p>
+    </div>
+
+    <div class="mt-10 grid md:grid-cols-3 gap-6 reveal">
+      <div class="card">
+        <h3 class="font-semibold text-surface-900 dark:text-white">Safety &amp; Privacy</h3>
+        <p class="text-sm text-surface-500 dark:text-surface-400 mt-2">
+          Avoid sharing personal data or secrets with AI tools. Remove identifiers and follow school policy.
+        </p>
+      </div>
+      <div class="card">
+        <h3 class="font-semibold text-surface-900 dark:text-white">Fairness &amp; Bias</h3>
+        <p class="text-sm text-surface-500 dark:text-surface-400 mt-2">
+          AI can reflect biased data. Cross‑check outputs, seek diverse sources, and acknowledge limitations.
+        </p>
+      </div>
+      <div class="card">
+        <h3 class="font-semibold text-surface-900 dark:text-white">Integrity &amp; Attribution</h3>
+        <p class="text-sm text-surface-500 dark:text-surface-400 mt-2">
+          Use AI for support, not to replace your work. Paraphrase, cite sources, and disclose assistance when required.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Good vs Bad -->
+  <section class="reveal border-t border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900/30">
+    <div class="section-container py-14 grid md:grid-cols-2 gap-6">
+      <div class="card">
+        <h3 class="text-lg font-bold text-surface-900 dark:text-white flex items-center gap-2">
+          <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+          Good Practices
+        </h3>
+        <ul class="text-sm text-surface-500 dark:text-surface-400 mt-3 list-disc list-inside space-y-1.5">
+          <li>Ask for outlines and explanations rather than finished essays.</li>
+          <li>Request sources and verify them; avoid copy‑paste.</li>
+          <li>Keep prompts safe — no private or sensitive data.</li>
+          <li>Use AI to debug, brainstorm, and learn concepts.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="text-lg font-bold text-surface-900 dark:text-white flex items-center gap-2">
+          <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+          What to Avoid
+        </h3>
+        <ul class="text-sm text-surface-500 dark:text-surface-400 mt-3 list-disc list-inside space-y-1.5">
+          <li>Submitting AI‑generated text as your own work.</li>
+          <li>Sharing personal data or credentials in prompts.</li>
+          <li>Bypassing rules, cheating, or generating harmful content.</li>
+          <li>Relying on a single AI answer without verification.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resources -->
+  <section class="reveal border-t border-surface-200 dark:border-surface-800">
+    <div class="section-container py-16">
+      <h2 class="page-heading">Resources</h2>
+      <div class="mt-8 grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <a href="/chatbot" class="card group">
+          <div class="font-semibold text-surface-900 dark:text-white group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">Club Chatbot</div>
+          <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">Ask basics on AI safety, privacy, and cybersecurity.</p>
+        </a>
+        <a href="/gallery" class="card group">
+          <div class="font-semibold text-surface-900 dark:text-white group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">AI &amp; Ethics Gallery</div>
+          <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">See snapshots from our Ethical AI sessions.</p>
+        </a>
+        <a href="/about" class="card group">
+          <div class="font-semibold text-surface-900 dark:text-white group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">About the Club</div>
+          <p class="text-sm text-surface-500 dark:text-surface-400 mt-1">How we balance cybersecurity with ethical AI learning.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

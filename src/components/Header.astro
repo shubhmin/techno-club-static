@@ -1,0 +1,77 @@
+---
+interface Props {
+  activePage?: string;
+}
+
+const { activePage = '' } = Astro.props;
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/ethical-ai', label: 'Ethical AI' },
+  { href: '/gallery', label: 'Gallery' },
+  { href: '/about', label: 'About' },
+  { href: '/members', label: 'Members' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<header class="sticky top-0 z-40 backdrop-blur-lg bg-white/80 dark:bg-surface-950/80 border-b border-surface-200 dark:border-surface-800">
+  <div class="section-container py-3 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-3 shrink-0">
+      <img src="/assets/logo.webp" alt="Club Logo" class="h-9 w-9 rounded-lg" />
+      <div class="leading-tight hidden sm:block">
+        <div class="font-bold text-surface-900 dark:text-white">Techno Sreshtha</div>
+        <div class="text-xs text-surface-500 dark:text-surface-400">DAV Public School</div>
+      </div>
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden lg:flex items-center gap-1" aria-label="Main navigation">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class:list={['nav-link', { active: activePage === link.label.toLowerCase() }]}
+        >
+          {link.label}
+        </a>
+      ))}
+      <a href="/chatbot" class="btn-primary ml-2 text-sm !py-2 !px-4">Chatbot</a>
+    </nav>
+
+    <!-- Mobile menu button -->
+    <button
+      id="mobile-menu-btn"
+      class="lg:hidden p-2 rounded-lg text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800"
+      aria-label="Toggle menu"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile nav -->
+  <div id="mobile-menu" class="hidden lg:hidden border-t border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-950">
+    <nav class="section-container py-4 flex flex-col gap-1">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class:list={['nav-link', { active: activePage === link.label.toLowerCase() }]}
+        >
+          {link.label}
+        </a>
+      ))}
+      <a href="/chatbot" class="btn-primary mt-2 text-center">Chatbot</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+  });
+</script>

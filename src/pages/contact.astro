@@ -1,0 +1,58 @@
+---
+import Base from '@/layouts/Base.astro';
+---
+
+<Base title="Contact — Techno Sreshtha" activePage="contact">
+  <section class="section-container py-16">
+    <h1 class="reveal page-heading text-center">Get in Touch</h1>
+    <p class="reveal page-lead text-center mx-auto">We'd love to hear from you! Fill out the form or find us online.</p>
+
+    <div class="grid md:grid-cols-3 gap-8 mt-12">
+      <!-- Info cards -->
+      <div class="reveal md:col-span-1 space-y-4 order-2 md:order-1">
+        <div class="card">
+          <div class="font-semibold text-surface-900 dark:text-white text-sm">Email</div>
+          <div class="text-sm text-surface-500 dark:text-surface-400 mt-1">cyberclub@davsv.edu</div>
+        </div>
+        <div class="card">
+          <div class="font-semibold text-surface-900 dark:text-white text-sm">Location</div>
+          <div class="text-sm text-surface-500 dark:text-surface-400 mt-1">DAV Public School, Sreshtha Vihar</div>
+        </div>
+        <div class="card">
+          <div class="font-semibold text-surface-900 dark:text-white text-sm">Hours</div>
+          <div class="text-sm text-surface-500 dark:text-surface-400 mt-1">Weekly meets · After school</div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form
+        action="https://formspree.io/f/myzdgoap"
+        method="POST"
+        class="reveal md:col-span-2 order-1 md:order-2 card space-y-4"
+      >
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name"
+          required
+          class="w-full border border-surface-300 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-white p-3 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-500"
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Your Email"
+          required
+          class="w-full border border-surface-300 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-white p-3 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-500"
+        />
+        <textarea
+          name="message"
+          rows="5"
+          placeholder="Your Message"
+          required
+          class="w-full border border-surface-300 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-white p-3 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-500 resize-none"
+        ></textarea>
+        <button type="submit" class="btn-primary w-full justify-center">Send Message</button>
+      </form>
+    </div>
+  </section>
+</Base>
