@@ -2,6 +2,7 @@
 import '@/styles/global.css';
 import { validateSession } from '@/lib/auth';
 import { hasDb } from '@/lib/db/client';
+import { isS3Configured, getBucket } from '@/lib/s3';
 import {
   getSiteSettings,
   getPageContent,
@@ -17,6 +18,8 @@ if (!session) {
 }
 
 const dbConnected = hasDb();
+const s3Connected = isS3Configured();
+const s3Bucket = getBucket();
 const settings = await getSiteSettings();
 const homeContent = await getPageContent('home');
 const aboutContent = await getPageContent('about');
@@ -34,416 +37,713 @@ const projectsList = await getProjects();
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Guild Control Console — Techno Sreshtha</title>
+  <title>Operator Dashboard — Techno Sreshtha</title>
   <link rel="icon" href="/assets/logo.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
 
-<body class="min-h-screen bg-[#07090e] text-neutral-100 font-sans selection:bg-blue-500/20">
-  <div class="fixed inset-0 pointer-events-none opacity-20 bg-grid-pattern [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+<body class="min-h-screen bg-[#07090e] text-neutral-100 font-sans selection:bg-blue-500/20 antialiased overflow-x-hidden">
+  <!-- Subtle ambient illumination (warm obsidian aura) -->
+  <div class="fixed inset-0 pointer-events-none z-0">
+    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[1000px] h-[450px] bg-gradient-to-b from-blue-600/10 via-indigo-500/5 to-transparent blur-3xl rounded-full"></div>
+    <div class="absolute top-80 right-0 w-[500px] h-[300px] bg-emerald-500/5 blur-3xl rounded-full"></div>
+    <div class="absolute inset-0 bg-grid-pattern opacity-10 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+  </div>
 
-  <!-- Top Global Bar -->
-  <header class="sticky top-0 z-40 backdrop-blur-xl bg-[#090d14]/90 border-b border-white/[0.08]">
+  <!-- Top Glass Navigation Bar -->
+  <header class="sticky top-0 z-40 backdrop-blur-xl bg-[#090d15]/80 border-b border-white/[0.07] transition-all">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <img src="/assets/logo.webp" alt="Logo" class="h-8 w-8 rounded-lg" />
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="font-bold text-sm tracking-tight text-white">GUILD CONTROL CONSOLE</span>
-            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              {dbConnected ? 'NEON POSTGRES: CONNECTED' : 'LOCAL CACHE MODE'}
+      <!-- Left brand & system badge -->
+      <div class="flex items-center gap-3.5">
+        <a href="/admin" class="flex items-center gap-3 group">
+          <div class="relative">
+            <img src="/assets/logo.webp" alt="Logo" class="h-9 w-9 rounded-xl ring-1 ring-white/10 group-hover:ring-blue-500/40 transition-all shadow-md shadow-black/40" />
+            <span class="absolute -bottom-0.5 -right-0.5 flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 ring-2 ring-[#090d15]"></span>
             </span>
           </div>
-          <div class="text-[11px] font-mono text-neutral-400">OPERATOR: {session.user.username}</div>
-        </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-sm tracking-tight text-white group-hover:text-blue-400 transition-colors">TECHNO SRESHTHA</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 font-medium">ADMIN v2.0</span>
+            </div>
+            <div class="text-[11px] font-mono text-neutral-400 flex items-center gap-1.5">
+              <span>DAV Sreshtha Vihar</span>
+              <span class="text-neutral-600">/</span>
+              <span class="text-neutral-300">Operator: <strong class="text-white font-medium">{session.user.username}</strong></span>
+            </div>
+          </div>
+        </a>
       </div>
 
-      <div class="flex items-center gap-3">
+      <!-- Right cluster actions -->
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <!-- Live storage health pill -->
+        <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/[0.08] bg-white/[0.02] text-xs font-mono">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
+          <span class="text-neutral-300">Storage:</span>
+          <span class="text-emerald-400 font-semibold">{s3Connected ? `S3 (${s3Bucket})` : 'Postgres DB'}</span>
+        </div>
+
         <a
           href="/"
           target="_blank"
-          class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-xs font-mono text-neutral-300 hover:bg-white/[0.06] transition-colors"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 text-xs font-mono text-neutral-300 hover:text-white hover:bg-white/[0.06] hover:border-white/20 transition-all shadow-sm"
+          title="Open public website in new tab"
         >
-          VIEW PUBLIC PORTAL ↗
+          <span>Live Site</span>
+          <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
         </a>
+
         <button
           id="logout-btn"
-          class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-colors"
+          class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
         >
-          DISCONNECT
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          <span class="hidden sm:inline">Sign Out</span>
         </button>
       </div>
     </div>
   </header>
 
   <!-- Main Container -->
-  <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8">
-    <!-- Toast message feedback -->
-    <div id="toast" class="fixed top-20 right-6 z-50 hidden px-4 py-3 rounded-xl font-mono text-xs shadow-2xl transition-all"></div>
+  <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
+    <!-- Toast Feedback Container -->
+    <div id="toast" class="fixed top-20 right-6 z-50 hidden px-4 py-3 rounded-2xl font-mono text-xs shadow-2xl backdrop-blur-xl transition-all duration-300 animate-slide-in"></div>
 
-    <!-- Tab navigation -->
-    <div class="flex items-center gap-2 border-b border-white/[0.08] pb-3 overflow-x-auto text-xs font-mono mb-8">
-      <button class="tab-btn active px-3.5 py-2 rounded-lg font-bold transition-colors" data-tab="tab-appearance">
-        🎨 APPEARANCE & BANNER
+    <!-- 1. STATS & HEALTH OVERVIEW (Warmth Anchor) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <!-- Stat 1: Storage & DB -->
+      <div class="group p-4 sm:p-5 rounded-2xl border border-white/[0.08] bg-[#0c101a]/80 backdrop-blur-sm hover:border-emerald-500/30 transition-all">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-mono uppercase tracking-wider text-neutral-400">Database & Cloud</span>
+          <span class="flex h-2 w-2 rounded-full bg-emerald-400"></span>
+        </div>
+        <div class="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+          <span>Neon + S3</span>
+        </div>
+        <div class="text-[11px] font-mono text-emerald-400/90 mt-1 flex items-center gap-1">
+          <span>✓ Edge Immutable Cache</span>
+        </div>
+      </div>
+
+      <!-- Stat 2: Events -->
+      <button class="quick-jump-btn text-left p-4 sm:p-5 rounded-2xl border border-white/[0.08] bg-[#0c101a]/80 backdrop-blur-sm hover:border-blue-500/30 transition-all group" data-tab="tab-events">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-mono uppercase tracking-wider text-neutral-400">Events & Drives</span>
+          <span class="text-xs text-blue-400 group-hover:translate-x-0.5 transition-transform">→</span>
+        </div>
+        <div class="text-lg sm:text-xl font-bold tracking-tight text-white">
+          {eventsList.length} <span class="text-xs font-normal text-neutral-400">scheduled</span>
+        </div>
+        <div class="text-[11px] font-mono text-neutral-400 mt-1">
+          Manage upcoming workshops
+        </div>
       </button>
-      <button class="tab-btn px-3.5 py-2 rounded-lg font-bold text-neutral-400 hover:text-white transition-colors" data-tab="tab-content">
-        📝 ALL WEBPAGES COPY
+
+      <!-- Stat 3: Gallery -->
+      <button class="quick-jump-btn text-left p-4 sm:p-5 rounded-2xl border border-white/[0.08] bg-[#0c101a]/80 backdrop-blur-sm hover:border-amber-500/30 transition-all group" data-tab="tab-gallery">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-mono uppercase tracking-wider text-neutral-400">S3 Media Gallery</span>
+          <span class="text-xs text-amber-400 group-hover:translate-x-0.5 transition-transform">→</span>
+        </div>
+        <div class="text-lg sm:text-xl font-bold tracking-tight text-white">
+          {galleryList.length} <span class="text-xs font-normal text-neutral-400">exhibits</span>
+        </div>
+        <div class="text-[11px] font-mono text-amber-400/90 mt-1">
+          Click to upload photos
+        </div>
       </button>
-      <button class="tab-btn px-3.5 py-2 rounded-lg font-bold text-neutral-400 hover:text-white transition-colors" data-tab="tab-events">
-        📅 EVENTS & MISSIONS ({eventsList.length})
+
+      <!-- Stat 4: Personnel -->
+      <button class="quick-jump-btn text-left p-4 sm:p-5 rounded-2xl border border-white/[0.08] bg-[#0c101a]/80 backdrop-blur-sm hover:border-purple-500/30 transition-all group" data-tab="tab-members">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-mono uppercase tracking-wider text-neutral-400">Guild Personnel</span>
+          <span class="text-xs text-purple-400 group-hover:translate-x-0.5 transition-transform">→</span>
+        </div>
+        <div class="text-lg sm:text-xl font-bold tracking-tight text-white">
+          {membersList.length} <span class="text-xs font-normal text-neutral-400">members</span>
+        </div>
+        <div class="text-[11px] font-mono text-neutral-400 mt-1">
+          Mentors & student leads
+        </div>
       </button>
-      <button class="tab-btn px-3.5 py-2 rounded-lg font-bold text-neutral-400 hover:text-white transition-colors" data-tab="tab-gallery">
-        🖼️ GALLERY & MEDIA ({galleryList.length})
-      </button>
-      <button class="tab-btn px-3.5 py-2 rounded-lg font-bold text-neutral-400 hover:text-white transition-colors" data-tab="tab-members">
-        👥 PERSONNEL ({membersList.length})
-      </button>
-      <button class="tab-btn px-3.5 py-2 rounded-lg font-bold text-neutral-400 hover:text-white transition-colors" data-tab="tab-projects">
-        💻 PROJECTS ({projectsList.length})
-      </button>
-      <button class="tab-btn px-3.5 py-2 rounded-lg font-bold text-neutral-400 hover:text-white transition-colors" data-tab="tab-audit">
-        🛡️ SECURITY AUDIT
-      </button>
+    </div>
+
+    <!-- 2. MODERN SEGMENTED TAB NAVIGATION -->
+    <div class="p-1.5 rounded-2xl bg-[#0c101a]/90 border border-white/[0.08] shadow-lg backdrop-blur-md overflow-x-auto">
+      <div class="flex items-center gap-1.5 min-w-max">
+        <button class="tab-btn active px-4 py-2.5 rounded-xl font-mono text-xs font-semibold transition-all flex items-center gap-2" data-tab="tab-appearance">
+          <svg class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+          </svg>
+          <span>Appearance & Banner</span>
+        </button>
+
+        <button class="tab-btn px-4 py-2.5 rounded-xl font-mono text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/[0.04] transition-all flex items-center gap-2" data-tab="tab-content">
+          <svg class="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          <span>Webpages Copy</span>
+        </button>
+
+        <button class="tab-btn px-4 py-2.5 rounded-xl font-mono text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/[0.04] transition-all flex items-center gap-2" data-tab="tab-events">
+          <svg class="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span>Events</span>
+          <span class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-white/[0.08] text-neutral-300 font-mono">{eventsList.length}</span>
+        </button>
+
+        <button class="tab-btn px-4 py-2.5 rounded-xl font-mono text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/[0.04] transition-all flex items-center gap-2" data-tab="tab-gallery">
+          <svg class="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span>Media & Gallery</span>
+          <span class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-white/[0.08] text-neutral-300 font-mono">{galleryList.length}</span>
+        </button>
+
+        <button class="tab-btn px-4 py-2.5 rounded-xl font-mono text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/[0.04] transition-all flex items-center gap-2" data-tab="tab-members">
+          <svg class="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <span>Personnel</span>
+          <span class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-white/[0.08] text-neutral-300 font-mono">{membersList.length}</span>
+        </button>
+
+        <button class="tab-btn px-4 py-2.5 rounded-xl font-mono text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/[0.04] transition-all flex items-center gap-2" data-tab="tab-projects">
+          <svg class="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+          </svg>
+          <span>Projects</span>
+          <span class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-white/[0.08] text-neutral-300 font-mono">{projectsList.length}</span>
+        </button>
+
+        <button class="tab-btn px-4 py-2.5 rounded-xl font-mono text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/[0.04] transition-all flex items-center gap-2" data-tab="tab-audit">
+          <svg class="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          <span>Audit Log</span>
+        </button>
+      </div>
     </div>
 
     <!-- TAB 1: APPEARANCE & BANNER -->
     <section id="tab-appearance" class="tab-content space-y-6">
-      <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
-        <h2 class="text-sm font-mono font-bold uppercase text-white mb-1">// GLOBAL THEME ACCENT & TELEMETRY</h2>
-        <p class="text-xs text-neutral-400 mb-6">Modify live brand colors, telemetry strings, and announcement alerts without editing code.</p>
-
-        <form id="settings-form" class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form id="settings-form" class="space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Left: Global Theme & Status -->
+          <div class="p-6 rounded-2xl border border-white/[0.08] bg-[#0c101a]/80 backdrop-blur-sm space-y-6">
             <div>
-              <label for="accentColor" class="block text-xs font-mono text-neutral-400 uppercase font-semibold mb-2">Accent Color Theme</label>
-              <select
-                id="accentColor"
-                name="accentColor"
-                class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="blue" selected={settings.accentColor === 'blue'}>Electric Blue (Default Terminal)</option>
-                <option value="emerald" selected={settings.accentColor === 'emerald'}>Cyber Emerald (Defense)</option>
-                <option value="amber" selected={settings.accentColor === 'amber'}>Safety Amber (Alert)</option>
-                <option value="rose" selected={settings.accentColor === 'rose'}>Crimson Rose (Tactical)</option>
-              </select>
+              <h2 class="text-sm font-mono font-bold uppercase tracking-wider text-white flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                THEME ACCENT & TELEMETRY
+              </h2>
+              <p class="text-xs text-neutral-400 mt-1">Configure live brand styling and telemetry bar without writing code.</p>
             </div>
 
-            <div>
-              <label for="systemStatus" class="block text-xs font-mono text-neutral-400 uppercase font-semibold mb-2">System Telemetry Status Bar</label>
+            <!-- Visual Accent Picker -->
+            <div class="space-y-2">
+              <label class="block text-xs font-mono text-neutral-300 uppercase font-semibold">Theme Palette Accent</label>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <label class="color-swatch-card cursor-pointer p-3 rounded-xl border border-white/10 bg-black/40 hover:border-blue-500/50 transition-all flex items-center gap-2.5">
+                  <input type="radio" name="accentColorRadio" value="blue" checked={settings.accentColor === 'blue'} class="accent-radio sr-only" />
+                  <span class="w-3.5 h-3.5 rounded-full bg-blue-500 shadow-sm shadow-blue-500/50 shrink-0"></span>
+                  <span class="text-xs font-mono text-white">Blue</span>
+                </label>
+                <label class="color-swatch-card cursor-pointer p-3 rounded-xl border border-white/10 bg-black/40 hover:border-emerald-500/50 transition-all flex items-center gap-2.5">
+                  <input type="radio" name="accentColorRadio" value="emerald" checked={settings.accentColor === 'emerald'} class="accent-radio sr-only" />
+                  <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50 shrink-0"></span>
+                  <span class="text-xs font-mono text-white">Emerald</span>
+                </label>
+                <label class="color-swatch-card cursor-pointer p-3 rounded-xl border border-white/10 bg-black/40 hover:border-amber-500/50 transition-all flex items-center gap-2.5">
+                  <input type="radio" name="accentColorRadio" value="amber" checked={settings.accentColor === 'amber'} class="accent-radio sr-only" />
+                  <span class="w-3.5 h-3.5 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50 shrink-0"></span>
+                  <span class="text-xs font-mono text-white">Amber</span>
+                </label>
+                <label class="color-swatch-card cursor-pointer p-3 rounded-xl border border-white/10 bg-black/40 hover:border-rose-500/50 transition-all flex items-center gap-2.5">
+                  <input type="radio" name="accentColorRadio" value="rose" checked={settings.accentColor === 'rose'} class="accent-radio sr-only" />
+                  <span class="w-3.5 h-3.5 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50 shrink-0"></span>
+                  <span class="text-xs font-mono text-white">Rose</span>
+                </label>
+              </div>
+              <input type="hidden" id="accentColor" name="accentColor" value={settings.accentColor} />
+            </div>
+
+            <!-- Telemetry string -->
+            <div class="space-y-2">
+              <label for="systemStatus" class="block text-xs font-mono text-neutral-300 uppercase font-semibold">Telemetry Status Bar</label>
               <input
                 type="text"
                 id="systemStatus"
                 name="systemStatus"
                 value={settings.systemStatus}
-                class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="SYSTEMS NORMAL // 2026 CYCLE"
+                class="w-full px-4 py-2.5 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
               />
+              <p class="text-[11px] text-neutral-400">Displayed in the header next to the live connection dot.</p>
             </div>
           </div>
 
-          <div class="p-4 rounded-xl border border-white/[0.08] bg-black/40 space-y-4">
+          <!-- Right: Announcement Banner & Live Preview -->
+          <div class="p-6 rounded-2xl border border-white/[0.08] bg-[#0c101a]/80 backdrop-blur-sm space-y-6">
             <div class="flex items-center justify-between">
               <div>
-                <div class="text-xs font-mono font-bold text-white uppercase">Announcement Top Ribbon</div>
-                <div class="text-[11px] text-neutral-400">Display emergency alert or tournament notice on top of all pages.</div>
+                <h2 class="text-sm font-mono font-bold uppercase tracking-wider text-white flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                  ANNOUNCEMENT TOP RIBBON
+                </h2>
+                <p class="text-xs text-neutral-400 mt-1">Broadcast high-priority notices across all pages.</p>
               </div>
-              <input
-                type="checkbox"
-                id="bannerActive"
-                name="bannerActive"
-                checked={settings.bannerActive}
-                class="w-4 h-4 rounded border-white/20 text-blue-600 focus:ring-blue-500 bg-neutral-900"
-              />
+
+              <!-- Animated Toggle Switch -->
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="bannerActive"
+                  name="bannerActive"
+                  checked={settings.bannerActive}
+                  class="sr-only peer"
+                />
+                <div class="w-11 h-6 bg-white/[0.1] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div class="space-y-4">
               <div>
-                <label for="bannerText" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Banner Announcement Text</label>
+                <label for="bannerText" class="block text-xs font-mono text-neutral-300 uppercase font-semibold mb-1">Ribbon Text</label>
                 <input
                   type="text"
                   id="bannerText"
                   name="bannerText"
                   value={settings.bannerText}
-                  placeholder="e.g. Registrations for CTF 2026 are now open!"
-                  class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white"
+                  placeholder="e.g. Registrations for Cyber Safety Hackathon 2026 are open!"
+                  class="w-full px-4 py-2.5 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 />
               </div>
 
               <div>
-                <label for="bannerLink" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Action Link (optional)</label>
+                <label for="bannerLink" class="block text-xs font-mono text-neutral-300 uppercase font-semibold mb-1">Target Link (Optional)</label>
                 <input
                   type="text"
                   id="bannerLink"
                   name="bannerLink"
                   value={settings.bannerLink}
-                  placeholder="e.g. /gallery or /contact"
-                  class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white"
+                  placeholder="e.g. /events or /contact"
+                  class="w-full px-4 py-2.5 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 />
+              </div>
+
+              <!-- Live Ribbon Mock Preview -->
+              <div class="pt-2">
+                <div class="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">Live Preview</div>
+                <div id="banner-preview" class={`p-3 rounded-xl border text-xs font-mono flex items-center justify-between transition-all ${settings.bannerActive ? 'bg-blue-950/40 border-blue-500/30 text-blue-200' : 'bg-white/[0.02] border-white/[0.06] text-neutral-500'}`}>
+                  <span id="preview-text" class="truncate">{settings.bannerText || 'No active announcement'}</span>
+                  <span id="preview-badge" class={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${settings.bannerActive ? 'bg-blue-500/20 text-blue-300' : 'bg-neutral-800 text-neutral-500'}`}>
+                    {settings.bannerActive ? 'ACTIVE' : 'DISABLED'}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <button type="submit" class="btn-cyber-primary text-xs font-mono">
+        <div class="flex justify-end">
+          <button type="submit" class="btn-cyber-primary px-6 py-2.5 text-xs font-mono font-bold shadow-lg shadow-blue-500/20">
             SAVE GLOBAL SETTINGS →
           </button>
-        </form>
-      </div>
+        </div>
+      </form>
     </section>
 
     <!-- TAB 2: ALL WEBPAGES COPY -->
     <section id="tab-content" class="tab-content hidden space-y-6">
-      <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
-        <div class="flex items-center justify-between mb-4">
+      <div class="p-6 rounded-2xl border border-white/[0.08] bg-[#0c101a]/80 backdrop-blur-sm space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.06]">
           <div>
-            <h2 class="text-sm font-mono font-bold uppercase text-white">// LIVE WEBPAGE COPY EDITOR</h2>
-            <p class="text-xs text-neutral-400">Modify headlines, leads, and section copy across all pages.</p>
+            <h2 class="text-sm font-mono font-bold uppercase tracking-wider text-white">// LIVE WEBPAGE COPY EDITOR</h2>
+            <p class="text-xs text-neutral-400 mt-1">Edit headlines, leads, and mission text across all public routes.</p>
           </div>
-          <select id="page-selector" class="px-3 py-1.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white">
-            <option value="home">Page: Home (/)</option>
-            <option value="about">Page: Charter (/about)</option>
-            <option value="ethical-ai">Page: Ethical AI (/ethical-ai)</option>
-            <option value="projects">Page: Projects (/projects)</option>
-            <option value="contact">Page: Contact (/contact)</option>
+
+          <!-- Page Pill Switcher -->
+          <div class="inline-flex p-1 rounded-xl bg-black/60 border border-white/10 text-xs font-mono">
+            <button type="button" class="page-pill active px-3 py-1.5 rounded-lg text-white font-bold bg-white/10 transition-all" data-target="home">Home (/)</button>
+            <button type="button" class="page-pill px-3 py-1.5 rounded-lg text-neutral-400 hover:text-white transition-all" data-target="about">Charter</button>
+            <button type="button" class="page-pill px-3 py-1.5 rounded-lg text-neutral-400 hover:text-white transition-all" data-target="ethical-ai">Ethical AI</button>
+            <button type="button" class="page-pill px-3 py-1.5 rounded-lg text-neutral-400 hover:text-white transition-all" data-target="projects">Projects</button>
+            <button type="button" class="page-pill px-3 py-1.5 rounded-lg text-neutral-400 hover:text-white transition-all" data-target="contact">Contact</button>
+          </div>
+          <select id="page-selector" class="sr-only">
+            <option value="home">home</option>
+            <option value="about">about</option>
+            <option value="ethical-ai">ethical-ai</option>
+            <option value="projects">projects</option>
+            <option value="contact">contact</option>
           </select>
         </div>
 
         <!-- Home editor -->
         <div id="editor-home" class="page-editor space-y-4">
-          <div>
-            <label for="home-heroTitle" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Hero Title (HTML supported)</label>
-            <textarea id="home-heroTitle" rows="2" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="home" data-key="heroTitle">{homeContent.heroTitle}</textarea>
-          </div>
-          <div>
-            <label for="home-heroLead" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Hero Lead Subtext</label>
-            <textarea id="home-heroLead" rows="3" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="home" data-key="heroLead">{homeContent.heroLead}</textarea>
-          </div>
-          <div class="grid grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label for="home-statMembers" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Members Stat</label>
-              <input type="text" id="home-statMembers" class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="home" data-key="statMembers" value={homeContent.statMembers} />
+              <label for="home-heroTitle" class="block text-xs font-mono text-neutral-300 uppercase font-semibold mb-1">Hero Title (HTML supported)</label>
+              <textarea id="home-heroTitle" rows="3" class="w-full px-4 py-2.5 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500 transition-all" data-page="home" data-key="heroTitle">{homeContent.heroTitle}</textarea>
             </div>
             <div>
-              <label for="home-statLabs" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Labs Stat</label>
-              <input type="text" id="home-statLabs" class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="home" data-key="statLabs" value={homeContent.statLabs} />
-            </div>
-            <div>
-              <label for="home-statDrives" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Drives Stat</label>
-              <input type="text" id="home-statDrives" class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="home" data-key="statDrives" value={homeContent.statDrives} />
+              <label for="home-heroLead" class="block text-xs font-mono text-neutral-300 uppercase font-semibold mb-1">Hero Lead Subtext</label>
+              <textarea id="home-heroLead" rows="3" class="w-full px-4 py-2.5 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500 transition-all" data-page="home" data-key="heroLead">{homeContent.heroLead}</textarea>
             </div>
           </div>
-          <button class="save-page-btn btn-cyber-primary text-xs font-mono" data-target="home">SAVE HOME COPY →</button>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label for="home-statMembers" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Members Stat Label</label>
+              <input type="text" id="home-statMembers" class="w-full px-4 py-2 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white" data-page="home" data-key="statMembers" value={homeContent.statMembers} />
+            </div>
+            <div>
+              <label for="home-statLabs" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Labs Stat Label</label>
+              <input type="text" id="home-statLabs" class="w-full px-4 py-2 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white" data-page="home" data-key="statLabs" value={homeContent.statLabs} />
+            </div>
+            <div>
+              <label for="home-statDrives" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Drives Stat Label</label>
+              <input type="text" id="home-statDrives" class="w-full px-4 py-2 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white" data-page="home" data-key="statDrives" value={homeContent.statDrives} />
+            </div>
+          </div>
+          <div class="flex justify-end pt-2">
+            <button class="save-page-btn btn-cyber-primary text-xs font-mono font-bold" data-target="home">SAVE HOME COPY →</button>
+          </div>
         </div>
 
         <!-- About editor -->
         <div id="editor-about" class="page-editor hidden space-y-4">
           <div>
-            <label for="about-title" class="block text-xs font-mono text-neutral-400 uppercase mb-1">About Page Headline</label>
-            <input type="text" id="about-title" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="about" data-key="title" value={aboutContent.title} />
+            <label for="about-title" class="block text-xs font-mono text-neutral-300 uppercase font-semibold mb-1">Charter Headline</label>
+            <input type="text" id="about-title" class="w-full px-4 py-2.5 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white" data-page="about" data-key="title" value={aboutContent.title} />
           </div>
           <div>
-            <label for="about-lead" class="block text-xs font-mono text-neutral-400 uppercase mb-1">About Page Lead Subtext</label>
-            <textarea id="about-lead" rows="3" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="about" data-key="lead">{aboutContent.lead}</textarea>
+            <label for="about-lead" class="block text-xs font-mono text-neutral-300 uppercase font-semibold mb-1">Charter Lead Subtext</label>
+            <textarea id="about-lead" rows="4" class="w-full px-4 py-2.5 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white" data-page="about" data-key="lead">{aboutContent.lead}</textarea>
           </div>
-          <button class="save-page-btn btn-cyber-primary text-xs font-mono" data-target="about">SAVE ABOUT COPY →</button>
+          <div class="flex justify-end pt-2">
+            <button class="save-page-btn btn-cyber-primary text-xs font-mono font-bold" data-target="about">SAVE CHARTER COPY →</button>
+          </div>
         </div>
 
         <!-- Ethical AI editor -->
         <div id="editor-ethical-ai" class="page-editor hidden space-y-4">
           <div>
-            <label for="ethical-ai-title" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Ethical AI Title</label>
-            <input type="text" id="ethical-ai-title" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="ethical-ai" data-key="title" value={ethicalAiContent.title} />
+            <label for="ethical-ai-title" class="block text-xs font-mono text-neutral-300 uppercase font-semibold mb-1">Ethical AI Title</label>
+            <input type="text" id="ethical-ai-title" class="w-full px-4 py-2.5 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white" data-page="ethical-ai" data-key="title" value={ethicalAiContent.title} />
           </div>
           <div>
-            <label for="ethical-ai-lead" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Charter Lead Subtext</label>
-            <textarea id="ethical-ai-lead" rows="3" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="ethical-ai" data-key="lead">{ethicalAiContent.lead}</textarea>
+            <label for="ethical-ai-lead" class="block text-xs font-mono text-neutral-300 uppercase font-semibold mb-1">Charter Lead Subtext</label>
+            <textarea id="ethical-ai-lead" rows="4" class="w-full px-4 py-2.5 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white" data-page="ethical-ai" data-key="lead">{ethicalAiContent.lead}</textarea>
           </div>
-          <button class="save-page-btn btn-cyber-primary text-xs font-mono" data-target="ethical-ai">SAVE ETHICAL AI COPY →</button>
+          <div class="flex justify-end pt-2">
+            <button class="save-page-btn btn-cyber-primary text-xs font-mono font-bold" data-target="ethical-ai">SAVE ETHICAL AI COPY →</button>
+          </div>
         </div>
 
         <!-- Projects editor -->
         <div id="editor-projects" class="page-editor hidden space-y-4">
           <div>
-            <label for="projects-title" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Projects Page Title</label>
-            <input type="text" id="projects-title" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="projects" data-key="title" value={projectsContent.title} />
+            <label for="projects-title" class="block text-xs font-mono text-neutral-300 uppercase font-semibold mb-1">Projects Page Title</label>
+            <input type="text" id="projects-title" class="w-full px-4 py-2.5 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white" data-page="projects" data-key="title" value={projectsContent.title} />
           </div>
           <div>
-            <label for="projects-lead" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Projects Page Lead</label>
-            <textarea id="projects-lead" rows="3" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="projects" data-key="lead">{projectsContent.lead}</textarea>
+            <label for="projects-lead" class="block text-xs font-mono text-neutral-300 uppercase font-semibold mb-1">Projects Page Lead</label>
+            <textarea id="projects-lead" rows="4" class="w-full px-4 py-2.5 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white" data-page="projects" data-key="lead">{projectsContent.lead}</textarea>
           </div>
-          <button class="save-page-btn btn-cyber-primary text-xs font-mono" data-target="projects">SAVE PROJECTS COPY →</button>
+          <div class="flex justify-end pt-2">
+            <button class="save-page-btn btn-cyber-primary text-xs font-mono font-bold" data-target="projects">SAVE PROJECTS COPY →</button>
+          </div>
         </div>
 
         <!-- Contact editor -->
         <div id="editor-contact" class="page-editor hidden space-y-4">
           <div>
-            <label for="contact-title" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Contact Page Title</label>
-            <input type="text" id="contact-title" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="contact" data-key="title" value={contactContent.title} />
+            <label for="contact-title" class="block text-xs font-mono text-neutral-300 uppercase font-semibold mb-1">Contact Page Title</label>
+            <input type="text" id="contact-title" class="w-full px-4 py-2.5 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white" data-page="contact" data-key="title" value={contactContent.title} />
           </div>
-          <div>
-            <label for="contact-email" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Official Club Email</label>
-            <input type="text" id="contact-email" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="contact" data-key="email" value={contactContent.email} />
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="contact-email" class="block text-xs font-mono text-neutral-300 uppercase font-semibold mb-1">Official Club Email</label>
+              <input type="text" id="contact-email" class="w-full px-4 py-2.5 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white" data-page="contact" data-key="email" value={contactContent.email} />
+            </div>
+            <div>
+              <label for="contact-location" class="block text-xs font-mono text-neutral-300 uppercase font-semibold mb-1">Meeting Location</label>
+              <input type="text" id="contact-location" class="w-full px-4 py-2.5 rounded-xl text-xs font-mono border border-white/[0.09] bg-black/50 text-white" data-page="contact" data-key="location" value={contactContent.location} />
+            </div>
           </div>
-          <div>
-            <label for="contact-location" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Meeting Location</label>
-            <input type="text" id="contact-location" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="contact" data-key="location" value={contactContent.location} />
+          <div class="flex justify-end pt-2">
+            <button class="save-page-btn btn-cyber-primary text-xs font-mono font-bold" data-target="contact">SAVE CONTACT COPY →</button>
           </div>
-          <button class="save-page-btn btn-cyber-primary text-xs font-mono" data-target="contact">SAVE CONTACT COPY →</button>
         </div>
       </div>
     </section>
 
     <!-- TAB 3: EVENTS & MISSIONS -->
     <section id="tab-events" class="tab-content hidden space-y-6">
-      <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
-        <div class="flex items-center justify-between mb-6">
+      <div class="p-6 rounded-2xl border border-white/[0.08] bg-[#0c101a]/80 backdrop-blur-sm space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.06]">
           <div>
-            <h2 class="text-sm font-mono font-bold uppercase text-white">// EVENTS & ACTIVITIES DISPATCH</h2>
-            <p class="text-xs text-neutral-400">Add upcoming workshops, inter-house debates, or awareness drives.</p>
+            <h2 class="text-sm font-mono font-bold uppercase tracking-wider text-white">// EVENTS & ACTIVITIES DISPATCH</h2>
+            <p class="text-xs text-neutral-400 mt-1">Broadcast workshops, competitions, inter-house debates, or cyber drills.</p>
           </div>
-          <button id="add-event-btn" class="btn-cyber-primary text-xs font-mono">
-            + CREATE NEW EVENT
+          <button id="add-event-toggle-btn" class="btn-cyber-primary text-xs font-mono font-bold flex items-center gap-2">
+            <span id="event-toggle-icon">+</span>
+            <span>CREATE NEW EVENT</span>
           </button>
         </div>
 
-        <!-- Events List Table -->
-        <div class="overflow-x-auto">
-          <table class="w-full text-left font-mono text-xs border-collapse">
-            <thead>
-              <tr class="border-b border-white/[0.08] text-neutral-400">
-                <th class="py-2.5 px-3">TITLE</th>
-                <th class="py-2.5 px-3">TRACK</th>
-                <th class="py-2.5 px-3">DATE</th>
-                <th class="py-2.5 px-3">LOCATION</th>
-                <th class="py-2.5 px-3">STATUS</th>
-                <th class="py-2.5 px-3 text-right">ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody id="events-table-body" class="divide-y divide-white/[0.04]">
-              {eventsList.map((e) => (
-                <tr>
-                  <td class="py-3 px-3 font-bold text-white">{e.title}</td>
-                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px]">{e.track}</span></td>
-                  <td class="py-3 px-3 text-neutral-300">{e.eventDate}</td>
-                  <td class="py-3 px-3 text-neutral-400">{e.location}</td>
-                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px]">{e.status}</span></td>
-                  <td class="py-3 px-3 text-right space-x-2">
-                    <button class="delete-event-btn text-red-400 hover:text-red-300" data-id={e.id}>DELETE</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 4: GALLERY & MEDIA -->
-    <section id="tab-gallery" class="tab-content hidden space-y-6">
-      <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
-        <h2 class="text-sm font-mono font-bold uppercase text-white mb-1">// S3 OBJECT STORAGE & MEDIA GALLERY</h2>
-        <p class="text-xs text-neutral-400 mb-6">Upload photos directly to S3-compatible storage (Neon S3, Cloudflare R2, or AWS S3) with automatic database fallback.</p>
-
-        <!-- Direct Upload Box -->
-        <div class="p-6 rounded-xl border border-dashed border-white/20 bg-black/40 text-center mb-8">
-          <input type="file" id="media-file-input" accept="image/*" class="hidden" />
-          <div class="space-y-3">
-            <div class="text-2xl">📸</div>
-            <div class="text-xs font-mono text-white font-bold">CLICK OR DRAG A PHOTO TO UPLOAD TO S3 STORAGE</div>
-            <div class="text-[11px] font-mono text-neutral-400">Supported: WebP, PNG, JPEG, SVG, AVIF (Cached edge-ready via S3 presigned / CDN URL)</div>
-            <button id="browse-btn" class="btn-cyber-outline text-xs font-mono">
-              SELECT IMAGE FILE
-            </button>
-          </div>
-          <div id="upload-status" class="hidden mt-3 text-xs font-mono text-emerald-400"></div>
-        </div>
-
-        <!-- Add Gallery Item Form -->
-        <form id="gallery-form" class="p-5 rounded-xl border border-white/[0.08] bg-black/30 space-y-4 mb-8">
-          <div class="text-xs font-mono font-bold text-white uppercase">// ATTACH PHOTO TO GALLERY ALBUM</div>
+        <!-- Add Event Collapsible Drawer -->
+        <form id="event-form" class="hidden p-5 rounded-2xl border border-blue-500/20 bg-blue-950/20 space-y-4">
+          <div class="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">// SCHEDULE NEW CALENDAR EVENT</div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label for="gallery-year" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Year</label>
-              <input type="text" id="gallery-year" placeholder="2025–2026" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+              <label for="event-title" class="block text-[11px] font-mono text-neutral-300 uppercase mb-1">Event Title</label>
+              <input type="text" id="event-title" placeholder="e.g. Prompt Engineering Invitational" required class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
             </div>
             <div>
-              <label for="gallery-album" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Album Title</label>
-              <input type="text" id="gallery-album" placeholder="e.g. AI Prompting Labs" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+              <label for="event-track" class="block text-[11px] font-mono text-neutral-300 uppercase mb-1">Track</label>
+              <select id="event-track" class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white">
+                <option value="WORKSHOP">Workshop</option>
+                <option value="COMPETITION">Competition</option>
+                <option value="CTF">Capture The Flag (CTF)</option>
+                <option value="SEMINAR">Seminar / Keynote</option>
+                <option value="DRIVE">Awareness Drive</option>
+              </select>
             </div>
             <div>
-              <label for="gallery-caption" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Caption / Label</label>
-              <input type="text" id="gallery-caption" placeholder="e.g. Demonstration Round" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+              <label for="event-date" class="block text-[11px] font-mono text-neutral-300 uppercase mb-1">Date & Time</label>
+              <input type="text" id="event-date" placeholder="e.g. Nov 14, 2026 · 10:00 AM" required class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="event-location" class="block text-[11px] font-mono text-neutral-300 uppercase mb-1">Location</label>
+              <input type="text" id="event-location" placeholder="e.g. Senior Computer Lab 2" required class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            </div>
+            <div>
+              <label for="event-reglink" class="block text-[11px] font-mono text-neutral-300 uppercase mb-1">Registration Link (optional)</label>
+              <input type="text" id="event-reglink" placeholder="https://forms.gle/... or /contact" class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
             </div>
           </div>
           <div>
-            <label for="gallery-image-url" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Image URL (Populated automatically after upload, or paste external URL)</label>
-            <input type="text" id="gallery-image-url" placeholder="e.g. /api/media/1 or /assets/A.webp" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            <label for="event-desc" class="block text-[11px] font-mono text-neutral-300 uppercase mb-1">Description</label>
+            <textarea id="event-desc" rows="2" placeholder="Brief outline of event goals and syllabus..." required class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white"></textarea>
           </div>
-          <button type="submit" class="btn-cyber-primary text-xs font-mono">+ ADD TO EXHIBIT GALLERY</button>
+          <div class="flex justify-end gap-2">
+            <button type="button" id="event-cancel-btn" class="px-4 py-2 rounded-xl text-xs font-mono border border-white/10 text-neutral-400 hover:text-white">Cancel</button>
+            <button type="submit" class="btn-cyber-primary text-xs font-mono font-bold">+ PUBLISH TO SCHEDULE</button>
+          </div>
+        </form>
+
+        <!-- Events List -->
+        {eventsList.length === 0 ? (
+          <div class="p-8 text-center rounded-2xl border border-dashed border-white/10 bg-black/20 text-neutral-400 text-xs font-mono">
+            No events scheduled yet. Click "+ Create New Event" above to add your first mission.
+          </div>
+        ) : (
+          <div class="overflow-x-auto">
+            <table class="w-full text-left font-mono text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-white/[0.08] text-neutral-400 text-[11px]">
+                  <th class="py-3 px-3">TITLE</th>
+                  <th class="py-3 px-3">TRACK</th>
+                  <th class="py-3 px-3">DATE & LOCATION</th>
+                  <th class="py-3 px-3">STATUS</th>
+                  <th class="py-3 px-3 text-right">ACTION</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-white/[0.04]">
+                {eventsList.map((e) => (
+                  <tr class="hover:bg-white/[0.02] transition-colors">
+                    <td class="py-3.5 px-3 font-bold text-white">
+                      <div>{e.title}</div>
+                      <div class="text-[11px] text-neutral-400 font-normal line-clamp-1">{e.description}</div>
+                    </td>
+                    <td class="py-3.5 px-3">
+                      <span class="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-[10px] font-semibold border border-blue-500/20">{e.track}</span>
+                    </td>
+                    <td class="py-3.5 px-3 text-neutral-300">
+                      <div>{e.eventDate}</div>
+                      <div class="text-[10px] text-neutral-500">{e.location}</div>
+                    </td>
+                    <td class="py-3.5 px-3">
+                      <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-semibold border border-emerald-500/20">{e.status}</span>
+                    </td>
+                    <td class="py-3.5 px-3 text-right">
+                      <button class="delete-event-btn text-red-400 hover:text-red-300 hover:underline px-2 py-1 rounded" data-id={e.id}>DELETE</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- TAB 4: GALLERY & S3 MEDIA -->
+    <section id="tab-gallery" class="tab-content hidden space-y-6">
+      <div class="p-6 rounded-2xl border border-white/[0.08] bg-[#0c101a]/80 backdrop-blur-sm space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-white/[0.06]">
+          <div>
+            <h2 class="text-sm font-mono font-bold uppercase tracking-wider text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              S3 OBJECT STORAGE & EXHIBIT GALLERY
+            </h2>
+            <p class="text-xs text-neutral-400 mt-1">Upload images straight to Neon S3 (`techno-club` bucket) with permanent immutable edge caching.</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-mono text-neutral-400">
+            <span class="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/10 text-emerald-300">Bucket: {s3Bucket}</span>
+          </div>
+        </div>
+
+        <!-- Modern S3 Drag-and-Drop Zone -->
+        <div id="dropzone" class="p-8 rounded-2xl border-2 border-dashed border-white/20 bg-black/40 hover:border-blue-500/50 hover:bg-black/60 transition-all text-center cursor-pointer group">
+          <input type="file" id="media-file-input" accept="image/*" class="hidden" />
+          <div class="space-y-3 pointer-events-none">
+            <div class="w-12 h-12 mx-auto rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+            </div>
+            <div>
+              <div class="text-sm font-mono text-white font-bold tracking-tight">DRAG & DROP IMAGE OR CLICK TO BROWSE</div>
+              <div class="text-[11px] font-mono text-neutral-400 mt-1">WebP, PNG, JPG, SVG, AVIF (Cached at /api/media/:id permanently)</div>
+            </div>
+            <button type="button" id="browse-btn" class="pointer-events-auto inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono border border-white/10 bg-white/[0.05] hover:bg-white/10 text-white transition-all">
+              Choose Local Image File
+            </button>
+          </div>
+          <div id="upload-status" class="hidden mt-4 p-3 rounded-xl border border-emerald-500/30 bg-emerald-950/30 text-xs font-mono text-emerald-300"></div>
+        </div>
+
+        <!-- Add Gallery Item Form -->
+        <form id="gallery-form" class="p-5 rounded-2xl border border-white/[0.08] bg-black/40 space-y-4">
+          <div class="text-xs font-mono font-bold text-white uppercase tracking-wider">// ATTACH PHOTO TO EXHIBIT GALLERY</div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label for="gallery-year" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Academic Cycle</label>
+              <input type="text" id="gallery-year" placeholder="2025–2026" required class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            </div>
+            <div>
+              <label for="gallery-album" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Album Title</label>
+              <input type="text" id="gallery-album" placeholder="e.g. AI Prompting Labs" required class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            </div>
+            <div>
+              <label for="gallery-caption" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Caption / Description</label>
+              <input type="text" id="gallery-caption" placeholder="e.g. Demonstration Round" required class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            </div>
+          </div>
+          <div>
+            <label for="gallery-image-url" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Image URL (Populated automatically after upload, or enter /api/media/...)</label>
+            <input type="text" id="gallery-image-url" placeholder="e.g. /api/media/1 or /assets/gallery/A.webp" required class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
+          </div>
+          <div class="flex justify-end">
+            <button type="submit" class="btn-cyber-primary text-xs font-mono font-bold">+ ADD TO PUBLIC EXHIBIT</button>
+          </div>
         </form>
 
         <!-- Current items grid -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {galleryList.map((g) => (
-            <div class="cyber-card p-2 group relative">
-              <img src={g.imageUrl} alt={g.caption} class="w-full h-28 object-cover rounded-lg" />
-              <div class="p-2 text-[11px] font-mono truncate text-white">{g.caption || 'Untitled'}</div>
-              <div class="px-2 text-[10px] font-mono text-neutral-400">{g.yearCategory}</div>
-              <button class="delete-gallery-btn absolute top-3 right-3 p-1 rounded bg-red-600/80 text-white text-[10px] opacity-0 group-hover:opacity-100 transition-opacity" data-id={g.id}>
-                ✕
-              </button>
+        <div>
+          <div class="text-xs font-mono font-bold text-neutral-400 uppercase tracking-wider mb-4">Current Gallery Exhibits ({galleryList.length})</div>
+          {galleryList.length === 0 ? (
+            <div class="p-8 text-center rounded-2xl border border-dashed border-white/10 bg-black/20 text-neutral-400 text-xs font-mono">
+              No gallery images found. Drag & drop an image above to populate the exhibit.
             </div>
-          ))}
+          ) : (
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {galleryList.map((g) => (
+                <div class="group relative rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0c101a] hover:border-white/20 transition-all shadow-md">
+                  <div class="aspect-video w-full bg-black/60 overflow-hidden">
+                    <img src={g.imageUrl} alt={g.caption} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                  </div>
+                  <div class="p-3">
+                    <div class="text-xs font-mono font-bold truncate text-white">{g.caption || 'Untitled'}</div>
+                    <div class="flex items-center justify-between text-[10px] font-mono text-neutral-400 mt-1">
+                      <span>{g.albumTitle}</span>
+                      <span class="text-neutral-500">{g.yearCategory}</span>
+                    </div>
+                  </div>
+                  <div class="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button class="copy-url-btn p-1.5 rounded-lg bg-black/80 hover:bg-black text-white text-[10px] backdrop-blur-md border border-white/20" data-url={g.imageUrl} title="Copy URL">
+                      📋
+                    </button>
+                    <button class="delete-gallery-btn p-1.5 rounded-lg bg-red-600/90 hover:bg-red-600 text-white text-[10px] backdrop-blur-md" data-id={g.id} title="Delete">
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>
 
     <!-- TAB 5: MEMBERS & PERSONNEL -->
     <section id="tab-members" class="tab-content hidden space-y-6">
-      <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
-        <h2 class="text-sm font-mono font-bold uppercase text-white mb-1">// GUILD PERSONNEL & FACULTY</h2>
-        <p class="text-xs text-neutral-400 mb-6">Manage faculty mentors and student core team operators.</p>
+      <div class="p-6 rounded-2xl border border-white/[0.08] bg-[#0c101a]/80 backdrop-blur-sm space-y-6">
+        <div>
+          <h2 class="text-sm font-mono font-bold uppercase tracking-wider text-white">// GUILD PERSONNEL & FACULTY MENTORS</h2>
+          <p class="text-xs text-neutral-400 mt-1">Manage faculty advisors and student core leads showcased on the public portal.</p>
+        </div>
 
         <!-- Add member form -->
-        <form id="member-form" class="p-5 rounded-xl border border-white/[0.08] bg-black/30 space-y-4 mb-8">
-          <div class="text-xs font-mono font-bold text-white uppercase">// REGISTER NEW MEMBER OR MENTOR</div>
+        <form id="member-form" class="p-5 rounded-2xl border border-white/[0.08] bg-black/40 space-y-4">
+          <div class="text-xs font-mono font-bold text-white uppercase tracking-wider">// ENROLL NEW GUILD MEMBER</div>
           <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
             <div>
               <label for="member-name" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Full Name</label>
-              <input type="text" id="member-name" placeholder="e.g. Aarav Sharma" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+              <input type="text" id="member-name" placeholder="e.g. Aarav Sharma" required class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
             </div>
             <div>
               <label for="member-role" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Role / Designation</label>
-              <input type="text" id="member-role" placeholder="e.g. Student Lead · Web Defense" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+              <input type="text" id="member-role" placeholder="e.g. Student Lead · Web Defense" required class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
             </div>
             <div>
               <label for="member-category" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Category</label>
-              <select id="member-category" class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white">
+              <select id="member-category" class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white">
                 <option value="CORE_STUDENT">Student Core Lead</option>
                 <option value="FACULTY">Faculty Mentor</option>
                 <option value="CONTRIBUTOR">Contributor</option>
               </select>
             </div>
             <div>
-              <label for="member-avatar" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Avatar Photo URL</label>
-              <input type="text" id="member-avatar" placeholder="/assets/placeholder.svg or /api/media/..." class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+              <label for="member-avatar" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Avatar URL</label>
+              <input type="text" id="member-avatar" placeholder="/assets/placeholder.svg or /api/media/..." class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
             </div>
           </div>
-          <button type="submit" class="btn-cyber-primary text-xs font-mono">+ SAVE GUILD MEMBER</button>
+          <div class="flex justify-end">
+            <button type="submit" class="btn-cyber-primary text-xs font-mono font-bold">+ SAVE GUILD MEMBER</button>
+          </div>
         </form>
 
         <!-- Current members list -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {membersList.map((m) => (
-            <div class="cyber-card p-4 flex items-center justify-between">
-              <div class="flex items-center gap-3 min-w-0">
-                <img src={m.imageUrl || '/assets/placeholder.svg'} alt={m.name} class="w-10 h-10 rounded-lg object-cover ring-1 ring-white/10" />
+            <div class="p-4 rounded-2xl border border-white/[0.08] bg-[#0c101a] flex items-center justify-between hover:border-white/20 transition-all">
+              <div class="flex items-center gap-3.5 min-w-0">
+                <img src={m.imageUrl || '/assets/placeholder.svg'} alt={m.name} class="w-11 h-11 rounded-xl object-cover ring-1 ring-white/10 bg-black/40 shrink-0" />
                 <div class="min-w-0">
                   <div class="font-bold text-xs text-white truncate">{m.name}</div>
-                  <div class="text-[10px] text-neutral-400 truncate">{m.role}</div>
+                  <div class="text-[11px] text-neutral-400 truncate">{m.role}</div>
+                  <span class="inline-block mt-1 text-[9px] font-mono px-2 py-0.5 rounded-full bg-white/[0.06] text-neutral-300">
+                    {m.category === 'FACULTY' ? 'Faculty Mentor' : m.category === 'CORE_STUDENT' ? 'Student Lead' : 'Contributor'}
+                  </span>
                 </div>
               </div>
-              <button class="delete-member-btn text-xs text-red-400 hover:text-red-300 ml-2" data-id={m.id}>DELETE</button>
+              <button class="delete-member-btn text-xs font-mono text-red-400 hover:text-red-300 ml-2 px-2 py-1" data-id={m.id}>DELETE</button>
             </div>
           ))}
         </div>
@@ -452,50 +752,60 @@ const projectsList = await getProjects();
 
     <!-- TAB 6: PROJECTS -->
     <section id="tab-projects" class="tab-content hidden space-y-6">
-      <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
-        <h2 class="text-sm font-mono font-bold uppercase text-white mb-1">// STUDENT PROJECTS & SCRATCH BUILDS</h2>
-        <p class="text-xs text-neutral-400 mb-6">Manage showcased software, games, and security tools.</p>
+      <div class="p-6 rounded-2xl border border-white/[0.08] bg-[#0c101a]/80 backdrop-blur-sm space-y-6">
+        <div>
+          <h2 class="text-sm font-mono font-bold uppercase tracking-wider text-white">// STUDENT PROJECTS & SCRATCH BUILDS</h2>
+          <p class="text-xs text-neutral-400 mt-1">Manage interactive cybersecurity tools, Scratch games, and ethics modules.</p>
+        </div>
 
         <!-- Add project form -->
-        <form id="project-form" class="p-5 rounded-xl border border-white/[0.08] bg-black/30 space-y-4 mb-8">
-          <div class="text-xs font-mono font-bold text-white uppercase">// PUBLISH NEW PROJECT</div>
+        <form id="project-form" class="p-5 rounded-2xl border border-white/[0.08] bg-black/40 space-y-4">
+          <div class="text-xs font-mono font-bold text-white uppercase tracking-wider">// PUBLISH NEW LAB PROJECT</div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label for="project-title" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Project Title</label>
-              <input type="text" id="project-title" placeholder="e.g. Phishing Maze Scratch" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+              <input type="text" id="project-title" placeholder="e.g. Phishing Maze Scratch" required class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
             </div>
             <div>
               <label for="project-tag" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Category Tag</label>
-              <input type="text" id="project-tag" placeholder="e.g. SCRATCH GAME" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+              <input type="text" id="project-tag" placeholder="e.g. SCRATCH GAME" required class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
             </div>
             <div>
               <label for="project-track" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Target Wing</label>
-              <input type="text" id="project-track" placeholder="e.g. JUNIOR WING (CLASSES 4–6)" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+              <input type="text" id="project-track" placeholder="e.g. JUNIOR WING (CLASSES 4–6)" required class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
             </div>
           </div>
           <div>
             <label for="project-desc" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Description</label>
-            <textarea id="project-desc" rows="2" placeholder="Brief explanation of the project..." required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white"></textarea>
+            <textarea id="project-desc" rows="2" placeholder="Brief outline of the learning outcomes..." required class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white"></textarea>
           </div>
           <div>
-            <label for="project-link" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Link URL (Scratch embed, GitHub, or internal route)</label>
-            <input type="text" id="project-link" placeholder="https://scratch.mit.edu/projects/..." class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            <label for="project-link" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Interactive URL (Scratch embed, GitHub, or internal route)</label>
+            <input type="text" id="project-link" placeholder="https://scratch.mit.edu/projects/... or /chatbot" class="w-full px-3.5 py-2 rounded-xl text-xs font-mono border border-white/10 bg-black/60 text-white" />
           </div>
-          <button type="submit" class="btn-cyber-primary text-xs font-mono">+ PUBLISH PROJECT</button>
+          <div class="flex justify-end">
+            <button type="submit" class="btn-cyber-primary text-xs font-mono font-bold">+ PUBLISH PROJECT</button>
+          </div>
         </form>
 
         <!-- Current projects list -->
         <div class="space-y-3">
           {projectsList.map((p) => (
-            <div class="cyber-card p-4 flex items-center justify-between">
-              <div>
+            <div class="p-4 rounded-2xl border border-white/[0.08] bg-[#0c101a] flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-white/20 transition-all">
+              <div class="min-w-0">
                 <div class="flex items-center gap-2">
-                  <span class="font-bold text-xs text-white">{p.title}</span>
-                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono">{p.categoryTag}</span>
+                  <span class="font-bold text-xs text-white truncate">{p.title}</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-mono font-medium border border-blue-500/20">{p.categoryTag}</span>
+                  <span class="text-[10px] text-neutral-400 font-mono">{p.track}</span>
                 </div>
                 <div class="text-xs text-neutral-400 mt-1">{p.description}</div>
+                {p.linkUrl && (
+                  <a href={p.linkUrl} target="_blank" class="inline-block mt-1 text-[11px] font-mono text-blue-400 hover:underline">
+                    {p.linkUrl} ↗
+                  </a>
+                )}
               </div>
-              <button class="delete-project-btn text-xs text-red-400 hover:text-red-300 ml-4 shrink-0" data-id={p.id}>DELETE</button>
+              <button class="delete-project-btn text-xs font-mono text-red-400 hover:text-red-300 shrink-0 self-end sm:self-center" data-id={p.id}>DELETE</button>
             </div>
           ))}
         </div>
@@ -504,31 +814,32 @@ const projectsList = await getProjects();
 
     <!-- TAB 7: SECURITY AUDIT LOG -->
     <section id="tab-audit" class="tab-content hidden space-y-6">
-      <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
-        <div class="flex items-center justify-between mb-4">
+      <div class="p-6 rounded-2xl border border-white/[0.08] bg-[#0c101a]/80 backdrop-blur-sm space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.06]">
           <div>
-            <h2 class="text-sm font-mono font-bold uppercase text-white">// TAMPER-EVIDENT SECURITY AUDIT TRAIL</h2>
-            <p class="text-xs text-neutral-400">Chronological log of logins, mutations, and telemetry events.</p>
+            <h2 class="text-sm font-mono font-bold uppercase tracking-wider text-white">// TAMPER-EVIDENT SECURITY AUDIT TRAIL</h2>
+            <p class="text-xs text-neutral-400 mt-1">Immutable forensic log of logins, mutations, and telemetry events.</p>
           </div>
-          <button id="refresh-audit-btn" class="btn-cyber-outline text-xs font-mono">
-            REFRESH AUDIT STREAM
+          <button id="refresh-audit-btn" class="btn-cyber-outline text-xs font-mono flex items-center gap-2">
+            <span>⟳</span>
+            <span>REFRESH AUDIT STREAM</span>
           </button>
         </div>
 
         <div class="overflow-x-auto">
           <table class="w-full text-left font-mono text-xs border-collapse">
             <thead>
-              <tr class="border-b border-white/[0.08] text-neutral-400">
-                <th class="py-2.5 px-3">TIMESTAMP</th>
-                <th class="py-2.5 px-3">EVENT</th>
-                <th class="py-2.5 px-3">IP ADDRESS</th>
-                <th class="py-2.5 px-3">ACTOR</th>
-                <th class="py-2.5 px-3">DETAILS</th>
+              <tr class="border-b border-white/[0.08] text-neutral-400 text-[11px]">
+                <th class="py-3 px-3">TIMESTAMP</th>
+                <th class="py-3 px-3">EVENT</th>
+                <th class="py-3 px-3">IP ADDRESS</th>
+                <th class="py-3 px-3">ACTOR</th>
+                <th class="py-3 px-3">METADATA</th>
               </tr>
             </thead>
             <tbody id="audit-table-body" class="divide-y divide-white/[0.04]">
               <tr>
-                <td colspan="5" class="py-4 text-center text-neutral-500">Loading audit records...</td>
+                <td colspan="5" class="py-6 text-center text-neutral-500 font-mono">Click "Refresh Audit Stream" to query security logs.</td>
               </tr>
             </tbody>
           </table>
@@ -539,27 +850,42 @@ const projectsList = await getProjects();
 
   <!-- Client-side Controller Script -->
   <script>
-    // Tab switching
+    // Tab switching controller
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
 
+    function activateTab(targetId: string) {
+      tabBtns.forEach((b) => {
+        const isTarget = b.getAttribute('data-tab') === targetId;
+        b.classList.toggle('active', isTarget);
+        if (isTarget) {
+          b.className = 'tab-btn active px-4 py-2.5 rounded-xl font-mono text-xs font-semibold transition-all flex items-center gap-2 bg-blue-600 text-white shadow-lg shadow-blue-500/20';
+        } else {
+          b.className = 'tab-btn px-4 py-2.5 rounded-xl font-mono text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/[0.04] transition-all flex items-center gap-2';
+        }
+      });
+
+      tabContents.forEach((c) => {
+        c.classList.toggle('hidden', c.id !== targetId);
+      });
+
+      if (targetId === 'tab-audit') {
+        loadAuditLogs();
+      }
+    }
+
     tabBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
-        tabBtns.forEach((b) => {
-          b.classList.remove('active', 'text-white', 'bg-white/10');
-          b.classList.add('text-neutral-400');
-        });
-        btn.classList.add('active', 'text-white', 'bg-white/10');
-        btn.classList.remove('text-neutral-400');
-
         const target = btn.getAttribute('data-tab');
-        tabContents.forEach((c) => {
-          c.classList.toggle('hidden', c.id !== target);
-        });
+        if (target) activateTab(target);
+      });
+    });
 
-        if (target === 'tab-audit') {
-          loadAuditLogs();
-        }
+    // Quick jump buttons from stats cards
+    document.querySelectorAll('.quick-jump-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-tab');
+        if (target) activateTab(target);
       });
     });
 
@@ -567,12 +893,48 @@ const projectsList = await getProjects();
     const toast = document.getElementById('toast')!;
     function showToast(msg: string, isError = false) {
       toast.textContent = msg;
-      toast.className = `fixed top-20 right-6 z-50 px-4 py-3 rounded-xl font-mono text-xs shadow-2xl transition-all ${
-        isError ? 'bg-red-950 border border-red-500 text-red-200' : 'bg-emerald-950 border border-emerald-500 text-emerald-200'
+      toast.className = `fixed top-20 right-6 z-50 px-5 py-3 rounded-2xl font-mono text-xs shadow-2xl transition-all duration-300 ${
+        isError ? 'bg-red-950/90 border border-red-500/50 text-red-200' : 'bg-emerald-950/90 border border-emerald-500/50 text-emerald-200'
       }`;
       toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('hidden'), 3500);
     }
+
+    // Color Swatch Selection Helper
+    const accentHiddenInput = document.getElementById('accentColor') as HTMLInputElement;
+    document.querySelectorAll('.accent-radio').forEach((radio) => {
+      radio.addEventListener('change', (e) => {
+        const val = (e.target as HTMLInputElement).value;
+        if (accentHiddenInput) accentHiddenInput.value = val;
+      });
+    });
+
+    // Banner Live Preview Updater
+    const bannerActiveCheck = document.getElementById('bannerActive') as HTMLInputElement;
+    const bannerTextInput = document.getElementById('bannerText') as HTMLInputElement;
+    const bannerPreview = document.getElementById('banner-preview');
+    const previewText = document.getElementById('preview-text');
+    const previewBadge = document.getElementById('preview-badge');
+
+    function updateBannerPreview() {
+      const active = bannerActiveCheck?.checked;
+      const text = bannerTextInput?.value || 'No active announcement';
+      if (previewText) previewText.textContent = text;
+      if (previewBadge) {
+        previewBadge.textContent = active ? 'ACTIVE' : 'DISABLED';
+        previewBadge.className = `text-[10px] px-2 py-0.5 rounded-full font-semibold ${
+          active ? 'bg-blue-500/20 text-blue-300' : 'bg-neutral-800 text-neutral-500'
+        }`;
+      }
+      if (bannerPreview) {
+        bannerPreview.className = `p-3 rounded-xl border text-xs font-mono flex items-center justify-between transition-all ${
+          active ? 'bg-blue-950/40 border-blue-500/30 text-blue-200' : 'bg-white/[0.02] border-white/[0.06] text-neutral-500'
+        }`;
+      }
+    }
+
+    bannerActiveCheck?.addEventListener('change', updateBannerPreview);
+    bannerTextInput?.addEventListener('input', updateBannerPreview);
 
     // Logout
     document.getElementById('logout-btn')?.addEventListener('click', async () => {
@@ -584,13 +946,12 @@ const projectsList = await getProjects();
     const settingsForm = document.getElementById('settings-form') as HTMLFormElement;
     settingsForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const formData = new FormData(settingsForm);
       const payload = {
-        accentColor: formData.get('accentColor'),
-        systemStatus: formData.get('systemStatus'),
-        bannerActive: (document.getElementById('bannerActive') as HTMLInputElement).checked,
-        bannerText: formData.get('bannerText'),
-        bannerLink: formData.get('bannerLink'),
+        accentColor: accentHiddenInput ? accentHiddenInput.value : 'blue',
+        systemStatus: (document.getElementById('systemStatus') as HTMLInputElement).value,
+        bannerActive: bannerActiveCheck.checked,
+        bannerText: bannerTextInput.value,
+        bannerLink: (document.getElementById('bannerLink') as HTMLInputElement).value,
       };
 
       try {
@@ -606,12 +967,21 @@ const projectsList = await getProjects();
       }
     });
 
-    // Page Selector Switcher
-    const pageSelector = document.getElementById('page-selector') as HTMLSelectElement;
-    pageSelector?.addEventListener('change', () => {
-      document.querySelectorAll('.page-editor').forEach((ed) => ed.classList.add('hidden'));
-      const activeEd = document.getElementById(`editor-${pageSelector.value}`);
-      activeEd?.classList.remove('hidden');
+    // Page Selector Pill Switcher
+    const pagePills = document.querySelectorAll('.page-pill');
+    pagePills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        const target = pill.getAttribute('data-target')!;
+        pagePills.forEach((p) => {
+          p.classList.remove('active', 'text-white', 'bg-white/10', 'font-bold');
+          p.classList.add('text-neutral-400');
+        });
+        pill.classList.add('active', 'text-white', 'bg-white/10', 'font-bold');
+        pill.classList.remove('text-neutral-400');
+
+        document.querySelectorAll('.page-editor').forEach((ed) => ed.classList.add('hidden'));
+        document.getElementById(`editor-${target}`)?.classList.remove('hidden');
+      });
     });
 
     // Save Page Content
@@ -640,19 +1010,101 @@ const projectsList = await getProjects();
       });
     });
 
-    // Zero-API Media Upload
+    // Event Drawer Toggle
+    const eventToggleBtn = document.getElementById('add-event-toggle-btn');
+    const eventForm = document.getElementById('event-form') as HTMLFormElement;
+    const eventCancelBtn = document.getElementById('event-cancel-btn');
+
+    eventToggleBtn?.addEventListener('click', () => {
+      eventForm?.classList.toggle('hidden');
+    });
+
+    eventCancelBtn?.addEventListener('click', () => {
+      eventForm?.classList.add('hidden');
+    });
+
+    // Add Event Form
+    eventForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        title: (document.getElementById('event-title') as HTMLInputElement).value,
+        track: (document.getElementById('event-track') as HTMLSelectElement).value,
+        eventDate: (document.getElementById('event-date') as HTMLInputElement).value,
+        location: (document.getElementById('event-location') as HTMLInputElement).value,
+        registrationLink: (document.getElementById('event-reglink') as HTMLInputElement).value || null,
+        description: (document.getElementById('event-desc') as HTMLTextAreaElement).value,
+        status: 'UPCOMING',
+      };
+
+      try {
+        const res = await fetch('/api/admin/events', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error('Failed to schedule event');
+        showToast('✓ Event successfully scheduled');
+        setTimeout(() => window.location.reload(), 1000);
+      } catch (err: any) {
+        showToast(err.message, true);
+      }
+    });
+
+    // Delete Event
+    document.querySelectorAll('.delete-event-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Are you sure you want to delete this event?')) return;
+        const id = btn.getAttribute('data-id');
+        try {
+          const res = await fetch(`/api/admin/events?id=${id}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Delete failed');
+          showToast('✓ Event deleted');
+          setTimeout(() => window.location.reload(), 1000);
+        } catch (err: any) {
+          showToast(err.message, true);
+        }
+      });
+    });
+
+    // S3 Media Upload & Dropzone Controller
     const fileInput = document.getElementById('media-file-input') as HTMLInputElement;
     const browseBtn = document.getElementById('browse-btn');
+    const dropzone = document.getElementById('dropzone');
     const uploadStatus = document.getElementById('upload-status')!;
     const galleryUrlInput = document.getElementById('gallery-image-url') as HTMLInputElement;
 
-    browseBtn?.addEventListener('click', () => fileInput.click());
+    browseBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fileInput.click();
+    });
 
-    fileInput?.addEventListener('change', async () => {
+    dropzone?.addEventListener('click', () => fileInput.click());
+
+    dropzone?.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('border-blue-500', 'bg-blue-950/20');
+    });
+
+    dropzone?.addEventListener('dragleave', () => {
+      dropzone.classList.remove('border-blue-500', 'bg-blue-950/20');
+    });
+
+    dropzone?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('border-blue-500', 'bg-blue-950/20');
+      if (e.dataTransfer?.files?.length) {
+        fileInput.files = e.dataTransfer.files;
+        handleFileUpload(e.dataTransfer.files[0]);
+      }
+    });
+
+    fileInput?.addEventListener('change', () => {
       const file = fileInput.files?.[0];
-      if (!file) return;
+      if (file) handleFileUpload(file);
+    });
 
-      uploadStatus.textContent = 'Uploading file to storage...';
+    async function handleFileUpload(file: File) {
+      uploadStatus.textContent = `Uploading ${file.name} to Neon S3 storage...`;
       uploadStatus.classList.remove('hidden');
 
       const formData = new FormData();
@@ -675,14 +1127,26 @@ const projectsList = await getProjects();
 
         if (!res.ok) throw new Error(data.error || 'Upload failed');
 
-        const storageType = data.storage === 's3' ? 'S3 Object Storage' : 'Database';
-        uploadStatus.textContent = `✓ Uploaded (${storageType})! Link: ${data.url}`;
+        const storageType = data.storage === 's3' ? 'Neon S3' : 'Database';
+        uploadStatus.innerHTML = `✓ Uploaded to <strong>${storageType}</strong>! Permanent Link: <span class="text-white underline">${data.url}</span>`;
         if (galleryUrlInput) galleryUrlInput.value = data.url;
-        showToast(`✓ Photo uploaded to ${storageType}`);
+        showToast(`✓ Image uploaded to ${storageType}`);
       } catch (err: any) {
         uploadStatus.textContent = `Upload failed: ${err.message}`;
         showToast(err.message, true);
       }
+    }
+
+    // Copy to clipboard helper
+    document.querySelectorAll('.copy-url-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const url = btn.getAttribute('data-url');
+        if (url) {
+          navigator.clipboard.writeText(url);
+          showToast('✓ Image URL copied to clipboard');
+        }
+      });
     });
 
     // Add Gallery Item
@@ -703,7 +1167,7 @@ const projectsList = await getProjects();
           body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error('Failed to add gallery item');
-        showToast('✓ Added photo to gallery');
+        showToast('✓ Added photo to exhibit gallery');
         setTimeout(() => window.location.reload(), 1000);
       } catch (err: any) {
         showToast(err.message, true);
@@ -713,28 +1177,12 @@ const projectsList = await getProjects();
     // Delete Gallery Item
     document.querySelectorAll('.delete-gallery-btn').forEach((btn) => {
       btn.addEventListener('click', async () => {
-        if (!confirm('Delete this gallery item?')) return;
+        if (!confirm('Delete this exhibit image?')) return;
         const id = btn.getAttribute('data-id');
         try {
           const res = await fetch(`/api/admin/gallery?id=${id}`, { method: 'DELETE' });
           if (!res.ok) throw new Error('Delete failed');
-          showToast('✓ Photo removed');
-          setTimeout(() => window.location.reload(), 1000);
-        } catch (err: any) {
-          showToast(err.message, true);
-        }
-      });
-    });
-
-    // Delete Event
-    document.querySelectorAll('.delete-event-btn').forEach((btn) => {
-      btn.addEventListener('click', async () => {
-        if (!confirm('Delete this event?')) return;
-        const id = btn.getAttribute('data-id');
-        try {
-          const res = await fetch(`/api/admin/events?id=${id}`, { method: 'DELETE' });
-          if (!res.ok) throw new Error('Delete failed');
-          showToast('✓ Event deleted');
+          showToast('✓ Exhibit image removed');
           setTimeout(() => window.location.reload(), 1000);
         } catch (err: any) {
           showToast(err.message, true);
@@ -759,7 +1207,7 @@ const projectsList = await getProjects();
           body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error('Failed to save member');
-        showToast('✓ Member added');
+        showToast('✓ Member registered');
         setTimeout(() => window.location.reload(), 1000);
       } catch (err: any) {
         showToast(err.message, true);
@@ -827,31 +1275,35 @@ const projectsList = await getProjects();
     // Load Audit Logs
     async function loadAuditLogs() {
       const tbody = document.getElementById('audit-table-body')!;
-      tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-neutral-500">Querying security audit table...</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-neutral-400 font-mono">Querying security audit records...</td></tr>';
       try {
         const res = await fetch('/api/admin/audit');
         const logs = await res.json();
         if (!Array.isArray(logs) || logs.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-neutral-500">No audit records yet.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-neutral-500 font-mono">No audit records found yet.</td></tr>';
           return;
         }
 
         tbody.innerHTML = logs
           .map(
             (l: any) => `
-          <tr class="hover:bg-white/[0.02]">
-            <td class="py-2.5 px-3 text-neutral-400 whitespace-nowrap">${new Date(l.timestamp).toLocaleString()}</td>
-            <td class="py-2.5 px-3 font-bold ${
+          <tr class="hover:bg-white/[0.02] transition-colors">
+            <td class="py-3 px-3 text-neutral-400 whitespace-nowrap font-mono text-[11px]">${new Date(l.timestamp).toLocaleString()}</td>
+            <td class="py-3 px-3 font-bold ${
               l.eventType.includes('SUCCESS') ? 'text-emerald-400' : l.eventType.includes('FAIL') ? 'text-red-400' : 'text-blue-400'
-            }">${l.eventType}</td>
-            <td class="py-2.5 px-3 text-neutral-300 font-mono text-[11px]">${l.ipAddress}</td>
-            <td class="py-2.5 px-3 text-neutral-200">${l.actorUsername || 'system'}</td>
-            <td class="py-2.5 px-3 text-neutral-400 max-w-xs truncate text-[11px]">${l.details || '-'}</td>
+            }">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono ${
+                l.eventType.includes('SUCCESS') ? 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20' : l.eventType.includes('FAIL') ? 'bg-red-500/10 text-red-300 border border-red-500/20' : 'bg-blue-500/10 text-blue-300 border border-blue-500/20'
+              }">${l.eventType}</span>
+            </td>
+            <td class="py-3 px-3 text-neutral-300 font-mono text-[11px]">${l.ipAddress}</td>
+            <td class="py-3 px-3 text-neutral-200 font-medium">${l.actorUsername || 'system'}</td>
+            <td class="py-3 px-3 text-neutral-400 max-w-xs truncate text-[11px] font-mono">${l.details || '-'}</td>
           </tr>`
           )
           .join('');
       } catch (err) {
-        tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-red-400">Failed to load audit records.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-red-400 font-mono">Failed to query audit records.</td></tr>';
       }
     }
 
