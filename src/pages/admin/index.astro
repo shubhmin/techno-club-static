@@ -341,16 +341,16 @@ const projectsList = await getProjects();
     <!-- TAB 4: GALLERY & MEDIA -->
     <section id="tab-gallery" class="tab-content hidden space-y-6">
       <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
-        <h2 class="text-sm font-mono font-bold uppercase text-white mb-1">// ZERO-API MEDIA UPLOAD & GALLERY</h2>
-        <p class="text-xs text-neutral-400 mb-6">Upload photos directly into Neon database. You don't need any third-party AWS/Cloudinary keys.</p>
+        <h2 class="text-sm font-mono font-bold uppercase text-white mb-1">// S3 OBJECT STORAGE & MEDIA GALLERY</h2>
+        <p class="text-xs text-neutral-400 mb-6">Upload photos directly to S3-compatible storage (Neon S3, Cloudflare R2, or AWS S3) with automatic database fallback.</p>
 
         <!-- Direct Upload Box -->
         <div class="p-6 rounded-xl border border-dashed border-white/20 bg-black/40 text-center mb-8">
           <input type="file" id="media-file-input" accept="image/*" class="hidden" />
           <div class="space-y-3">
             <div class="text-2xl">📸</div>
-            <div class="text-xs font-mono text-white font-bold">CLICK OR DRAG A PHOTO TO UPLOAD TO NEON DB</div>
-            <div class="text-[11px] font-mono text-neutral-400">Supported: WebP, PNG, JPEG, SVG (Automatically cached at /api/media/:id)</div>
+            <div class="text-xs font-mono text-white font-bold">CLICK OR DRAG A PHOTO TO UPLOAD TO S3 STORAGE</div>
+            <div class="text-[11px] font-mono text-neutral-400">Supported: WebP, PNG, JPEG, SVG, AVIF (Cached edge-ready via S3 presigned / CDN URL)</div>
             <button id="browse-btn" class="btn-cyber-outline text-xs font-mono">
               SELECT IMAGE FILE
             </button>
@@ -652,7 +652,7 @@ const projectsList = await getProjects();
       const file = fileInput.files?.[0];
       if (!file) return;
 
-      uploadStatus.textContent = 'Uploading file to Neon Postgres storage...';
+      uploadStatus.textContent = 'Uploading file to storage...';
       uploadStatus.classList.remove('hidden');
 
       const formData = new FormData();
@@ -663,12 +663,22 @@ const projectsList = await getProjects();
           method: 'POST',
           body: formData,
         });
-        const data = await res.json();
+
+        const contentType = res.headers.get('content-type') || '';
+        let data: any = {};
+        if (contentType.includes('application/json')) {
+          data = await res.json();
+        } else {
+          const text = await res.text();
+          throw new Error(text || `Server returned ${res.status}`);
+        }
+
         if (!res.ok) throw new Error(data.error || 'Upload failed');
 
-        uploadStatus.textContent = `✓ Uploaded! Saved to: ${data.url}`;
+        const storageType = data.storage === 's3' ? 'S3 Object Storage' : 'Database';
+        uploadStatus.textContent = `✓ Uploaded (${storageType})! Link: ${data.url}`;
         if (galleryUrlInput) galleryUrlInput.value = data.url;
-        showToast('✓ Photo uploaded & saved to database');
+        showToast(`✓ Photo uploaded to ${storageType}`);
       } catch (err: any) {
         uploadStatus.textContent = `Upload failed: ${err.message}`;
         showToast(err.message, true);

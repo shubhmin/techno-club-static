@@ -88,9 +88,14 @@ const DDL_STATEMENTS = [
     id SERIAL PRIMARY KEY,
     filename VARCHAR(255) NOT NULL,
     mime_type VARCHAR(64) NOT NULL,
-    data TEXT NOT NULL,
+    data TEXT,
+    s3_key VARCHAR(512),
+    s3_url TEXT,
     created_at TIMESTAMP DEFAULT NOW() NOT NULL
   );`,
+  `ALTER TABLE media_assets ADD COLUMN IF NOT EXISTS s3_key VARCHAR(512);`,
+  `ALTER TABLE media_assets ADD COLUMN IF NOT EXISTS s3_url TEXT;`,
+  `ALTER TABLE media_assets ALTER COLUMN data DROP NOT NULL;`,
   `CREATE TABLE IF NOT EXISTS admin_users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(64) UNIQUE NOT NULL,

@@ -65,12 +65,14 @@ export const projects = pgTable('projects', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
-// 7. Self-contained media assets (images stored in Neon - ZERO extra storage APIs required)
+// 7. Media assets (stored in Neon S3 storage or direct base64 fallback)
 export const mediaAssets = pgTable('media_assets', {
   id: serial('id').primaryKey(),
   filename: varchar('filename', { length: 255 }).notNull(),
   mimeType: varchar('mime_type', { length: 64 }).notNull(),
-  data: text('data').notNull(), // Base64 data URI or raw base64
+  data: text('data'), // Fallback base64 data URI or raw base64
+  s3Key: varchar('s3_key', { length: 512 }),
+  s3Url: text('s3_url'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
