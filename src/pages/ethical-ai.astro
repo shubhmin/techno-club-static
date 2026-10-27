@@ -1,5 +1,8 @@
 ---
 import Base from '@/layouts/Base.astro';
+import { getPageContent } from '@/lib/content';
+
+const content = await getPageContent('ethical-ai');
 
 const pillars = [
   {
@@ -58,10 +61,10 @@ const comparisons = [
       <div class="max-w-3xl mb-16">
         <span class="tech-badge mb-2">INSTITUTIONAL DIRECTIVE</span>
         <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
-          The Ethical AI Charter
+          {content.title || 'The Ethical AI Charter'}
         </h1>
         <p class="text-base text-neutral-600 dark:text-neutral-400 mt-4 leading-relaxed">
-          Artificial intelligence tools are transforming how students research and code. Techno Sreshtha establishes clear, uncompromising guidelines for responsible, transparent, and rigorous AI adoption at DAV Public School.
+          {content.lead || 'Artificial intelligence tools are transforming how students research and code. Techno Sreshtha establishes clear, uncompromising guidelines for responsible, transparent, and rigorous AI adoption at DAV Public School.'}
         </p>
       </div>
 

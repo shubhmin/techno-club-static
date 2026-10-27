@@ -1,5 +1,8 @@
 ---
 import Base from '@/layouts/Base.astro';
+import { getPageContent } from '@/lib/content';
+
+const content = await getPageContent('about');
 
 const timeline = [
   {
@@ -30,16 +33,16 @@ const timeline = [
 
 const pillars = [
   {
-    title: 'RADICAL PRACTICALITY',
-    desc: 'No theoretical lectures without live demonstration. Every concept—from SQL injection to prompt injection—is demonstrated in safe, isolated labs.',
+    title: content.pillar1Title || 'RADICAL PRACTICALITY',
+    desc: content.pillar1Desc || 'No theoretical lectures without live demonstration. Every concept—from SQL injection to prompt injection—is demonstrated in safe, isolated labs.',
   },
   {
-    title: 'PEER-TO-PEER MENTORSHIP',
-    desc: 'Senior guild members mentor junior students, breaking down intimidating technical jargon into accessible, engaging modules.',
+    title: content.pillar2Title || 'PEER-TO-PEER MENTORSHIP',
+    desc: content.pillar2Desc || 'Senior guild members mentor junior students, breaking down intimidating technical jargon into accessible, engaging modules.',
   },
   {
-    title: 'ETHICS FIRST',
-    desc: 'Offensive cybersecurity knowledge is only taught with rigorous ethical boundaries. We train white-hat defenders, not rogue actors.',
+    title: content.pillar3Title || 'ETHICS FIRST',
+    desc: content.pillar3Desc || 'Offensive cybersecurity knowledge is only taught with rigorous ethical boundaries. We train white-hat defenders, not rogue actors.',
   },
 ];
 ---
@@ -51,10 +54,10 @@ const pillars = [
       <div class="max-w-3xl mb-16">
         <span class="tech-badge mb-2">CLUB CHARTER &amp; MANIFESTO</span>
         <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
-          Defending our campus in the age of synthetic media.
+          {content.title || 'Defending our campus in the age of synthetic media.'}
         </h1>
         <p class="text-base text-neutral-600 dark:text-neutral-400 mt-4 leading-relaxed">
-          Techno Sreshtha was established at DAV Public School, Sreshtha Vihar, with a singular mission: to transition students from passive, vulnerable consumers of technology into proactive, ethical digital citizens.
+          {content.lead || 'Techno Sreshtha was established at DAV Public School, Sreshtha Vihar, with a singular mission: to transition students from passive, vulnerable consumers of technology into proactive, ethical digital citizens.'}
         </p>
       </div>
 

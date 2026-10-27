@@ -1,0 +1,851 @@
+---
+import '@/styles/global.css';
+import { validateSession } from '@/lib/auth';
+import { hasDb } from '@/lib/db/client';
+import {
+  getSiteSettings,
+  getPageContent,
+  getEvents,
+  getGallery,
+  getMembers,
+  getProjects,
+} from '@/lib/content';
+
+const session = await validateSession(Astro.cookies);
+if (!session) {
+  return Astro.redirect('/admin/login');
+}
+
+const dbConnected = hasDb();
+const settings = await getSiteSettings();
+const homeContent = await getPageContent('home');
+const aboutContent = await getPageContent('about');
+const ethicalAiContent = await getPageContent('ethical-ai');
+const projectsContent = await getPageContent('projects');
+const contactContent = await getPageContent('contact');
+const eventsList = await getEvents();
+const galleryList = await getGallery();
+const membersList = await getMembers();
+const projectsList = await getProjects();
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guild Control Console — Techno Sreshtha</title>
+  <link rel="icon" href="/assets/logo.webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet" />
+</head>
+
+<body class="min-h-screen bg-[#07090e] text-neutral-100 font-sans selection:bg-blue-500/20">
+  <div class="fixed inset-0 pointer-events-none opacity-20 bg-grid-pattern [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+
+  <!-- Top Global Bar -->
+  <header class="sticky top-0 z-40 backdrop-blur-xl bg-[#090d14]/90 border-b border-white/[0.08]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="/assets/logo.webp" alt="Logo" class="h-8 w-8 rounded-lg" />
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-sm tracking-tight text-white">GUILD CONTROL CONSOLE</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              {dbConnected ? 'NEON POSTGRES: CONNECTED' : 'LOCAL CACHE MODE'}
+            </span>
+          </div>
+          <div class="text-[11px] font-mono text-neutral-400">OPERATOR: {session.user.username}</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a
+          href="/"
+          target="_blank"
+          class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-xs font-mono text-neutral-300 hover:bg-white/[0.06] transition-colors"
+        >
+          VIEW PUBLIC PORTAL ↗
+        </a>
+        <button
+          id="logout-btn"
+          class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-colors"
+        >
+          DISCONNECT
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8">
+    <!-- Toast message feedback -->
+    <div id="toast" class="fixed top-20 right-6 z-50 hidden px-4 py-3 rounded-xl font-mono text-xs shadow-2xl transition-all"></div>
+
+    <!-- Tab navigation -->
+    <div class="flex items-center gap-2 border-b border-white/[0.08] pb-3 overflow-x-auto text-xs font-mono mb-8">
+      <button class="tab-btn active px-3.5 py-2 rounded-lg font-bold transition-colors" data-tab="tab-appearance">
+        🎨 APPEARANCE & BANNER
+      </button>
+      <button class="tab-btn px-3.5 py-2 rounded-lg font-bold text-neutral-400 hover:text-white transition-colors" data-tab="tab-content">
+        📝 ALL WEBPAGES COPY
+      </button>
+      <button class="tab-btn px-3.5 py-2 rounded-lg font-bold text-neutral-400 hover:text-white transition-colors" data-tab="tab-events">
+        📅 EVENTS & MISSIONS ({eventsList.length})
+      </button>
+      <button class="tab-btn px-3.5 py-2 rounded-lg font-bold text-neutral-400 hover:text-white transition-colors" data-tab="tab-gallery">
+        🖼️ GALLERY & MEDIA ({galleryList.length})
+      </button>
+      <button class="tab-btn px-3.5 py-2 rounded-lg font-bold text-neutral-400 hover:text-white transition-colors" data-tab="tab-members">
+        👥 PERSONNEL ({membersList.length})
+      </button>
+      <button class="tab-btn px-3.5 py-2 rounded-lg font-bold text-neutral-400 hover:text-white transition-colors" data-tab="tab-projects">
+        💻 PROJECTS ({projectsList.length})
+      </button>
+      <button class="tab-btn px-3.5 py-2 rounded-lg font-bold text-neutral-400 hover:text-white transition-colors" data-tab="tab-audit">
+        🛡️ SECURITY AUDIT
+      </button>
+    </div>
+
+    <!-- TAB 1: APPEARANCE & BANNER -->
+    <section id="tab-appearance" class="tab-content space-y-6">
+      <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
+        <h2 class="text-sm font-mono font-bold uppercase text-white mb-1">// GLOBAL THEME ACCENT & TELEMETRY</h2>
+        <p class="text-xs text-neutral-400 mb-6">Modify live brand colors, telemetry strings, and announcement alerts without editing code.</p>
+
+        <form id="settings-form" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="accentColor" class="block text-xs font-mono text-neutral-400 uppercase font-semibold mb-2">Accent Color Theme</label>
+              <select
+                id="accentColor"
+                name="accentColor"
+                class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="blue" selected={settings.accentColor === 'blue'}>Electric Blue (Default Terminal)</option>
+                <option value="emerald" selected={settings.accentColor === 'emerald'}>Cyber Emerald (Defense)</option>
+                <option value="amber" selected={settings.accentColor === 'amber'}>Safety Amber (Alert)</option>
+                <option value="rose" selected={settings.accentColor === 'rose'}>Crimson Rose (Tactical)</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="systemStatus" class="block text-xs font-mono text-neutral-400 uppercase font-semibold mb-2">System Telemetry Status Bar</label>
+              <input
+                type="text"
+                id="systemStatus"
+                name="systemStatus"
+                value={settings.systemStatus}
+                class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl border border-white/[0.08] bg-black/40 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-xs font-mono font-bold text-white uppercase">Announcement Top Ribbon</div>
+                <div class="text-[11px] text-neutral-400">Display emergency alert or tournament notice on top of all pages.</div>
+              </div>
+              <input
+                type="checkbox"
+                id="bannerActive"
+                name="bannerActive"
+                checked={settings.bannerActive}
+                class="w-4 h-4 rounded border-white/20 text-blue-600 focus:ring-blue-500 bg-neutral-900"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div>
+                <label for="bannerText" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Banner Announcement Text</label>
+                <input
+                  type="text"
+                  id="bannerText"
+                  name="bannerText"
+                  value={settings.bannerText}
+                  placeholder="e.g. Registrations for CTF 2026 are now open!"
+                  class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white"
+                />
+              </div>
+
+              <div>
+                <label for="bannerLink" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Action Link (optional)</label>
+                <input
+                  type="text"
+                  id="bannerLink"
+                  name="bannerLink"
+                  value={settings.bannerLink}
+                  placeholder="e.g. /gallery or /contact"
+                  class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white"
+                />
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-cyber-primary text-xs font-mono">
+            SAVE GLOBAL SETTINGS →
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 2: ALL WEBPAGES COPY -->
+    <section id="tab-content" class="tab-content hidden space-y-6">
+      <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-sm font-mono font-bold uppercase text-white">// LIVE WEBPAGE COPY EDITOR</h2>
+            <p class="text-xs text-neutral-400">Modify headlines, leads, and section copy across all pages.</p>
+          </div>
+          <select id="page-selector" class="px-3 py-1.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white">
+            <option value="home">Page: Home (/)</option>
+            <option value="about">Page: Charter (/about)</option>
+            <option value="ethical-ai">Page: Ethical AI (/ethical-ai)</option>
+            <option value="projects">Page: Projects (/projects)</option>
+            <option value="contact">Page: Contact (/contact)</option>
+          </select>
+        </div>
+
+        <!-- Home editor -->
+        <div id="editor-home" class="page-editor space-y-4">
+          <div>
+            <label for="home-heroTitle" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Hero Title (HTML supported)</label>
+            <textarea id="home-heroTitle" rows="2" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="home" data-key="heroTitle">{homeContent.heroTitle}</textarea>
+          </div>
+          <div>
+            <label for="home-heroLead" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Hero Lead Subtext</label>
+            <textarea id="home-heroLead" rows="3" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="home" data-key="heroLead">{homeContent.heroLead}</textarea>
+          </div>
+          <div class="grid grid-cols-3 gap-4">
+            <div>
+              <label for="home-statMembers" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Members Stat</label>
+              <input type="text" id="home-statMembers" class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="home" data-key="statMembers" value={homeContent.statMembers} />
+            </div>
+            <div>
+              <label for="home-statLabs" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Labs Stat</label>
+              <input type="text" id="home-statLabs" class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="home" data-key="statLabs" value={homeContent.statLabs} />
+            </div>
+            <div>
+              <label for="home-statDrives" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Drives Stat</label>
+              <input type="text" id="home-statDrives" class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="home" data-key="statDrives" value={homeContent.statDrives} />
+            </div>
+          </div>
+          <button class="save-page-btn btn-cyber-primary text-xs font-mono" data-target="home">SAVE HOME COPY →</button>
+        </div>
+
+        <!-- About editor -->
+        <div id="editor-about" class="page-editor hidden space-y-4">
+          <div>
+            <label for="about-title" class="block text-xs font-mono text-neutral-400 uppercase mb-1">About Page Headline</label>
+            <input type="text" id="about-title" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="about" data-key="title" value={aboutContent.title} />
+          </div>
+          <div>
+            <label for="about-lead" class="block text-xs font-mono text-neutral-400 uppercase mb-1">About Page Lead Subtext</label>
+            <textarea id="about-lead" rows="3" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="about" data-key="lead">{aboutContent.lead}</textarea>
+          </div>
+          <button class="save-page-btn btn-cyber-primary text-xs font-mono" data-target="about">SAVE ABOUT COPY →</button>
+        </div>
+
+        <!-- Ethical AI editor -->
+        <div id="editor-ethical-ai" class="page-editor hidden space-y-4">
+          <div>
+            <label for="ethical-ai-title" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Ethical AI Title</label>
+            <input type="text" id="ethical-ai-title" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="ethical-ai" data-key="title" value={ethicalAiContent.title} />
+          </div>
+          <div>
+            <label for="ethical-ai-lead" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Charter Lead Subtext</label>
+            <textarea id="ethical-ai-lead" rows="3" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="ethical-ai" data-key="lead">{ethicalAiContent.lead}</textarea>
+          </div>
+          <button class="save-page-btn btn-cyber-primary text-xs font-mono" data-target="ethical-ai">SAVE ETHICAL AI COPY →</button>
+        </div>
+
+        <!-- Projects editor -->
+        <div id="editor-projects" class="page-editor hidden space-y-4">
+          <div>
+            <label for="projects-title" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Projects Page Title</label>
+            <input type="text" id="projects-title" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="projects" data-key="title" value={projectsContent.title} />
+          </div>
+          <div>
+            <label for="projects-lead" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Projects Page Lead</label>
+            <textarea id="projects-lead" rows="3" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="projects" data-key="lead">{projectsContent.lead}</textarea>
+          </div>
+          <button class="save-page-btn btn-cyber-primary text-xs font-mono" data-target="projects">SAVE PROJECTS COPY →</button>
+        </div>
+
+        <!-- Contact editor -->
+        <div id="editor-contact" class="page-editor hidden space-y-4">
+          <div>
+            <label for="contact-title" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Contact Page Title</label>
+            <input type="text" id="contact-title" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="contact" data-key="title" value={contactContent.title} />
+          </div>
+          <div>
+            <label for="contact-email" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Official Club Email</label>
+            <input type="text" id="contact-email" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="contact" data-key="email" value={contactContent.email} />
+          </div>
+          <div>
+            <label for="contact-location" class="block text-xs font-mono text-neutral-400 uppercase mb-1">Meeting Location</label>
+            <input type="text" id="contact-location" class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" data-page="contact" data-key="location" value={contactContent.location} />
+          </div>
+          <button class="save-page-btn btn-cyber-primary text-xs font-mono" data-target="contact">SAVE CONTACT COPY →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: EVENTS & MISSIONS -->
+    <section id="tab-events" class="tab-content hidden space-y-6">
+      <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="text-sm font-mono font-bold uppercase text-white">// EVENTS & ACTIVITIES DISPATCH</h2>
+            <p class="text-xs text-neutral-400">Add upcoming workshops, inter-house debates, or awareness drives.</p>
+          </div>
+          <button id="add-event-btn" class="btn-cyber-primary text-xs font-mono">
+            + CREATE NEW EVENT
+          </button>
+        </div>
+
+        <!-- Events List Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left font-mono text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-white/[0.08] text-neutral-400">
+                <th class="py-2.5 px-3">TITLE</th>
+                <th class="py-2.5 px-3">TRACK</th>
+                <th class="py-2.5 px-3">DATE</th>
+                <th class="py-2.5 px-3">LOCATION</th>
+                <th class="py-2.5 px-3">STATUS</th>
+                <th class="py-2.5 px-3 text-right">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="events-table-body" class="divide-y divide-white/[0.04]">
+              {eventsList.map((e) => (
+                <tr>
+                  <td class="py-3 px-3 font-bold text-white">{e.title}</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px]">{e.track}</span></td>
+                  <td class="py-3 px-3 text-neutral-300">{e.eventDate}</td>
+                  <td class="py-3 px-3 text-neutral-400">{e.location}</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px]">{e.status}</span></td>
+                  <td class="py-3 px-3 text-right space-x-2">
+                    <button class="delete-event-btn text-red-400 hover:text-red-300" data-id={e.id}>DELETE</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: GALLERY & MEDIA -->
+    <section id="tab-gallery" class="tab-content hidden space-y-6">
+      <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
+        <h2 class="text-sm font-mono font-bold uppercase text-white mb-1">// ZERO-API MEDIA UPLOAD & GALLERY</h2>
+        <p class="text-xs text-neutral-400 mb-6">Upload photos directly into Neon database. You don't need any third-party AWS/Cloudinary keys.</p>
+
+        <!-- Direct Upload Box -->
+        <div class="p-6 rounded-xl border border-dashed border-white/20 bg-black/40 text-center mb-8">
+          <input type="file" id="media-file-input" accept="image/*" class="hidden" />
+          <div class="space-y-3">
+            <div class="text-2xl">📸</div>
+            <div class="text-xs font-mono text-white font-bold">CLICK OR DRAG A PHOTO TO UPLOAD TO NEON DB</div>
+            <div class="text-[11px] font-mono text-neutral-400">Supported: WebP, PNG, JPEG, SVG (Automatically cached at /api/media/:id)</div>
+            <button id="browse-btn" class="btn-cyber-outline text-xs font-mono">
+              SELECT IMAGE FILE
+            </button>
+          </div>
+          <div id="upload-status" class="hidden mt-3 text-xs font-mono text-emerald-400"></div>
+        </div>
+
+        <!-- Add Gallery Item Form -->
+        <form id="gallery-form" class="p-5 rounded-xl border border-white/[0.08] bg-black/30 space-y-4 mb-8">
+          <div class="text-xs font-mono font-bold text-white uppercase">// ATTACH PHOTO TO GALLERY ALBUM</div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label for="gallery-year" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Year</label>
+              <input type="text" id="gallery-year" placeholder="2025–2026" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            </div>
+            <div>
+              <label for="gallery-album" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Album Title</label>
+              <input type="text" id="gallery-album" placeholder="e.g. AI Prompting Labs" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            </div>
+            <div>
+              <label for="gallery-caption" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Caption / Label</label>
+              <input type="text" id="gallery-caption" placeholder="e.g. Demonstration Round" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            </div>
+          </div>
+          <div>
+            <label for="gallery-image-url" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Image URL (Populated automatically after upload, or paste external URL)</label>
+            <input type="text" id="gallery-image-url" placeholder="e.g. /api/media/1 or /assets/A.webp" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+          </div>
+          <button type="submit" class="btn-cyber-primary text-xs font-mono">+ ADD TO EXHIBIT GALLERY</button>
+        </form>
+
+        <!-- Current items grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {galleryList.map((g) => (
+            <div class="cyber-card p-2 group relative">
+              <img src={g.imageUrl} alt={g.caption} class="w-full h-28 object-cover rounded-lg" />
+              <div class="p-2 text-[11px] font-mono truncate text-white">{g.caption || 'Untitled'}</div>
+              <div class="px-2 text-[10px] font-mono text-neutral-400">{g.yearCategory}</div>
+              <button class="delete-gallery-btn absolute top-3 right-3 p-1 rounded bg-red-600/80 text-white text-[10px] opacity-0 group-hover:opacity-100 transition-opacity" data-id={g.id}>
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: MEMBERS & PERSONNEL -->
+    <section id="tab-members" class="tab-content hidden space-y-6">
+      <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
+        <h2 class="text-sm font-mono font-bold uppercase text-white mb-1">// GUILD PERSONNEL & FACULTY</h2>
+        <p class="text-xs text-neutral-400 mb-6">Manage faculty mentors and student core team operators.</p>
+
+        <!-- Add member form -->
+        <form id="member-form" class="p-5 rounded-xl border border-white/[0.08] bg-black/30 space-y-4 mb-8">
+          <div class="text-xs font-mono font-bold text-white uppercase">// REGISTER NEW MEMBER OR MENTOR</div>
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div>
+              <label for="member-name" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Full Name</label>
+              <input type="text" id="member-name" placeholder="e.g. Aarav Sharma" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            </div>
+            <div>
+              <label for="member-role" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Role / Designation</label>
+              <input type="text" id="member-role" placeholder="e.g. Student Lead · Web Defense" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            </div>
+            <div>
+              <label for="member-category" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Category</label>
+              <select id="member-category" class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white">
+                <option value="CORE_STUDENT">Student Core Lead</option>
+                <option value="FACULTY">Faculty Mentor</option>
+                <option value="CONTRIBUTOR">Contributor</option>
+              </select>
+            </div>
+            <div>
+              <label for="member-avatar" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Avatar Photo URL</label>
+              <input type="text" id="member-avatar" placeholder="/assets/placeholder.svg or /api/media/..." class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            </div>
+          </div>
+          <button type="submit" class="btn-cyber-primary text-xs font-mono">+ SAVE GUILD MEMBER</button>
+        </form>
+
+        <!-- Current members list -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {membersList.map((m) => (
+            <div class="cyber-card p-4 flex items-center justify-between">
+              <div class="flex items-center gap-3 min-w-0">
+                <img src={m.imageUrl || '/assets/placeholder.svg'} alt={m.name} class="w-10 h-10 rounded-lg object-cover ring-1 ring-white/10" />
+                <div class="min-w-0">
+                  <div class="font-bold text-xs text-white truncate">{m.name}</div>
+                  <div class="text-[10px] text-neutral-400 truncate">{m.role}</div>
+                </div>
+              </div>
+              <button class="delete-member-btn text-xs text-red-400 hover:text-red-300 ml-2" data-id={m.id}>DELETE</button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: PROJECTS -->
+    <section id="tab-projects" class="tab-content hidden space-y-6">
+      <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
+        <h2 class="text-sm font-mono font-bold uppercase text-white mb-1">// STUDENT PROJECTS & SCRATCH BUILDS</h2>
+        <p class="text-xs text-neutral-400 mb-6">Manage showcased software, games, and security tools.</p>
+
+        <!-- Add project form -->
+        <form id="project-form" class="p-5 rounded-xl border border-white/[0.08] bg-black/30 space-y-4 mb-8">
+          <div class="text-xs font-mono font-bold text-white uppercase">// PUBLISH NEW PROJECT</div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label for="project-title" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Project Title</label>
+              <input type="text" id="project-title" placeholder="e.g. Phishing Maze Scratch" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            </div>
+            <div>
+              <label for="project-tag" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Category Tag</label>
+              <input type="text" id="project-tag" placeholder="e.g. SCRATCH GAME" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            </div>
+            <div>
+              <label for="project-track" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Target Wing</label>
+              <input type="text" id="project-track" placeholder="e.g. JUNIOR WING (CLASSES 4–6)" required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+            </div>
+          </div>
+          <div>
+            <label for="project-desc" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Description</label>
+            <textarea id="project-desc" rows="2" placeholder="Brief explanation of the project..." required class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white"></textarea>
+          </div>
+          <div>
+            <label for="project-link" class="block text-[11px] font-mono text-neutral-400 uppercase mb-1">Link URL (Scratch embed, GitHub, or internal route)</label>
+            <input type="text" id="project-link" placeholder="https://scratch.mit.edu/projects/..." class="w-full px-3 py-2 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white" />
+          </div>
+          <button type="submit" class="btn-cyber-primary text-xs font-mono">+ PUBLISH PROJECT</button>
+        </form>
+
+        <!-- Current projects list -->
+        <div class="space-y-3">
+          {projectsList.map((p) => (
+            <div class="cyber-card p-4 flex items-center justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-xs text-white">{p.title}</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono">{p.categoryTag}</span>
+                </div>
+                <div class="text-xs text-neutral-400 mt-1">{p.description}</div>
+              </div>
+              <button class="delete-project-btn text-xs text-red-400 hover:text-red-300 ml-4 shrink-0" data-id={p.id}>DELETE</button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 7: SECURITY AUDIT LOG -->
+    <section id="tab-audit" class="tab-content hidden space-y-6">
+      <div class="cyber-card p-6 border-white/10 bg-[#0d1117]">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-sm font-mono font-bold uppercase text-white">// TAMPER-EVIDENT SECURITY AUDIT TRAIL</h2>
+            <p class="text-xs text-neutral-400">Chronological log of logins, mutations, and telemetry events.</p>
+          </div>
+          <button id="refresh-audit-btn" class="btn-cyber-outline text-xs font-mono">
+            REFRESH AUDIT STREAM
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left font-mono text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-white/[0.08] text-neutral-400">
+                <th class="py-2.5 px-3">TIMESTAMP</th>
+                <th class="py-2.5 px-3">EVENT</th>
+                <th class="py-2.5 px-3">IP ADDRESS</th>
+                <th class="py-2.5 px-3">ACTOR</th>
+                <th class="py-2.5 px-3">DETAILS</th>
+              </tr>
+            </thead>
+            <tbody id="audit-table-body" class="divide-y divide-white/[0.04]">
+              <tr>
+                <td colspan="5" class="py-4 text-center text-neutral-500">Loading audit records...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Client-side Controller Script -->
+  <script>
+    // Tab switching
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach((b) => {
+          b.classList.remove('active', 'text-white', 'bg-white/10');
+          b.classList.add('text-neutral-400');
+        });
+        btn.classList.add('active', 'text-white', 'bg-white/10');
+        btn.classList.remove('text-neutral-400');
+
+        const target = btn.getAttribute('data-tab');
+        tabContents.forEach((c) => {
+          c.classList.toggle('hidden', c.id !== target);
+        });
+
+        if (target === 'tab-audit') {
+          loadAuditLogs();
+        }
+      });
+    });
+
+    // Toast feedback helper
+    const toast = document.getElementById('toast')!;
+    function showToast(msg: string, isError = false) {
+      toast.textContent = msg;
+      toast.className = `fixed top-20 right-6 z-50 px-4 py-3 rounded-xl font-mono text-xs shadow-2xl transition-all ${
+        isError ? 'bg-red-950 border border-red-500 text-red-200' : 'bg-emerald-950 border border-emerald-500 text-emerald-200'
+      }`;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3500);
+    }
+
+    // Logout
+    document.getElementById('logout-btn')?.addEventListener('click', async () => {
+      await fetch('/api/admin/auth/logout', { method: 'POST' });
+      window.location.href = '/admin/login';
+    });
+
+    // Save Settings
+    const settingsForm = document.getElementById('settings-form') as HTMLFormElement;
+    settingsForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(settingsForm);
+      const payload = {
+        accentColor: formData.get('accentColor'),
+        systemStatus: formData.get('systemStatus'),
+        bannerActive: (document.getElementById('bannerActive') as HTMLInputElement).checked,
+        bannerText: formData.get('bannerText'),
+        bannerLink: formData.get('bannerLink'),
+      };
+
+      try {
+        const res = await fetch('/api/admin/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error('Failed to update settings');
+        showToast('✓ Global settings updated successfully');
+      } catch (err: any) {
+        showToast(err.message, true);
+      }
+    });
+
+    // Page Selector Switcher
+    const pageSelector = document.getElementById('page-selector') as HTMLSelectElement;
+    pageSelector?.addEventListener('change', () => {
+      document.querySelectorAll('.page-editor').forEach((ed) => ed.classList.add('hidden'));
+      const activeEd = document.getElementById(`editor-${pageSelector.value}`);
+      activeEd?.classList.remove('hidden');
+    });
+
+    // Save Page Content
+    document.querySelectorAll('.save-page-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const targetPage = btn.getAttribute('data-target')!;
+        const editor = document.getElementById(`editor-${targetPage}`)!;
+        const inputs = editor.querySelectorAll('[data-key]');
+
+        try {
+          for (const input of inputs) {
+            const sectionKey = input.getAttribute('data-key')!;
+            const content = (input as HTMLInputElement | HTMLTextAreaElement).value;
+
+            const res = await fetch('/api/admin/content', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ pageSlug: targetPage, sectionKey, content }),
+            });
+            if (!res.ok) throw new Error(`Failed saving ${sectionKey}`);
+          }
+          showToast(`✓ Saved copy for /${targetPage === 'home' ? '' : targetPage}`);
+        } catch (err: any) {
+          showToast(err.message, true);
+        }
+      });
+    });
+
+    // Zero-API Media Upload
+    const fileInput = document.getElementById('media-file-input') as HTMLInputElement;
+    const browseBtn = document.getElementById('browse-btn');
+    const uploadStatus = document.getElementById('upload-status')!;
+    const galleryUrlInput = document.getElementById('gallery-image-url') as HTMLInputElement;
+
+    browseBtn?.addEventListener('click', () => fileInput.click());
+
+    fileInput?.addEventListener('change', async () => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+
+      uploadStatus.textContent = 'Uploading file to Neon Postgres storage...';
+      uploadStatus.classList.remove('hidden');
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const res = await fetch('/api/admin/media', {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Upload failed');
+
+        uploadStatus.textContent = `✓ Uploaded! Saved to: ${data.url}`;
+        if (galleryUrlInput) galleryUrlInput.value = data.url;
+        showToast('✓ Photo uploaded & saved to database');
+      } catch (err: any) {
+        uploadStatus.textContent = `Upload failed: ${err.message}`;
+        showToast(err.message, true);
+      }
+    });
+
+    // Add Gallery Item
+    const galleryForm = document.getElementById('gallery-form') as HTMLFormElement;
+    galleryForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        yearCategory: (document.getElementById('gallery-year') as HTMLInputElement).value,
+        albumTitle: (document.getElementById('gallery-album') as HTMLInputElement).value,
+        caption: (document.getElementById('gallery-caption') as HTMLInputElement).value,
+        imageUrl: galleryUrlInput.value,
+      };
+
+      try {
+        const res = await fetch('/api/admin/gallery', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error('Failed to add gallery item');
+        showToast('✓ Added photo to gallery');
+        setTimeout(() => window.location.reload(), 1000);
+      } catch (err: any) {
+        showToast(err.message, true);
+      }
+    });
+
+    // Delete Gallery Item
+    document.querySelectorAll('.delete-gallery-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Delete this gallery item?')) return;
+        const id = btn.getAttribute('data-id');
+        try {
+          const res = await fetch(`/api/admin/gallery?id=${id}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Delete failed');
+          showToast('✓ Photo removed');
+          setTimeout(() => window.location.reload(), 1000);
+        } catch (err: any) {
+          showToast(err.message, true);
+        }
+      });
+    });
+
+    // Delete Event
+    document.querySelectorAll('.delete-event-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Delete this event?')) return;
+        const id = btn.getAttribute('data-id');
+        try {
+          const res = await fetch(`/api/admin/events?id=${id}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Delete failed');
+          showToast('✓ Event deleted');
+          setTimeout(() => window.location.reload(), 1000);
+        } catch (err: any) {
+          showToast(err.message, true);
+        }
+      });
+    });
+
+    // Add Member
+    const memberForm = document.getElementById('member-form') as HTMLFormElement;
+    memberForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        name: (document.getElementById('member-name') as HTMLInputElement).value,
+        role: (document.getElementById('member-role') as HTMLInputElement).value,
+        category: (document.getElementById('member-category') as HTMLSelectElement).value,
+        imageUrl: (document.getElementById('member-avatar') as HTMLInputElement).value || '/assets/placeholder.svg',
+      };
+      try {
+        const res = await fetch('/api/admin/members', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error('Failed to save member');
+        showToast('✓ Member added');
+        setTimeout(() => window.location.reload(), 1000);
+      } catch (err: any) {
+        showToast(err.message, true);
+      }
+    });
+
+    // Delete Member
+    document.querySelectorAll('.delete-member-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Remove this member?')) return;
+        const id = btn.getAttribute('data-id');
+        try {
+          const res = await fetch(`/api/admin/members?id=${id}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Delete failed');
+          showToast('✓ Member removed');
+          setTimeout(() => window.location.reload(), 1000);
+        } catch (err: any) {
+          showToast(err.message, true);
+        }
+      });
+    });
+
+    // Add Project
+    const projectForm = document.getElementById('project-form') as HTMLFormElement;
+    projectForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        title: (document.getElementById('project-title') as HTMLInputElement).value,
+        categoryTag: (document.getElementById('project-tag') as HTMLInputElement).value,
+        track: (document.getElementById('project-track') as HTMLInputElement).value,
+        description: (document.getElementById('project-desc') as HTMLTextAreaElement).value,
+        linkUrl: (document.getElementById('project-link') as HTMLInputElement).value,
+        status: 'ACTIVE',
+      };
+      try {
+        const res = await fetch('/api/admin/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error('Failed to add project');
+        showToast('✓ Project published');
+        setTimeout(() => window.location.reload(), 1000);
+      } catch (err: any) {
+        showToast(err.message, true);
+      }
+    });
+
+    // Delete Project
+    document.querySelectorAll('.delete-project-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Remove this project?')) return;
+        const id = btn.getAttribute('data-id');
+        try {
+          const res = await fetch(`/api/admin/projects?id=${id}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Delete failed');
+          showToast('✓ Project removed');
+          setTimeout(() => window.location.reload(), 1000);
+        } catch (err: any) {
+          showToast(err.message, true);
+        }
+      });
+    });
+
+    // Load Audit Logs
+    async function loadAuditLogs() {
+      const tbody = document.getElementById('audit-table-body')!;
+      tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-neutral-500">Querying security audit table...</td></tr>';
+      try {
+        const res = await fetch('/api/admin/audit');
+        const logs = await res.json();
+        if (!Array.isArray(logs) || logs.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-neutral-500">No audit records yet.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = logs
+          .map(
+            (l: any) => `
+          <tr class="hover:bg-white/[0.02]">
+            <td class="py-2.5 px-3 text-neutral-400 whitespace-nowrap">${new Date(l.timestamp).toLocaleString()}</td>
+            <td class="py-2.5 px-3 font-bold ${
+              l.eventType.includes('SUCCESS') ? 'text-emerald-400' : l.eventType.includes('FAIL') ? 'text-red-400' : 'text-blue-400'
+            }">${l.eventType}</td>
+            <td class="py-2.5 px-3 text-neutral-300 font-mono text-[11px]">${l.ipAddress}</td>
+            <td class="py-2.5 px-3 text-neutral-200">${l.actorUsername || 'system'}</td>
+            <td class="py-2.5 px-3 text-neutral-400 max-w-xs truncate text-[11px]">${l.details || '-'}</td>
+          </tr>`
+          )
+          .join('');
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-red-400">Failed to load audit records.</td></tr>';
+      }
+    }
+
+    document.getElementById('refresh-audit-btn')?.addEventListener('click', loadAuditLogs);
+  </script>
+</body>
+</html>

@@ -1,5 +1,9 @@
 ---
 import Base from '@/layouts/Base.astro';
+import { getPageContent, getEvents } from '@/lib/content';
+
+const content = await getPageContent('home');
+const eventsList = await getEvents();
 ---
 
 <Base activePage="home">
@@ -12,18 +16,14 @@ import Base from '@/layouts/Base.astro';
           <!-- Status Pill -->
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            DAV PUBLIC SCHOOL, SRESHTHA VIHAR · CYBER GUILD
+            {content.heroBadge || 'DAV PUBLIC SCHOOL, SRESHTHA VIHAR · CYBER GUILD'}
           </div>
 
-          <!-- Major Headline -->
-          <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-neutral-900 dark:text-white leading-[1.08]">
-            Securing bytes.<br/>
-            Questioning algorithms.<br/>
-            <span class="text-blue-600 dark:text-blue-400 font-black">Building digital defenses.</span>
-          </h1>
+          <!-- Major Headline (Dynamically rendered with HTML support) -->
+          <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-neutral-900 dark:text-white leading-[1.08]" set:html={content.heroTitle || 'Securing bytes.<br/>Questioning algorithms.<br/><span class="text-blue-600 dark:text-blue-400 font-black">Building digital defenses.</span>'} />
 
           <p class="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-xl leading-relaxed">
-            Techno Sreshtha is DAV Public School’s flagship student cybersecurity and ethical AI guild. We deconstruct real-world security vulnerabilities, interrogate algorithmic bias, and build open safety tools for students.
+            {content.heroLead || 'Techno Sreshtha is DAV Public School’s flagship student cybersecurity and ethical AI guild. We deconstruct real-world security vulnerabilities, interrogate algorithmic bias, and build open safety tools for students.'}
           </p>
 
           <!-- Action buttons -->
@@ -41,18 +41,18 @@ import Base from '@/layouts/Base.astro';
             </a>
           </div>
 
-          <!-- Fast stats ticker -->
+          <!-- Fast stats ticker (Dynamic) -->
           <div class="pt-8 border-t border-black/[0.06] dark:border-white/[0.08] grid grid-cols-3 gap-6 font-mono">
             <div>
-              <div class="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">50+</div>
+              <div class="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">{content.statMembers || '50+'}</div>
               <div class="text-[11px] text-neutral-500 uppercase mt-0.5">Active Members</div>
             </div>
             <div>
-              <div class="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">12+</div>
+              <div class="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">{content.statLabs || '12+'}</div>
               <div class="text-[11px] text-neutral-500 uppercase mt-0.5">Security Labs</div>
             </div>
             <div>
-              <div class="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">06</div>
+              <div class="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">{content.statDrives || '06'}</div>
               <div class="text-[11px] text-neutral-500 uppercase mt-0.5">School Drives</div>
             </div>
           </div>
@@ -215,9 +215,9 @@ import Base from '@/layouts/Base.astro';
               <span class="px-2 py-1 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-mono font-bold">TRACK 01</span>
               <span class="text-xs font-mono text-neutral-400">DEFENSIVE &amp; OFFENSIVE OPS</span>
             </div>
-            <h3 class="text-2xl font-bold text-neutral-900 dark:text-white mb-3">Cybersecurity Fundamentals</h3>
+            <h3 class="text-2xl font-bold text-neutral-900 dark:text-white mb-3">{content.track1Title || 'Cybersecurity Fundamentals'}</h3>
             <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6">
-              Hands-on mastery over real-world network mechanics, credential protection, password hygiene, safe web browsing, and recognizing modern phishing vectors.
+              {content.track1Desc || 'Hands-on mastery over real-world network mechanics, credential protection, password hygiene, safe web browsing, and recognizing modern phishing vectors.'}
             </p>
             <ul class="space-y-2.5 text-xs font-mono text-neutral-700 dark:text-neutral-300">
               <li class="flex items-center gap-2">
@@ -243,9 +243,9 @@ import Base from '@/layouts/Base.astro';
               <span class="px-2 py-1 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-bold">TRACK 02</span>
               <span class="text-xs font-mono text-neutral-400">AI ETHICS &amp; GOVERNANCE</span>
             </div>
-            <h3 class="text-2xl font-bold text-neutral-900 dark:text-white mb-3">Responsible &amp; Ethical AI</h3>
+            <h3 class="text-2xl font-bold text-neutral-900 dark:text-white mb-3">{content.track2Title || 'Responsible &amp; Ethical AI'}</h3>
             <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6">
-              Moving beyond blindly copying AI outputs. We audit models for data bias, learn safe prompt engineering without privacy leakage, and preserve academic integrity.
+              {content.track2Desc || 'Moving beyond blindly copying AI outputs. We audit models for data bias, learn safe prompt engineering without privacy leakage, and preserve academic integrity.'}
             </p>
             <ul class="space-y-2.5 text-xs font-mono text-neutral-700 dark:text-neutral-300">
               <li class="flex items-center gap-2">
@@ -267,7 +267,7 @@ import Base from '@/layouts/Base.astro';
     </div>
   </section>
 
-  <!-- Upcoming Missions / Events Timeline -->
+  <!-- Live Dynamic Events & Activities Timeline -->
   <section class="py-16 border-t border-black/[0.06] dark:border-white/[0.08] bg-neutral-50 dark:bg-[#05070a]/50">
     <div class="tech-container">
       <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
@@ -281,47 +281,21 @@ import Base from '@/layouts/Base.astro';
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="cyber-card p-6">
-          <div class="flex items-center justify-between text-[11px] font-mono text-neutral-500 mb-3">
-            <span>LAB 01</span>
-            <span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-500 font-bold">INTERACTIVE</span>
+        {eventsList.map((e, index) => (
+          <div class="cyber-card p-6">
+            <div class="flex items-center justify-between text-[11px] font-mono text-neutral-500 mb-3">
+              <span>MISSION 0{index + 1}</span>
+              <span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-500 font-bold uppercase">{e.status}</span>
+            </div>
+            <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-2">{e.title}</h3>
+            <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+              {e.description}
+            </p>
+            <div class="text-[11px] font-mono text-neutral-400">
+              LOCATION: {e.location} // {e.eventDate}
+            </div>
           </div>
-          <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-2">Web Exploits &amp; Safe Coding</h3>
-          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
-            Deconstructing common client-side injection attacks, browser cookies, and how HTTPS encrypts student communications.
-          </p>
-          <div class="text-[11px] font-mono text-neutral-400">
-            LOCATION: COMPUTER LAB 2 // BIWEEKLY THURSDAY
-          </div>
-        </div>
-
-        <div class="cyber-card p-6">
-          <div class="flex items-center justify-between text-[11px] font-mono text-neutral-500 mb-3">
-            <span>MISSION 02</span>
-            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 font-bold">COMPETITION</span>
-          </div>
-          <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-2">Annual Cyber &amp; AI Quiz Debate</h3>
-          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
-            Inter-house challenge testing ethical AI principles, cyber laws, digital forensics puzzles, and poster making.
-          </p>
-          <div class="text-[11px] font-mono text-neutral-400">
-            AUDITORIUM // OPEN TO ALL CLASSES
-          </div>
-        </div>
-
-        <div class="cyber-card p-6">
-          <div class="flex items-center justify-between text-[11px] font-mono text-neutral-500 mb-3">
-            <span>DRIVE 03</span>
-            <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 font-bold">COMMUNITY</span>
-          </div>
-          <h3 class="font-bold text-base text-neutral-900 dark:text-white mb-2">Campus-Wide Cyber Hygiene Drive</h3>
-          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
-            Student ambassadors sharing live demonstrations on setting up 2FA, spotting scam WhatsApp links, and securing home Wi-Fi.
-          </p>
-          <div class="text-[11px] font-mono text-neutral-400">
-            CAMPUS-WIDE // ANNUAL CAMPAIGN
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   </section>
@@ -379,7 +353,6 @@ import Base from '@/layouts/Base.astro';
 
       const entropy = pwd.length * Math.log2(pool);
 
-      // Estimate crack time assuming 10 billion guesses/sec
       const combinations = Math.pow(pool, pwd.length);
       const seconds = combinations / (10 * 1000 * 1000 * 1000);
 
@@ -413,7 +386,6 @@ import Base from '@/layouts/Base.astro';
         }
       }
 
-      // Update checkmark indicators
       if (checkLen) checkLen.innerHTML = (pwd.length >= 12 ? '<span class="text-emerald-500">●</span>' : '<span>○</span>') + ' 12+ Characters';
       if (checkUpper) checkUpper.innerHTML = (/[A-Z]/.test(pwd) ? '<span class="text-emerald-500">●</span>' : '<span>○</span>') + ' Uppercase [A-Z]';
       if (checkNum) checkNum.innerHTML = (/[0-9]/.test(pwd) ? '<span class="text-emerald-500">●</span>' : '<span>○</span>') + ' Numbers [0-9]';

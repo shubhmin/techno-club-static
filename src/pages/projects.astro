@@ -1,52 +1,9 @@
 ---
 import Base from '@/layouts/Base.astro';
+import { getPageContent, getProjects } from '@/lib/content';
 
-const projects = [
-  {
-    title: 'CyberGuard: The Phishing Maze',
-    tag: 'SCRATCH / GAMIFIED LEARNING',
-    track: 'JUNIOR WING (CLASSES 4–6)',
-    desc: 'An interactive puzzle adventure where students navigate a corporate network, spot suspect email headers, and neutralize ransomware bots before the timer expires.',
-    status: 'ACTIVE DEMO',
-    accent: 'border-blue-500/30 text-blue-500',
-    links: [
-      { label: 'Play on Scratch', href: 'https://scratch.mit.edu', external: true },
-    ],
-  },
-  {
-    title: 'Client-Side Password Entropy Engine',
-    tag: 'CRYPTOGRAPHY / WEB APP',
-    track: 'ALL GRADES',
-    desc: 'Pure client-side password entropy evaluator. Computes bits of unpredictability, models brute-force cluster crack times, and flags dictionary vulnerabilities without network transmission.',
-    status: 'LIVE ON HOMEPAGE',
-    accent: 'border-emerald-500/30 text-emerald-500',
-    links: [
-      { label: 'Try on Home', href: '/#entropy-lab' },
-    ],
-  },
-  {
-    title: 'The AI Disclosure Generator',
-    tag: 'ETHICAL AI / ACADEMIC INTEGRITY',
-    track: 'MIDDLE & SENIOR WING',
-    desc: 'A structured form generator helping students format transparent citations and disclosures when using AI models for school projects.',
-    status: 'SPECIFICATION RELEASED',
-    accent: 'border-amber-500/30 text-amber-500',
-    links: [
-      { label: 'View Charter', href: '/ethical-ai' },
-    ],
-  },
-  {
-    title: 'Social Footprint Audit Guide',
-    tag: 'PRIVACY / DEFENSIVE HYGIENE',
-    track: 'COMMUNITY CAMPAIGN',
-    desc: 'A checklist protocol designed by DAV students to audit camera permissions, location metadata, and public exposure on social media apps.',
-    status: 'PDF CHECKLIST',
-    accent: 'border-purple-500/30 text-purple-500',
-    links: [
-      { label: 'Ask Bot for Tips', href: '/chatbot' },
-    ],
-  },
-];
+const content = await getPageContent('projects');
+const projects = await getProjects();
 ---
 
 <Base title="Student Labs & Projects — Techno Sreshtha" activePage="projects">
@@ -56,10 +13,10 @@ const projects = [
       <div class="max-w-3xl mb-16">
         <span class="tech-badge mb-2">STUDENT BUILDS &amp; LABS</span>
         <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
-          Practical Security Engineered by Students
+          {content.title || 'Practical Security Engineered by Students'}
         </h1>
         <p class="text-base text-neutral-600 dark:text-neutral-400 mt-4 leading-relaxed">
-          From Scratch games for primary classes to client-side cryptographic calculators and AI prompt audit tools—here is what our members build.
+          {content.lead || 'From Scratch games for primary classes to client-side cryptographic calculators and AI prompt audit tools—here is what our members build.'}
         </p>
       </div>
 
@@ -69,30 +26,30 @@ const projects = [
           <div class="cyber-card p-8 flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between text-xs font-mono mb-4">
-                <span class:list={['px-2 py-0.5 rounded border font-semibold', p.accent]}>
-                  {p.tag}
+                <span class="px-2 py-0.5 rounded border border-blue-500/30 text-blue-400 font-semibold">
+                  {p.categoryTag}
                 </span>
                 <span class="text-neutral-400">{p.status}</span>
               </div>
               <h2 class="text-xl font-bold text-neutral-900 dark:text-white mb-2">{p.title}</h2>
               <div class="text-[11px] font-mono text-neutral-500 mb-3">{p.track}</div>
               <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6">
-                {p.desc}
+                {p.description}
               </p>
             </div>
 
             <div class="pt-6 border-t border-black/[0.06] dark:border-white/[0.08] flex items-center justify-between">
-              <div class="flex gap-3">
-                {p.links.map((link) => (
-                  <a
-                    href={link.href}
-                    target={link.external ? '_blank' : undefined}
-                    class="btn-cyber-outline text-xs"
-                  >
-                    {link.label} {link.external ? '↗' : '→'}
-                  </a>
-                ))}
-              </div>
+              {p.linkUrl ? (
+                <a
+                  href={p.linkUrl}
+                  target={p.linkUrl.startsWith('http') ? '_blank' : undefined}
+                  class="btn-cyber-outline text-xs"
+                >
+                  Explore Project →
+                </a>
+              ) : (
+                <span class="text-xs font-mono text-neutral-500">Internal Demo</span>
+              )}
             </div>
           </div>
         ))}

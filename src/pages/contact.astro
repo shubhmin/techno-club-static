@@ -1,5 +1,8 @@
 ---
 import Base from '@/layouts/Base.astro';
+import { getPageContent } from '@/lib/content';
+
+const content = await getPageContent('contact');
 ---
 
 <Base title="Connect & Join — Techno Sreshtha" activePage="connect">
@@ -9,10 +12,10 @@ import Base from '@/layouts/Base.astro';
       <div class="max-w-3xl mb-16">
         <span class="tech-badge mb-2">COMMUNICATIONS DISPATCH</span>
         <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
-          Initiate Contact with the Guild
+          {content.title || 'Initiate Contact with the Guild'}
         </h1>
         <p class="text-base text-neutral-600 dark:text-neutral-400 mt-4 leading-relaxed">
-          Interested in joining the cybersecurity guild, proposing a workshop, or inviting our student ambassadors for an awareness session? Send a dispatch directly to our coordinators.
+          {content.lead || 'Interested in joining the cybersecurity guild, proposing a workshop, or inviting our student ambassadors for an awareness session? Send a dispatch directly to our coordinators.'}
         </p>
       </div>
 
@@ -25,7 +28,7 @@ import Base from '@/layouts/Base.astro';
               <span class="text-xs font-mono text-neutral-400 font-bold uppercase">PHYSICAL LOCATION</span>
             </div>
             <h3 class="font-bold text-sm text-neutral-900 dark:text-white">DAV Public School, Sreshtha Vihar</h3>
-            <p class="text-xs text-neutral-500 mt-1">Computer Laboratory 2 &amp; Auditorium Wing</p>
+            <p class="text-xs text-neutral-500 mt-1">{content.location || 'Computer Laboratory 2 & Auditorium Wing'}</p>
             <p class="text-xs text-neutral-400 mt-0.5 font-mono">Delhi 110092, India</p>
           </div>
 
@@ -35,7 +38,7 @@ import Base from '@/layouts/Base.astro';
               <span class="text-xs font-mono text-neutral-400 font-bold uppercase">SCHEDULE &amp; MEETS</span>
             </div>
             <h3 class="font-bold text-sm text-neutral-900 dark:text-white">Biweekly Club Assembly</h3>
-            <p class="text-xs text-neutral-500 mt-1">Mondays &amp; Thursdays · After School (2:00 PM – 3:30 PM)</p>
+            <p class="text-xs text-neutral-500 mt-1">{content.schedule || 'Mondays & Thursdays · After School (2:00 PM – 3:30 PM)'}</p>
             <p class="text-xs text-neutral-400 mt-0.5 font-mono">Special lab clinics prior to Olympiad tournaments</p>
           </div>
 
@@ -44,7 +47,7 @@ import Base from '@/layouts/Base.astro';
               <span class="w-2 h-2 rounded-full bg-amber-500"></span>
               <span class="text-xs font-mono text-neutral-400 font-bold uppercase">OFFICIAL EMAIL</span>
             </div>
-            <h3 class="font-bold text-sm text-neutral-900 dark:text-white">cyberclub@davsv.edu</h3>
+            <h3 class="font-bold text-sm text-neutral-900 dark:text-white">{content.email || 'cyberclub@davsv.edu'}</h3>
             <p class="text-xs text-neutral-500 mt-1">Monitored by student coordinators and faculty patrons</p>
           </div>
         </div>

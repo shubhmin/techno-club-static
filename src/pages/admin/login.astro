@@ -1,0 +1,243 @@
+---
+import '@/styles/global.css';
+import { validateSession, hasAdminUser } from '@/lib/auth';
+import { hasDb } from '@/lib/db/client';
+
+const session = await validateSession(Astro.cookies);
+if (session) {
+  return Astro.redirect('/admin');
+}
+
+const dbConnected = hasDb();
+const adminConfigured = await hasAdminUser();
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Console Gateway — Techno Sreshtha</title>
+  <link rel="icon" href="/assets/logo.webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet" />
+</head>
+
+<body class="min-h-screen bg-[#07090e] text-neutral-100 font-sans flex items-center justify-center p-4 selection:bg-blue-500/20">
+  <div class="fixed inset-0 pointer-events-none opacity-20 bg-grid-pattern [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
+
+  <div class="relative z-10 w-full max-w-md">
+    <!-- Brand / System Header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium border border-blue-500/30 bg-blue-500/10 text-blue-400 mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+        SECURITY CONSOLE // ACCESS GATEWAY
+      </div>
+      <h1 class="text-2xl font-extrabold tracking-tight text-white flex items-center justify-center gap-2">
+        <img src="/assets/logo.webp" alt="Logo" class="h-8 w-8 rounded-lg" />
+        Techno Sreshtha
+      </h1>
+      <p class="text-xs font-mono text-neutral-400 mt-1">
+        DAV PUBLIC SCHOOL, SRESHTHA VIHAR
+      </p>
+    </div>
+
+    <!-- DB Warning if not connected -->
+    {!dbConnected && (
+      <div class="mb-6 p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 text-xs font-mono text-amber-300">
+        <div class="font-bold flex items-center gap-2 mb-1">
+          <span>⚠</span> DATABASE_URL NOT DETECTED
+        </div>
+        <p class="text-neutral-400 leading-relaxed">
+          Please add your Neon PostgreSQL connection string as <code class="text-amber-200 font-bold">DATABASE_URL</code> in your <code class="text-amber-200">.env</code> or Vercel Environment Variables.
+        </p>
+      </div>
+    )}
+
+    <!-- Card -->
+    <div class="cyber-card p-8 border-white/10 bg-[#0d1117] shadow-2xl">
+      <!-- Mode: First-Time Setup Wizard -->
+      {!adminConfigured && dbConnected ? (
+        <div>
+          <div class="border-b border-white/[0.08] pb-4 mb-6">
+            <h2 class="text-sm font-mono font-bold uppercase text-emerald-400 tracking-wider">
+              [INITIAL MASTER SETUP WIZARD]
+            </h2>
+            <p class="text-xs text-neutral-400 mt-1">
+              No administrator detected. Create your initial master credentials now.
+            </p>
+          </div>
+
+          <form id="setup-form" class="space-y-4">
+            <div>
+              <label for="setup-username" class="block text-xs font-mono text-neutral-400 uppercase font-semibold mb-1.5">
+                Admin Username
+              </label>
+              <input
+                type="text"
+                id="setup-username"
+                required
+                minlength="3"
+                placeholder="e.g. lead_admin"
+                class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+            </div>
+
+            <div>
+              <label for="setup-password" class="block text-xs font-mono text-neutral-400 uppercase font-semibold mb-1.5">
+                Master Password (min 8 chars)
+              </label>
+              <input
+                type="password"
+                id="setup-password"
+                required
+                minlength="8"
+                placeholder="••••••••••••"
+                class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+            </div>
+
+            <div id="setup-error" class="hidden text-xs font-mono text-red-400 p-2.5 rounded bg-red-500/10 border border-red-500/20"></div>
+
+            <button
+              type="submit"
+              id="setup-btn"
+              class="w-full py-2.5 rounded-lg text-xs font-mono font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-lg shadow-emerald-600/20"
+            >
+              INITIALIZE MASTER CREDENTIALS →
+            </button>
+          </form>
+        </div>
+      ) : (
+        <!-- Mode: Standard High-Security Login -->
+        <div>
+          <div class="border-b border-white/[0.08] pb-4 mb-6">
+            <h2 class="text-sm font-mono font-bold uppercase text-neutral-200 tracking-wider">
+              AUTHORIZATION GATE
+            </h2>
+            <p class="text-xs text-neutral-400 mt-1">
+              Enter operator credentials to authenticate session.
+            </p>
+          </div>
+
+          <form id="login-form" class="space-y-4">
+            <div>
+              <label for="login-username" class="block text-xs font-mono text-neutral-400 uppercase font-semibold mb-1.5">
+                Username
+              </label>
+              <input
+                type="text"
+                id="login-username"
+                required
+                autocomplete="username"
+                placeholder="Enter username"
+                class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label for="login-password" class="block text-xs font-mono text-neutral-400 uppercase font-semibold mb-1.5">
+                Password
+              </label>
+              <input
+                type="password"
+                id="login-password"
+                required
+                autocomplete="current-password"
+                placeholder="••••••••••••"
+                class="w-full px-3.5 py-2.5 rounded-lg text-xs font-mono border border-white/10 bg-black/60 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div id="login-error" class="hidden text-xs font-mono text-red-400 p-2.5 rounded bg-red-500/10 border border-red-500/20"></div>
+
+            <button
+              type="submit"
+              id="login-btn"
+              class="w-full py-2.5 rounded-lg text-xs font-mono font-bold bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-lg shadow-blue-600/20"
+            >
+              AUTHENTICATE SESSION →
+            </button>
+          </form>
+        </div>
+      )}
+
+      <!-- Telemetry Footer -->
+      <div class="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-neutral-500">
+        <span>SECURITY: SCRYPT-64</span>
+        <span>RATE-LIMIT: ACTIVE</span>
+      </div>
+    </div>
+
+    <!-- Return to site link -->
+    <div class="text-center mt-6">
+      <a href="/" class="text-xs font-mono text-neutral-400 hover:text-white transition-colors">
+        ← Return to Public Website
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Handle Setup Wizard
+    const setupForm = document.getElementById('setup-form');
+    setupForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('setup-btn') as HTMLButtonElement;
+      const errBox = document.getElementById('setup-error')!;
+      const username = (document.getElementById('setup-username') as HTMLInputElement).value;
+      const password = (document.getElementById('setup-password') as HTMLInputElement).value;
+
+      btn.disabled = true;
+      btn.textContent = 'BOOTSTRAPPING...';
+      errBox.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/admin/auth/setup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Initialization failed');
+        window.location.href = '/admin';
+      } catch (err: any) {
+        errBox.textContent = err.message;
+        errBox.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'INITIALIZE MASTER CREDENTIALS →';
+      }
+    });
+
+    // Handle Login
+    const loginForm = document.getElementById('login-form');
+    loginForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('login-btn') as HTMLButtonElement;
+      const errBox = document.getElementById('login-error')!;
+      const username = (document.getElementById('login-username') as HTMLInputElement).value;
+      const password = (document.getElementById('login-password') as HTMLInputElement).value;
+
+      btn.disabled = true;
+      btn.textContent = 'VERIFYING CREDENTIALS...';
+      errBox.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/admin/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Access denied');
+        window.location.href = '/admin';
+      } catch (err: any) {
+        errBox.textContent = err.message;
+        errBox.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'AUTHENTICATE SESSION →';
+      }
+    });
+  </script>
+</body>
+</html>

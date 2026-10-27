@@ -1,4 +1,10 @@
 ---
+interface Props {
+  systemStatus?: string;
+}
+
+const { systemStatus = 'GUILD SYSTEMS: NORMAL · DAVPS SRESHTHA VIHAR' } = Astro.props;
+
 const sitemap = [
   {
     title: 'OPERATIONS',
@@ -18,11 +24,11 @@ const sitemap = [
     ],
   },
   {
-    title: 'TOOLS & DOCS',
+    title: 'TOOLS & ACCESS',
     links: [
       { label: 'Interactive Terminal', href: '/chatbot' },
       { label: 'Password Entropy Lab', href: '/#entropy-lab' },
-      { label: 'Phishing Detection Drill', href: '/#phishing-drill' },
+      { label: 'Guild Admin Console', href: '/admin' },
     ],
   },
 ];
@@ -37,12 +43,10 @@ const sitemap = [
           <span></span>
           <span></span>
         </div>
-        <span class="text-neutral-800 dark:text-neutral-200">GUILD SYSTEMS: NORMAL</span>
-        <span class="text-neutral-400">|</span>
-        <span class="text-neutral-500">DAV SRESHHTA VIHAR // NEW DELHI</span>
+        <span class="text-neutral-800 dark:text-neutral-200">{systemStatus}</span>
       </div>
       <div class="text-neutral-500 hidden sm:block">
-        BUILD PROTOCOL: ASTRO v5.7 (ZERO CLIENT BLOAT)
+        BUILD PROTOCOL: ASTRO SSR + NEON DB
       </div>
     </div>
   </div>
@@ -94,7 +98,7 @@ const sitemap = [
       <div class="flex items-center gap-4 text-xs font-mono">
         <span class="text-emerald-500 font-semibold">SECURE HTTPS</span>
         <span>·</span>
-        <span>VERCEL EDGE HOSTED</span>
+        <a href="/admin" class="hover:text-blue-400 transition-colors">OPERATOR CONSOLE</a>
       </div>
     </div>
   </div>

@@ -1,74 +1,38 @@
 ---
 import Base from '@/layouts/Base.astro';
+import { getGallery } from '@/lib/content';
 
-const albums = [
-  {
-    year: '2025–2026',
-    category: 'Competitions',
-    title: 'Inter-House Cyber & AI Quiz Debates',
-    description: 'High-octane rounds for classes 5–8 assessing awareness on digital footprints, cyber laws, and AI attribution.',
-    images: [
-      { src: '/assets/2025/2025quiz (1).webp', label: 'Class 5 Preliminary Round' },
-      { src: '/assets/2025/2025quiz (2).jpeg', label: 'Class 6 Debate Quarter-Finals' },
-      { src: '/assets/2025/2025quiz (3).webp', label: 'Auditorium Championship Finals' },
-    ],
-  },
-  {
-    year: '2025–2026',
-    category: 'Workshops',
-    title: 'AI Literacy & Safe Prompting Labs',
-    description: 'Hands-on training sessions in computer labs exploring prompt evaluation, bias identification, and citation mechanics.',
-    images: [
-      { src: '/assets/2025/2025workshop (1).jpeg', label: 'Lab Setup & Initial Briefing' },
-      { src: '/assets/2025/2025workshop (2).webp', label: 'Live Demonstration on Bias Detection' },
-      { src: '/assets/2025/2025workshop (3).webp', label: 'Peer Code Reviews & Verification' },
-    ],
-  },
-  {
-    year: '2025–2026',
-    category: 'Drives',
-    title: 'Campus Awareness & Security Demos',
-    description: 'Student-led interactive booths showing live password cracking simulators and phishing link dissection.',
-    images: [
-      { src: '/assets/2025/2025awareness (1).webp', label: 'Corridor Information Booth' },
-      { src: '/assets/2025/2025awareness (2).webp', label: 'Interactive Student Quiz Kiosk' },
-      { src: '/assets/2025/2025awareness (3).webp', label: 'Poster Campaign Showcase' },
-    ],
-  },
-  {
-    year: '2024–2025',
-    category: 'Competitions',
-    title: 'Foundational Cybersecurity Challenges',
-    description: 'Inaugural cyber tournament testing encryption ciphers, password entropy, and safe social media habits.',
-    images: [
-      { src: '/assets/2024/2024quiz (1).webp', label: 'Junior Category Puzzles' },
-      { src: '/assets/2024/2024quiz (2).webp', label: 'Middle Wing Debate' },
-      { src: '/assets/2024/2024quiz (3).webp', label: 'Prize Distribution' },
-    ],
-  },
-  {
-    year: '2024–2025',
-    category: 'Workshops',
-    title: 'Password Safety & Two-Factor Hygiene',
-    description: 'Practical workshops teaching students how to enforce 2FA and safely manage personal digital identities.',
-    images: [
-      { src: '/assets/2024/2024workshop (1).webp', label: 'Keynote & Slides' },
-      { src: '/assets/2024/2024workshop (2).webp', label: 'Interactive 2FA Configuration Lab' },
-      { src: '/assets/2024/2024workshop (3).webp', label: 'Q&A and Safety Pledge' },
-    ],
-  },
-  {
-    year: '2024–2025',
-    category: 'Drives',
-    title: 'Pledge for Digital Safety',
-    description: 'School-wide awareness posters, slogan competitions, and ethical internet pledges.',
-    images: [
-      { src: '/assets/2024/2024awareness (1).webp', label: 'Poster Exhibit' },
-      { src: '/assets/2024/2024awareness (2).webp', label: 'Student Engagement' },
-      { src: '/assets/2024/2024awareness (3).webp', label: 'Campus Showcase' },
-    ],
-  },
-];
+const rawGallery = await getGallery();
+
+// Group items by yearCategory and albumTitle
+interface GroupedAlbum {
+  year: string;
+  category: string;
+  title: string;
+  description: string;
+  images: Array<{ src: string; label: string }>;
+}
+
+const albumsMap = new Map<string, GroupedAlbum>();
+
+for (const item of rawGallery) {
+  const key = `${item.yearCategory}-${item.albumTitle}`;
+  if (!albumsMap.has(key)) {
+    albumsMap.set(key, {
+      year: item.yearCategory,
+      category: 'EXHIBIT',
+      title: item.albumTitle,
+      description: 'Documented field records and student activities.',
+      images: [],
+    });
+  }
+  albumsMap.get(key)!.images.push({
+    src: item.imageUrl,
+    label: item.caption,
+  });
+}
+
+const albums = Array.from(albumsMap.values());
 ---
 
 <Base title="Event Archives & Gallery — Techno Sreshtha" activePage="gallery">
