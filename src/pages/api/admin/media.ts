@@ -71,7 +71,6 @@ export const POST: APIRoute = async ({ request, cookies, clientAddress }) => {
         const s3Res = await uploadToS3(buffer, filename, mimeType);
         s3Key = s3Res.key;
         s3Url = s3Res.url;
-        publicUrl = s3Res.url;
       } catch (s3Err: any) {
         console.error('S3 upload encountered error, falling back to database storage:', s3Err);
         base64Fallback = buffer.toString('base64');
@@ -92,8 +91,10 @@ export const POST: APIRoute = async ({ request, cookies, clientAddress }) => {
       })
       .returning();
 
-    // If S3 wasn't used or URL wasn't assigned, use our proxy endpoint
-    if (!publicUrl) {
+    // Permanent CDN URL that never expires and streams from S3
+    if (process.env.S3_PUBLIC_URL && s3Key) {
+      publicUrl = `${process.env.S3_PUBLIC_URL.replace(/\/+$/, '')}/${s3Key}`;
+    } else {
       publicUrl = `/api/media/${saved.id}`;
     }
 
